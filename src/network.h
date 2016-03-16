@@ -1,10 +1,10 @@
 /**
  * @file
- * @author Pierre Gillet
+ * @author Corentin Bocquillon <0x539@nybble.fr>
  *
  * @section LICENSE
  *
- * Copyright (C) 2016 Pierre Gillet
+ * Copyright (C) 2016 Corentin Bocquillon
  *
  * factorywars is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,25 +21,26 @@
  *
  * @section DESCRIPTION
  *
- * gama_mechanics.cpp contain all the code for the game mechanics
+ * network.c the header file of network.c
  */
 
-class A
-{
-public:
-  int getValue() const { return this->value; } // définition au sein de la classe
-  void setValue(int value);
-  void print() const;
-private:
-  int value;
-};
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <netdb.h>
 
-inline void A::setValue(int value) // définition en dehors de la classe (inline)
-{
-  this->value = value;
-}
-
-void A::print() const // définition en dehors de la classe (non inline)
-{
-  std::cout << "Value=" << this->value << std::endl;
-}
+/**
+ * Send data
+ * 
+ * @param *ip is the ip where the message will be sent.
+ * @param port is the port where the server is listening.
+ * @param *data is the string which will be sent.
+ * @return 0 if success, -1 if there is an error.
+ */
+int client (char *ip, unsigned short port, char* data);
