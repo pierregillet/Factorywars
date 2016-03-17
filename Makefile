@@ -6,3 +6,11 @@ OBJ_NAME = factorywars
 
 all : $(OBJS)
 	$(CC) $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+
+documentation :
+	doxygen doc/config
+
+clean :
+	rm -rf doc/html
+	rm -rf doc/latex
+	rm -f factorywars
