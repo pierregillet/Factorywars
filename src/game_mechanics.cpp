@@ -19,6 +19,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
  */
 
+#include string
+
+/* Player :
+- health --> int
+- items --> tableau
+- name --> string
+- coordinates
+
+ */
+
+class player
+{
+public:
+  int playerGetsAttacked()
+
+
+private:
+  int health;
+  //  int items[];
+  string name;
+  long coordinates[];
+
+}
+
+
 class A
 {
 public:
