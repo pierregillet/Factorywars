@@ -47,7 +47,7 @@ public:
   Player(void);
   Player(int, std::string);
   Player(int, std::string, coordinates);
-  int getPlayerHealth ();
+  int getPlayerHealth () const;
   int playerGetsAttacked (std::string, int);
   int playerWalks(bool, bool);
 
@@ -59,7 +59,7 @@ private:
 };
 
 Player::Player(void)
-
+{
   m_health = 100;
   m_name = "Foobar";
   m_coordinates.x = 0;
@@ -77,7 +77,7 @@ Player::Player(int health,
 
 Player::Player(int health,
 	       std::string name,
-	       long coordinates)
+	       coordinates m_coordinates)
 {
   m_health = health;
   m_name = name;
@@ -88,14 +88,14 @@ Player::Player(int health,
 inline int
 Player::getPlayerHealth () const
 {
-  return this->health;
+  return this->m_health;
 }
 
 inline int
 Player::playerGetsAttacked (std::string enemy_name,
 			    int damage)
 {
-  this->health -= damage;
+  this->m_health -= damage;
 }
 
 inline int
@@ -105,4 +105,8 @@ Player::playerWalks (bool vertical,
 
 }
 
+int main ()
+{
+
+}
 
