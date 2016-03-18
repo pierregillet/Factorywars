@@ -21,10 +21,10 @@
  *
  * @section DESCRIPTION
  *
- * gama_mechanics.cpp contain all the code for the game mechanics
+ * game_mechanics.cpp contain all the code for the game mechanics
  */
 
-#include string
+#include <string>
 
 /* Player :
 - health --> int
@@ -34,37 +34,75 @@
 
  */
 
-class player
+struct coordinates
 {
-public:
-  int playerGetsAttacked()
-
-
-private:
-  int health;
-  //  int items[];
-  string name;
-  long coordinates[];
-
-}
-
-
-class A
-{
-public:
-  int getValue() const { return this->value; } // définition au sein de la classe
-  void setValue(int value);
-  void print() const;
-private:
-  int value;
+  long x;
+  long y;
 };
 
-inline void A::setValue(int value) // définition en dehors de la classe (inline)
+class
+Player
 {
-  this->value = value;
+public:
+  Player(void);
+  Player(int, std::string);
+  Player(int, std::string, coordinates);
+  int getPlayerHealth ();
+  int playerGetsAttacked (std::string, int);
+  int playerWalks(bool, bool);
+
+private:
+  int m_health;
+  std::string m_name;
+  coordinates m_coordinates;
+
+};
+
+Player::Player(void)
+
+  m_health = 100;
+  m_name = "Foobar";
+  m_coordinates.x = 0;
+  m_coordinates.y = 0;
 }
 
-void A::print() const // définition en dehors de la classe (non inline)
+Player::Player(int health,
+	       std::string name)
 {
-  std::cout << "Value=" << this->value << std::endl;
+  m_health = health;
+  m_name = name;
+  m_coordinates.x = 0;
+  m_coordinates.y = 0;
 }
+
+Player::Player(int health,
+	       std::string name,
+	       long coordinates)
+{
+  m_health = health;
+  m_name = name;
+  m_coordinates.x = 0;
+  m_coordinates.y = 0;
+}
+
+inline int
+Player::getPlayerHealth () const
+{
+  return this->health;
+}
+
+inline int
+Player::playerGetsAttacked (std::string enemy_name,
+			    int damage)
+{
+  this->health -= damage;
+}
+
+inline int
+Player::playerWalks (bool vertical,
+		     bool horizontal)
+{
+
+}
+
+
