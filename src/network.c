@@ -29,11 +29,13 @@ client (char *ip, unsigned short port, char* data)
 {
   int sockfd6, n, s;
   char port_str[6];
-  snprintf (port_str, 6, "%d", port);
   unsigned int length;
   struct sockaddr_in6 server, from;
   struct addrinfo hints;
   struct addrinfo *result, *rp;
+
+  /* Convert port to a string */
+  snprintf (port_str, 6, "%d", port);
 
   memset(&hints, 0, sizeof(struct addrinfo));
   hints.ai_family = AF_UNSPEC; // Allow IPv4 and IPv6
@@ -41,33 +43,38 @@ client (char *ip, unsigned short port, char* data)
   hints.ai_flags = 0;
   hints.ai_protocol = 0; //Any protocol
 
-  s = getaddrinfo(ip, port_str, &hints, &result);
+  s = getaddrinfo (ip, port_str, &hints, &result);
   if(s != 0)
     {
       fprintf (stderr, "Getaddrinfo: %s\n", gai_strerror(s));
       return -1;
     }
 
-  for(rp = result; rp != NULL; rp = rp->ai_next) {
-    sockfd6 = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-    if(sockfd6 == -1)
-      continue;
-    if(connect(sockfd6, rp->ai_addr, rp->ai_addrlen) != -1)
-      break; // Success
+  for(rp = result; rp != NULL; rp = rp->ai_next)
+    {
+      sockfd6 = socket (rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+      
+      if (sockfd6 == -1)
+	continue;
+      if (connect (sockfd6, rp->ai_addr, rp->ai_addrlen) != -1)
+	break; // Success
 
-    close(sockfd6);
+      close (sockfd6);
   }
 
-  if(rp==NULL) {
-    fprintf (stderr, "Couldn't connect\n");
-    return -1;
+  if (rp == NULL)
+    {
+      fprintf (stderr, "Couldn't connect\n");
+      return -1;
   }
 
-  freeaddrinfo(result);
+  freeaddrinfo (result);
 
-  if(send(sockfd6, data, strlen (data), 0) != strlen (data))
+  if (send (sockfd6, data, strlen (data), 0) != strlen (data))
     {
       fprintf (stderr, "Error while writing on the socket\n");
       return -1;
     }
 }
+
+
