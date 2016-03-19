@@ -44,11 +44,3 @@
  * @return 0 if success, -1 if there is an error.
  */
 int client (char *ip, unsigned short port, char* data);
-
-/**
- * 
- * 
- * @param 
- * @return
- */
-

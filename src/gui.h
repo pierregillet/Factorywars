@@ -7,7 +7,9 @@
  * @section LICENSE
  *
  * Copyright (C) 2016 Corentin Bocquillon <0x539@nybble.fr>
+ *
  * Copyright (C) 2016 Loup Fourment
+ *
  * Copyright (C) 2016 Pierre Gillet
  *
  * factorywars is free software: you can redistribute it and/or modify
