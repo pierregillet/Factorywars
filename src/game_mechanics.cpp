@@ -24,39 +24,7 @@
  * game_mechanics.cpp contain all the code for the game mechanics
  */
 
-#include <string>
-
-/* Player :
-- health --> int
-- items --> tableau
-- name --> string
-- coordinates
-
- */
-
-struct coordinates
-{
-  long x;
-  long y;
-};
-
-class
-Player
-{
-public:
-  Player(void);
-  Player(int, std::string);
-  Player(int, std::string, coordinates);
-  int getPlayerHealth () const;
-  int playerGetsAttacked (std::string, int);
-  int playerWalks(bool, bool);
-
-private:
-  int m_health;
-  std::string m_name;
-  coordinates m_coordinates;
-
-};
+#include "game_mechanics.h"
 
 Player::Player(void)
 {
@@ -104,24 +72,19 @@ Player::playerWalks (bool vertical,
 {
   if (vertical == 1)
     {
-      this->m_coordinates.y ++;
+      m_coordinates.y ++;
     }
   else
     {
-      this->m_coordinates.y--;
+      m_coordinates.y --;
     }
   if (horizontal == 1)
     {
-      this->m_coordinates.x ++;
+      m_coordinates.x ++;
     }
   else
     {
-      this->m_coordinates--;
+      m_coordinates.x --;
     }
-}
-
-int main ()
-{
-
 }
 
