@@ -67,16 +67,14 @@ init_SDL (SDL_Window** window, SDL_Renderer** renderer)
 int
 load_media (SDL_Renderer** renderer, SDL_Texture** texture)
 {
-  int success = 1;
-  
   *texture = load_texture ("media/factorywars.png", renderer);
   if (*texture == NULL)
     {
       fprintf(stderr, "Failed to load PNG image!\n");
-      success = 0;
+      return 0;
     }
 
-  return success;
+  return 1;
 }
 
 SDL_Texture*
@@ -107,7 +105,7 @@ gui ()
 {
   SDL_Window *window = NULL;
   SDL_Texture *PNG_texture = NULL;
-  SDL_Renderer* renderer = NULL;
+  SDL_Renderer *renderer = NULL;
 
   if (!init_SDL (&window, &renderer))
     exit (EXIT_FAILURE);
