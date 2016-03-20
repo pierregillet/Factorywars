@@ -5,6 +5,8 @@
  * @section LICENSE
  *
  * Copyright (C) 2016 Pierre Gillet
+ * Copyright (C) 2016 Corentin Bocquillon
+ * Copyright (C) 2016 Loup Fourment
  *
  * factorywars is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,25 +34,19 @@ Player::Player(void)
   m_name = "Foobar";
   m_coordinates.x = 0;
   m_coordinates.y = 0;
-}
-
-Player::Player(int health,
-	       std::string name)
-{
-  m_health = health;
-  m_name = name;
-  m_coordinates.x = 0;
-  m_coordinates.y = 0;
+  m_velocity = 
 }
 
 Player::Player(int health,
 	       std::string name,
-	       coordinates m_coordinates)
+	       coordinates m_coordinates,
+	       int velocity)
 {
   m_health = health;
   m_name = name;
   m_coordinates.x = 0;
   m_coordinates.y = 0;
+  m_velocity = velocity;
 }
 
 inline int
@@ -71,6 +67,7 @@ Player::playerWalks (bool vertical,
 		     bool horizontal)
 {
   if (vertical == 1)
+    // We'll maybe have to add this-> before every m_coordinates, gotta check
     {
       m_coordinates.y ++;
     }
@@ -88,3 +85,15 @@ Player::playerWalks (bool vertical,
     }
 }
 
+
+inline void
+Items::Items()
+{
+  m_stack_size = 64;
+}
+
+inline void
+Imtes::Items(int stack_size)
+{
+  m_stack_size = stack_size;
+}

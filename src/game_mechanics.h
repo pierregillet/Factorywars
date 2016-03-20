@@ -5,6 +5,8 @@
  * @section LICENSE
  *
  * Copyright (C) 2016 Corentin Bocquillon
+ * Copyright (C) 2016 Corentin Bocquillon
+ * Copyright (C) 2016 Loup Fourment
  *
  * factorywars is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,17 +37,28 @@ struct coordinates
 class
 Player
 {
-public:
+ public:
   Player(void);
-  Player(int, std::string);
-  Player(int, std::string, coordinates);
+  Player(int, std::string, coordinates, int);
   int getPlayerHealth () const;
   int playerGetsAttacked (std::string, int);
   void playerWalks(bool, bool);
 
-private:
+ private:
   int m_health;
   std::string m_name;
   coordinates m_coordinates;
+  int m_velocity;
 };
+
+class
+Items
+{
+ public:
+  Items (void);
+  Items (int);
+  
+ private:
+  int m_stack_size;
+}
 
