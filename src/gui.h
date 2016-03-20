@@ -41,17 +41,17 @@ const int SCREEN_HEIGHT = 480;
 /**
  * Initialize the SDL and SDL_image libraries
  */
-int init_SDL (SDL_Window** window, SDL_Surface** screen_surface);
+int init_SDL (SDL_Window** window, SDL_Texture** renderer);
 
 /**
  * Load the textures
  */
-int load_media (SDL_Surface** screen_surface, SDL_Surface** PNG_surface);
+int load_media (SDL_Renderer** renderer, SDL_Texture** texture);
 
 /**
  * Load PNG file
  */
-SDL_Surface* load_surface (char* path, SDL_Surface** screen_surface);
+SDL_Texture* load_texture (char* path, SDL_Renderer** renderer);
 
 /**
  * Run the gui
@@ -61,4 +61,4 @@ void gui ();
 /**
  * Exit the SDL and SDL_image libraries
  */
-void exit_SDL (SDL_Surface** PNG_surface, SDL_Window** window);
+void exit_SDL (SDL_Texture** texture, SDL_Renderer** renderer, SDL_Window** window);

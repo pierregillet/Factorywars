@@ -27,53 +27,50 @@
 #include "gui.h"
 
 int
-init_SDL (SDL_Window** window, SDL_Surface** screen_surface)
+init_SDL (SDL_Window** window, SDL_Renderer** renderer)
 {
-  int success = 1;
-
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
       fprintf (stderr, "SDL could not initialize! SDL Error: %s\n", SDL_GetError ());
-      success = 0;
-    }
-  else
-    {
-      //Create window
-      *window = SDL_CreateWindow ("factorywars", SDL_WINDOWPOS_UNDEFINED,
-				 SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-				 SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-      if(*window == NULL)
-	{
-	  fprintf(stderr, "Window could not be created! SDL Error: %s\n", SDL_GetError());
-	  success = 0;
-	}
-      else
-	{
-	  //Initialize PNG loading
-	  int img_flags = IMG_INIT_PNG;
-	  if (!(IMG_Init (img_flags) & img_flags))
-	    {
-	      fprintf(stderr, "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError ());
-	      success = 0;
-	    }
-	  else
-	    {
-	      //Get window surface
-	      *screen_surface = SDL_GetWindowSurface (*window);
-	    }
-	}
+      return 0;
     }
 
-  return success;
+  //Create window
+  *window = SDL_CreateWindow ("factorywars", SDL_WINDOWPOS_UNDEFINED,
+			      SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+			      SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+  if(*window == NULL)
+    {
+      fprintf(stderr, "Window could not be created! SDL Error: %s\n", SDL_GetError());
+      return 0;
+    }
+ 
+  *renderer = SDL_CreateRenderer (*window, -1, SDL_RENDERER_ACCELERATED);
+  if (*renderer == NULL)
+    {
+      fprintf(stderr, "Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+      return 0;
+    }
+  SDL_SetRenderDrawColor (*renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+ 
+  //Initialize PNG loading
+  int img_flags = IMG_INIT_PNG;
+  if (!(IMG_Init (img_flags) & img_flags))
+    {
+      fprintf(stderr, "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError ());
+      return 0;
+    }
+
+  return 1;
 }
 
 int
-load_media (SDL_Surface** screen_surface, SDL_Surface** PNG_surface)
+load_media (SDL_Renderer** renderer, SDL_Texture** texture)
 {
   int success = 1;
   
-  *PNG_surface = load_surface ("media/factorywars.png", screen_surface);
-  if (*PNG_surface == NULL)
+  *texture = load_texture ("media/factorywars.png", renderer);
+  if (*texture == NULL)
     {
       fprintf(stderr, "Failed to load PNG image!\n");
       success = 0;
@@ -82,10 +79,10 @@ load_media (SDL_Surface** screen_surface, SDL_Surface** PNG_surface)
   return success;
 }
 
-SDL_Surface*
-load_surface (char* path, SDL_Surface** screen_surface)
+SDL_Texture*
+load_texture (char* path, SDL_Renderer** renderer)
 {
-  SDL_Surface* surface = NULL;
+  SDL_Texture* new_texture = NULL;
 
   SDL_Surface* loaded_surface = IMG_Load (path);
   if (loaded_surface == NULL)
@@ -94,32 +91,37 @@ load_surface (char* path, SDL_Surface** screen_surface)
     }
   else
     {
-      surface = SDL_ConvertSurface (loaded_surface, (**screen_surface).format, 0);
-      if (surface == NULL)
+      new_texture = SDL_CreateTextureFromSurface (*renderer, loaded_surface);
+      if (new_texture == NULL)
   	{
   	  fprintf (stderr, "Unable to optimize image %s! SDL Error: %s\n", path, SDL_GetError ());
   	}
-	    
       SDL_FreeSurface (loaded_surface);
     }
 
-  return surface;
+  return new_texture;
 }
 
 void
 gui ()
 {
   SDL_Window *window = NULL;
-  SDL_Surface *screen_surface = NULL;
-  SDL_Surface *PNG_surface = NULL;
+  SDL_Texture *PNG_texture = NULL;
+  SDL_Renderer* renderer = NULL;
 
-  if (!init_SDL (&window, &screen_surface))
+  if (!init_SDL (&window, &renderer))
     exit (EXIT_FAILURE);
-  if (!load_media (&screen_surface, &PNG_surface))
+  if (!load_media (&renderer, &PNG_texture))
     exit (EXIT_FAILURE);
 
-  SDL_BlitSurface (PNG_surface, NULL, screen_surface, NULL);
-  SDL_UpdateWindowSurface (window);
+  // Clear screen
+  SDL_RenderClear (renderer);
+
+  // Render texture to screen
+  SDL_RenderCopy (renderer, PNG_texture, NULL, NULL);
+
+  // Update screen
+  SDL_RenderPresent (renderer);
 
   // Event Loop
   int quit = 0;
@@ -138,20 +140,24 @@ gui ()
 	}
     }
 
-  exit_SDL (&PNG_surface, &window);
+  exit_SDL (&PNG_texture, &renderer, &window);
 }
 
 void
-exit_SDL (SDL_Surface** PNG_surface, SDL_Window** window)
+exit_SDL (SDL_Texture** texture, SDL_Renderer** renderer, SDL_Window** window)
 {
-	SDL_FreeSurface (*PNG_surface);
-	*PNG_surface = NULL;
+  SDL_DestroyTexture (*texture);
+  *texture = NULL;
 
-	//Destroy window
-	SDL_DestroyWindow (*window);
-	*window = NULL;
+  // Destroy texture
+  SDL_DestroyRenderer (*renderer);
+  *renderer = NULL;
 
-	//Quit SDL subsystems
-	IMG_Quit();
-	SDL_Quit();
+  // Destroy window
+  SDL_DestroyWindow (*window);
+  *window = NULL;
+  
+  //Quit SDL subsystems
+  IMG_Quit();
+  SDL_Quit();
 }
