@@ -1,7 +1,7 @@
-OBJS = src/main.cpp src/game_mechanics.cpp
+OBJS = src/main.cpp src/gui.cpp src/game_mechanics.cpp
 CC = g++
 COMPILER_FLAGS = 
-LINKER_FLAGS = -lSDL2
+LINKER_FLAGS = -lSDL2 -lSDL2_image
 OBJ_NAME = factorywars
 
 all : $(OBJS)

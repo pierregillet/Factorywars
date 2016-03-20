@@ -6,8 +6,10 @@
  *
  * @section LICENSE
  *
- * Copyright (C) 2016 Corentin Bocquillon <corentin@nybble.fr>
+ * Copyright (C) 2016 Corentin Bocquillon <0x539@nybble.fr>
+ *
  * Copyright (C) 2016 Loup Fourment
+ *
  * Copyright (C) 2016 Pierre Gillet
  *
  * factorywars is free software: you can redistribute it and/or modify
@@ -25,14 +27,38 @@
  *
  * @section DESCRIPTION
  *
- * main.cpp contain the code of the main function
+ * gui.h is the header of gui.cpp
  */
 
-#include "gui.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <stdio.h>
+#include <unistd.h>
 
-int
-main (int argc, char *argv[])
-{
-  gui ();
-  return 0;
-}
+const int SCREEN_WIDTH = 640;
+const int SCREEN_HEIGHT = 480;
+
+/**
+ * Initialize the SDL and SDL_image libraries
+ */
+int init_SDL (SDL_Window** window, SDL_Surface** screen_surface);
+
+/**
+ * Load the textures
+ */
+int load_media (SDL_Surface** screen_surface, SDL_Surface** PNG_surface);
+
+/**
+ * Load PNG file
+ */
+SDL_Surface* load_surface (char* path, SDL_Surface** screen_surface);
+
+/**
+ * Run the gui
+ */
+void gui ();
+
+/**
+ * Exit the SDL and SDL_image libraries
+ */
+void exit_SDL (SDL_Surface** PNG_surface, SDL_Window** window);

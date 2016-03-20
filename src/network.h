@@ -21,7 +21,7 @@
  *
  * @section DESCRIPTION
  *
- * network.c the header file of network.c
+ * network. the header file of network.c
  */
 
 #include <unistd.h>
