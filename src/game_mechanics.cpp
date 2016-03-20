@@ -98,11 +98,26 @@ Player::playerGetsAttacked (std::string enemy_name,
   this->m_health -= damage;
 }
 
-inline int
+inline void
 Player::playerWalks (bool vertical,
 		     bool horizontal)
 {
-
+  if (vertical == 1)
+    {
+      this->m_coordinates.y ++;
+    }
+  else
+    {
+      this->m_coordinates.y--;
+    }
+  if (horizontal == 1)
+    {
+      this->m_coordinates.x ++;
+    }
+  else
+    {
+      this->m_coordinates--;
+    }
 }
 
 int main ()
