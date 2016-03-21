@@ -23,65 +23,21 @@
  *
  * @section DESCRIPTION
  *
- * game_mechanics.h the header file of game_mechanics.cpp
+ * items.h the header file containing the conversion between item's names and IDs
  */
 
+#include <map>
 #include <string>
-#include "structures.h"
 
-class
-Player
-{
- public:
-  Player ();
-  Player (int, std::string, coordinates, int);
-  int getPlayerHealth () const;
-  int playerGetsAttacked (std::string, int);
-  void playerWalks (bool, bool);
+std::string items_name[] = {"Iron ore",
+			     "Iron plate",
+			     "Copper ore",
+			     "Copper plate",
+			     "Wood"};
 
- private:
-  int m_health;
-  std::string m_name;
-  coordinates m_coordinates;
-  int m_velocity;
-  int m_inventory[100][2];
-};
+std::map<int, std::string> items;
 
-class
-Machines
-{
- public:
-  Machines();
- private:
-  int m_size;
-  std::string m_path_to_image;
-};
-
-class
-BurnerMachines : Machines
-{
- public:
-  BurnerMachines();
-};
-
-class
-ElectricMachines : Machines
-{
- public:
-  ElectricMachines();
-};
-
-class
-Trees
-{
- public:
-  Trees();
-};
-
-class
-Armor
-{
- public:
-  Armor();
-};
-
+for (int i = 0; i< (sizeof(items_name)/sizeof(int)); ++i)
+  {
+    items[i] = items_name[i]
+  }
