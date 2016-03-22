@@ -93,6 +93,11 @@ Machines::Machines()
 
 }
 
+Machines::Machines(int size)
+{
+  m_size = size;
+}
+
 BurnerMachines::BurnerMachines ()
 {
 

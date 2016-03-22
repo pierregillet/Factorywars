@@ -52,6 +52,7 @@ Machines
 {
  public:
   Machines();
+  Machines(int);
  private:
   int m_size;
   std::string m_path_to_image;
