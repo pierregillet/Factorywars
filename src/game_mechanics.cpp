@@ -98,9 +98,19 @@ Machines::Machines(int size)
   m_size = size;
 }
 
+Inserters::Inserters()
+{
+
+}
+
 BurnerMachines::BurnerMachines ()
 {
 
+}
+
+BurnerInserters::BurnerInserters()
+{
+  
 }
 
 ElectricMachines::ElectricMachines ()
@@ -117,3 +127,5 @@ Armor::Armor ()
 {
 
 }
+
+

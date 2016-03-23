@@ -59,10 +59,28 @@ Machines
 };
 
 class
+Inserters
+{
+ public :
+  Inserters();
+ private:
+  int m_inserter_type;
+};
+
+class
 BurnerMachines : Machines
 {
  public:
   BurnerMachines();
+ private:
+  int m_energy_consumption;
+};
+
+class
+BurnerInserters : BurnerMachines, Inserters
+{
+ public:
+  BurnerInserters();
 };
 
 class
@@ -78,6 +96,12 @@ Trees
  public:
   Trees();
 };
+
+class
+Ores
+{
+  
+}
 
 class
 Armor

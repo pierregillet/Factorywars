@@ -32,3 +32,9 @@ struct coordinates
   long x;
   long y;
 };
+
+struct size
+{
+  int x;
+  int y;
+};
