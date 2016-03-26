@@ -23,18 +23,21 @@
  *
  * @section DESCRIPTION
  *
- * structures.h the header file containing most of the structures
+ * items.h the header file containing the conversion between item's names and IDs
  */
 
+#include <map>
+#include <string>
 
-struct coordinates
-{
-  long x;
-  long y;
-};
+std::string items_name[] = {"Iron ore",
+			     "Iron plate",
+			     "Copper ore",
+			     "Copper plate",
+			     "Wood"};
 
-struct size
-{
-  int x;
-  int y;
-};
+std::map<int, std::string> items;
+
+for (int i = 0; i< (sizeof(items_name)/sizeof(int)); ++i)
+  {
+    items[i] = items_name[i]
+  }

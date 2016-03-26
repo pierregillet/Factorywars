@@ -1,12 +1,12 @@
 /**
  * @file
- * @author Corentin Bocquillon <0x539@nybble.fr>
+ * @author Pierre Gillet <pierre.gillet@linuxw.info>
  *
  * @section LICENSE
  *
  * Copyright (C) 2016 Corentin Bocquillon
- * Copyright (C) 2016 Corentin Bocquillon
  * Copyright (C) 2016 Loup Fourment
+ * Copyright (C) 2016 Pierre Gillet
  *
  * factorywars is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,38 +27,86 @@
  */
 
 #include <string>
-
-struct coordinates
-{
-  long x;
-  long y;
-};
+#include "structures.h"
 
 class
 Player
 {
  public:
-  Player(void);
-  Player(int, std::string, coordinates, int);
+  Player ();
+  Player (int, std::string, coordinates, int);
   int getPlayerHealth () const;
   int playerGetsAttacked (std::string, int);
-  void playerWalks(bool, bool);
+  void playerWalks (bool, bool);
 
  private:
   int m_health;
   std::string m_name;
   coordinates m_coordinates;
   int m_velocity;
+  int m_inventory[100][2];
 };
 
 class
-Items
+Machines
 {
  public:
-  Items (void);
-  Items (int);
-  
+  Machines();
+  Machines(int);
  private:
-  int m_stack_size;
+  int m_size;
+  std::string m_path_to_image;
+};
+
+class
+Inserters
+{
+ public :
+  Inserters();
+ private:
+  int m_inserter_type;
+};
+
+class
+BurnerMachines : Machines
+{
+ public:
+  BurnerMachines();
+ private:
+  int m_energy_consumption;
+};
+
+class
+BurnerInserters : BurnerMachines, Inserters
+{
+ public:
+  BurnerInserters();
+};
+
+class
+ElectricMachines : Machines
+{
+ public:
+  ElectricMachines();
+};
+
+class
+Trees
+{
+ public:
+  Trees();
+};
+
+class
+Ores
+{
+  
 }
+
+class
+Armor
+{
+ public:
+  Armor();
+};
 

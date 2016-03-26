@@ -1,12 +1,12 @@
 /**
  * @file
- * @author Pierre Gillet
+ * @author Pierre Gillet <pierre.gillet@linuxw.info>
  *
  * @section LICENSE
  *
- * Copyright (C) 2016 Pierre Gillet
  * Copyright (C) 2016 Corentin Bocquillon
  * Copyright (C) 2016 Loup Fourment
+ * Copyright (C) 2016 Pierre Gillet
  *
  * factorywars is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,10 @@ Player::Player(void)
   m_name = "Foobar";
   m_coordinates.x = 0;
   m_coordinates.y = 0;
-  m_velocity = 
+  m_velocity = 10;
+  for (int i = 0; i < 100; i++) // Filling the inventory with zeroes
+    for (int j = 0; j < 2; j++)
+      m_inventory[i][j] = 0;
 }
 
 Player::Player(int health,
@@ -85,15 +88,44 @@ Player::playerWalks (bool vertical,
     }
 }
 
-
-inline void
-Items::Items()
+Machines::Machines()
 {
-  m_stack_size = 64;
+
 }
 
-inline void
-Imtes::Items(int stack_size)
+Machines::Machines(int size)
 {
-  m_stack_size = stack_size;
+  m_size = size;
 }
+
+Inserters::Inserters()
+{
+
+}
+
+BurnerMachines::BurnerMachines ()
+{
+
+}
+
+BurnerInserters::BurnerInserters()
+{
+  
+}
+
+ElectricMachines::ElectricMachines ()
+{
+
+}
+
+Trees::Trees ()
+{
+
+}
+
+Armor::Armor ()
+{
+
+}
+
+
