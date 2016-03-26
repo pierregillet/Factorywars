@@ -35,6 +35,17 @@
 int
 main (int argc, char *argv[])
 {
+  struct coordinates chunk_coordinates, square_coordinates;
+  char coordinates_str[512];
+
+  chunk_coordinates.x = 0;
+  chunk_coordinates.y = 1;
+  square_coordinates.x = 5;
+  square_coordinates.y = 8;
+  
+  printf ("item: %d\n", get_surface_item (chunk_coordinates, square_coordinates));
+  printf ("coord: %s\n", coordinates_to_string (square_coordinates, coordinates_str, 512));
+  
   gui ();
   return 0;
 }

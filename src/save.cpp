@@ -5,10 +5,12 @@ get_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
 {
   regex_t regex;
   int reti;
-  std::string regex_str;
+  const unsigned int REGEX_STR_SIZE = 512;
+  char regex_str[REGEX_STR_SIZE];
 
   const unsigned int LINE_SIZE = 512;
-  char line[LINE_SIZE];
+  const unsigned int COORDINATES_STR_SIZE = 20;
+  char line[LINE_SIZE], chunk_coordinates_str[COORDINATES_STR_SIZE];
   
   bool matched(false);
 
@@ -20,10 +22,11 @@ get_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
     }
   // Else: Matched !
   // We need to ignore the chunk coordinates because it could be the same as the square_coordinates
-  int old_regex_str_len = regex_str.length ();
-  regex_str = std::to_string (square_coordinates.x) + ";" + std::to_string (square_coordinates.y);
+  int chunk_coordinates_len = strlen (coordinates_to_string (chunk_coordinates, chunk_coordinates_str, COORDINATES_STR_SIZE));
   
-  reti = regcomp (&regex, regex_str.c_str (), REG_EXTENDED);
+  coordinates_to_string (square_coordinates, regex_str, REGEX_STR_SIZE);
+  
+  reti = regcomp (&regex, regex_str, REG_EXTENDED);
   if (reti)
     {
       fprintf (stderr, "Could not compile regex\n");
@@ -31,7 +34,7 @@ get_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
     }
 
   regmatch_t regmatch[1];
-  reti = regexec (&regex, line+(old_regex_str_len), 1, regmatch, 0);
+  reti = regexec (&regex, line+(chunk_coordinates_len), 1, regmatch, 0);
   if (reti)
     {
       // Not Matched !
@@ -45,7 +48,7 @@ get_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
   std::string item_id = "";
 
   // We isolate the item_id
-  for (int i = regmatch[0].rm_eo-1+old_regex_str_len; i>0; i--)
+  for (int i = regmatch[0].rm_eo-1+chunk_coordinates_len; i>0; i--)
     {
       if (line[i] == ';')
 	spaces = 0;
@@ -73,20 +76,14 @@ find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t
 {
   const unsigned int LINE_SIZE = n;
   const unsigned int REGEX_STR_SIZE = 14;
-  const unsigned int COORDINATE_STR_SIZE = (REGEX_STR_SIZE-2)/2;
     
-  char line[LINE_SIZE], regex_str[REGEX_STR_SIZE], coordinate_str[COORDINATE_STR_SIZE];
+  char line[LINE_SIZE], regex_str[REGEX_STR_SIZE], coordinates_str[REGEX_STR_SIZE];
 
   // Filling regex_str
   memset (regex_str, 0, REGEX_STR_SIZE);
   strncat (regex_str, "^", REGEX_STR_SIZE);
-  memset (coordinate_str, 0, COORDINATE_STR_SIZE);
-  snprintf (coordinate_str, COORDINATE_STR_SIZE, "%d", chunk_coordinates.x);
-  strncat (regex_str, coordinate_str, REGEX_STR_SIZE);
-  strncat (regex_str, ";", REGEX_STR_SIZE);
-  memset (coordinate_str, 0, COORDINATE_STR_SIZE);
-  snprintf (coordinate_str, COORDINATE_STR_SIZE, "%d", chunk_coordinates.y);
-  strncat (regex_str, coordinate_str, REGEX_STR_SIZE);
+  coordinates_to_string (chunk_coordinates, coordinates_str, REGEX_STR_SIZE);
+  strncat (regex_str, coordinates_str, REGEX_STR_SIZE);
 
   FILE *file = fopen (file_path, "r");
   regex_t regex;
@@ -119,7 +116,27 @@ find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t
     return NULL;
   else
     {
-      strncpy (dst, line, LINE_SIZE);
+      strncpy (dst, line, n);
       return dst;
     }
 }
+
+char*
+coordinates_to_string (struct coordinates coordinates, char *dst, size_t dst_size)
+{
+  const unsigned int STR_SIZE = dst_size;
+  char str[STR_SIZE], tmp_str[STR_SIZE];
+  memset (str, 0, STR_SIZE);
+  memset (tmp_str, 0, STR_SIZE);
+
+  snprintf (tmp_str, STR_SIZE, "%d", coordinates.x);
+  strncat (str, tmp_str, STR_SIZE);
+  strncat (str, ";", STR_SIZE);
+  memset (tmp_str, 0, STR_SIZE);
+  snprintf (tmp_str, STR_SIZE, "%d", coordinates.y);
+  strncat (str, tmp_str, STR_SIZE);
+
+  strncpy (dst, str, dst_size);
+  return dst;
+}
+
