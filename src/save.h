@@ -32,9 +32,10 @@
 
 #include <stdio.h>
 #include "structures.h"
-#include <regex.h>
-#include <sys/types>
+#include <sys/types.h>
 #include <string>
+#include <string.h>
+#include <regex.h>
 
 /**
  * Get the surface item at given coordinates.
@@ -67,3 +68,13 @@ int set_surface_item (struct coordinates chunk_coordinates, struct coordinates s
  * @return 0 if there is an error, 1 if not.
  */
 int set_biome_id (struct coordinates chunk_coordinates, int biome_id);
+
+/**
+ * Find the line which described the given chunk in a file.
+ * @param chunk_coordinates is the coordinates of the chunk.
+ * @param dst is a pointer to the variable where the line will be stored.
+ * @param n is the size of dst.
+ * @param file_path is the path of the file where we want to find the chunk line.
+ * @return A pointer to the line or NULL if there is an error.
+ */
+char* find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t n, char* file_path);

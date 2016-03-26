@@ -101,7 +101,7 @@ class
 Ores
 {
   
-}
+};
 
 class
 Armor
