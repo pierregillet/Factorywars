@@ -11,7 +11,6 @@ get_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
   const unsigned int LINE_SIZE = 512;
   const unsigned int COORDINATES_STR_SIZE = 20;
   char line[LINE_SIZE], chunk_coordinates_str[COORDINATES_STR_SIZE];
-  
   bool matched(false);
 
   find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, "save");
@@ -69,6 +68,36 @@ get_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
     }
 
   return std::atoi(item_id.c_str ());
+}
+
+int
+get_biome_id (struct coordinates chunk_coordinates)
+{
+  const unsigned int LINE_SIZE = 512;
+  const unsigned int BIOME_ID_STR_SIZE = 4;
+  char line[LINE_SIZE], biome_id_str[BIOME_ID_STR_SIZE];
+  char* SAVE_FILE_PATH = "save";
+
+  memset (line, 0, LINE_SIZE);
+  memset (biome_id_str, 0, BIOME_ID_STR_SIZE);
+
+  if (find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, SAVE_FILE_PATH) == NULL)
+    return 0;
+
+  int spaces_number = 0;
+  for (int i= 0; i < LINE_SIZE; i++)
+    {
+      if (line[i] == ' ')
+	{
+	  for (int j = i+1; line[j] != ' ' && j < LINE_SIZE; j++)
+	    {
+	      biome_id_str[j-(i+1)] = line[j];
+	    }
+	  break;
+	}
+    }
+
+  return atoi (biome_id_str);
 }
 
 char*
