@@ -23,26 +23,24 @@
  *
  * @section DESCRIPTION
  *
- * items.h the header file containing the conversion between item's names and IDs
+ * items.h the header file of items.cpp
  */
 
-#ifndef ITEMS_H
-#define ITEMS_H
-
-
-#include <map>
-#include <string>
-
-std::string items_name[] = {"Iron ore",
-			    "Iron plate",
-			    "Copper ore",
-			    "Copper plate",
-			    "Wood",
-			    "Electric inserter"};
-
-std::map<int, std::string> items;
+#include "items.h"
 
 void
-init_items_name_id ();
-
-#endif	/* ITEMS_H */
+init_items_name_id()
+{
+  /*
+  for (int i : items_name)
+    {
+      items[i] = items_name;
+    }
+*/
+  for (int i = 0; i < (sizeof (items_name) / sizeof (std::string)); ++i)
+  {
+    items[i] = items_name[i];
+  }
+ 
+}
+ 

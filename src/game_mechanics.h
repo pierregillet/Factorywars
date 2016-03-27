@@ -27,7 +27,9 @@
  */
 
 #include <string>
+#include "items.h"
 #include "structures.h"
+
 
 class
 Player
@@ -101,7 +103,7 @@ class
 Ores
 {
   
-}
+};
 
 class
 Armor
@@ -109,4 +111,6 @@ Armor
  public:
   Armor();
 };
+
+
 
