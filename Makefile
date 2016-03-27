@@ -1,4 +1,4 @@
-OBJS = src/main.cpp src/gui.cpp src/game_mechanics.cpp src/save.cpp
+OBJS = src/main.cpp src/gui.cpp src/game_mechanics.cpp src/items.cpp src/save.cpp
 CC = g++
 COMPILER_FLAGS = -std=c++11
 LINKER_FLAGS = -lSDL2 -lSDL2_image

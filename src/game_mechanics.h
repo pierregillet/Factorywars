@@ -29,6 +29,7 @@
 #include <string>
 #include "structures.h"
 
+
 class
 Player
 {
@@ -109,4 +110,6 @@ Armor
  public:
   Armor();
 };
+
+
 

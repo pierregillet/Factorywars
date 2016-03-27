@@ -23,24 +23,28 @@
  *
  * @section DESCRIPTION
  *
- * items.h the header file containing the conversion between item's names and IDs
+ * items.h the header file of items.cpp
  */
 
-#ifndef ITEMS_H
-#define ITEMS_H
+#include "items.h"
 
-#include <map>
-#include <string>
-
-class
-ItemsName
+ItemsName::ItemsName()
 {
- public:
-  ItemsName();
-  std::string getItemName(int);
- private:
-  std::map<int, std::string> m_items_map;
-  std::string m_items_name[];
-};
+  std::string m_items_name[] = {"Iron ore",
+				"Iron plate",
+				"Copper ore",
+				"Copper plate",
+				"Wood",
+				"Electric inserter"};
+  for (int i : m_items_name)
+    {
+      m_items_map[i] = m_items_name[i];
+    }
+}
 
-#endif	/* ITEMS_H */
+inline std::string
+ItemsName::getItemName(int id)
+{
+  return m_items_map[id];
+}
+
