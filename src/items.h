@@ -29,20 +29,28 @@
 #ifndef ITEMS_H
 #define ITEMS_H
 
-
 #include <map>
 #include <string>
 
-std::string items_name[] = {"Iron ore",
-			    "Iron plate",
-			    "Copper ore",
-			    "Copper plate",
-			    "Wood",
-			    "Electric inserter"};
-
+/*
 std::map<int, std::string> items;
 
 void
 init_items_name_id ();
+
+std::string
+name_of_id(int);
+*/
+
+class
+ItemsName
+{
+ public:
+  ItemsName();
+  std::string getItemName(int);
+ private:
+  std::map<int, std::string> m_items_map;
+  std::string m_items_name[];
+};
 
 #endif	/* ITEMS_H */

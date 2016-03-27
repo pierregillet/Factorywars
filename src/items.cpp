@@ -28,19 +28,55 @@
 
 #include "items.h"
 
+/*
 void
 init_items_name_id()
-{
+{  
+  std::string items_name[] = {"Iron ore",
+			      "Iron plate",
+			      "Copper ore",
+			      "Copper plate",
+			      "Wood",
+			      "Electric inserter"};
+  
   /*
   for (int i : items_name)
     {
       items[i] = items_name;
     }
-*/
+  /
+
   for (int i = 0; i < (sizeof (items_name) / sizeof (std::string)); ++i)
   {
     items[i] = items_name[i];
   }
  
 }
- 
+
+std::srting
+name_of_id(int)
+{
+  
+}
+*/
+
+ItemsName::ItemsName()
+{
+  std::string m_items_name[] = {"Iron ore",
+				"Iron plate",
+				"Copper ore",
+				"Copper plate",
+				"Wood",
+				"Electric inserter"};
+  for (int i : m_items_name)
+    {
+      m_items_map[i] = m_items_name[i];
+    }
+}
+
+inline std::string
+ItemsName::getItemName(int id)
+{
+  return m_items_map[id];
+}
+
