@@ -69,28 +69,23 @@ inline void
 Player::playerWalks (bool vertical,
 		     bool horizontal)
 {
-  if (vertical == 1)
+  if (vertical == 1) 
     // We'll maybe have to add this-> before every m_coordinates, gotta check
-    {
-      m_coordinates.y ++;
-    }
+    m_coordinates.y ++;
+
   else
-    {
-      m_coordinates.y --;
-    }
+    m_coordinates.y --;
+  
   if (horizontal == 1)
-    {
-      m_coordinates.x ++;
-    }
+    m_coordinates.x ++;
+  
   else
-    {
-      m_coordinates.x --;
-    }
+    m_coordinates.x --;
 }
 
 Machines::Machines()
 {
-
+  
 }
 
 Machines::Machines(int size)
