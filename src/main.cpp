@@ -29,6 +29,8 @@
  */
 
 #include "gui.h"
+#include "save.h"
+#include "structures.h"
 
 int
 main (int argc, char *argv[])

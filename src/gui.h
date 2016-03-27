@@ -23,7 +23,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with factorywars.  If not, see <http://www.gnu.org/licenses/>.
+ * along with factorywars.  If not, see <http://www.gnu.org/licenses/
  *
  * @section DESCRIPTION
  *
@@ -39,26 +39,26 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 /**
- * Initialize the SDL and SDL_image libraries
+ * Initialize the SDL and SDL_image libraries.
  */
 int init_SDL (SDL_Window** window, SDL_Texture** renderer);
 
 /**
- * Load the textures
+ * Load the textures.
  */
 int load_media (SDL_Renderer** renderer, SDL_Texture** texture);
 
 /**
- * Load PNG file
+ * Load PNG file.
  */
 SDL_Texture* load_texture (char* path, SDL_Renderer** renderer);
 
 /**
- * Run the gui
+ * Run the gui.
  */
 void gui ();
 
 /**
- * Exit the SDL and SDL_image libraries
+ * Exit the SDL and SDL_image libraries.
  */
 void exit_SDL (SDL_Texture** texture, SDL_Renderer** renderer, SDL_Window** window);
