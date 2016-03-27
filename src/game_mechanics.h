@@ -27,7 +27,6 @@
  */
 
 #include <string>
-#include "items.h"
 #include "structures.h"
 
 

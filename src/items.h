@@ -32,16 +32,6 @@
 #include <map>
 #include <string>
 
-/*
-std::map<int, std::string> items;
-
-void
-init_items_name_id ();
-
-std::string
-name_of_id(int);
-*/
-
 class
 ItemsName
 {
