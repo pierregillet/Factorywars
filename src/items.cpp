@@ -36,7 +36,7 @@ ItemsName::ItemsName()
 				"Copper plate",
 				"Wood",
 				"Electric inserter"};
-  for (int i : m_items_name)
+  for (std::string i : m_items_name)
     {
       m_items_map[i] = m_items_name[i];
     }

@@ -1,3 +1,4 @@
+
 /**
  * @file
  * @author Corentin Bocquillon <0x539@nybble.fr>
@@ -132,56 +133,6 @@ get_biome_id (struct coordinates chunk_coordinates)
   return atoi (biome_id_str);
 }
 
-char*
-find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t n, char* file_path)
-{
-  const unsigned int LINE_SIZE = n;
-  const unsigned int REGEX_STR_SIZE = 14;
-    
-  char line[LINE_SIZE], regex_str[REGEX_STR_SIZE], coordinates_str[REGEX_STR_SIZE];
-
-  // Filling regex_str
-  memset (regex_str, 0, REGEX_STR_SIZE);
-  strncat (regex_str, "^", REGEX_STR_SIZE);
-  coordinates_to_string (chunk_coordinates, coordinates_str, REGEX_STR_SIZE);
-  strncat (regex_str, coordinates_str, REGEX_STR_SIZE);
-
-  FILE *file = fopen (file_path, "r");
-  regex_t regex;
-  int reti;
-  int matched = 0;
-
-  reti = regcomp (&regex, regex_str, REG_EXTENDED|REG_NOSUB);
-  if (reti)
-    {
-      fprintf (stderr, "Could not compile regex\n");
-      return NULL;
-    }
-  
-  while (fgets (line, LINE_SIZE, file) != NULL)
-    {
-      reti = regexec (&regex, line, 0, NULL, 0);
-      if (!reti)
-  	{
-	  matched = 1;
-  	  break;
-  	}
-      else
-	regerror (reti, &regex, line, LINE_SIZE);
-    }
-  regfree (&regex);
-  fclose (file);
-
-  // We breaked only if we reached EOF or if the patern matched
-  if (!matched)
-    return NULL;
-  else
-    {
-      strncpy (dst, line, n);
-      return dst;
-    }
-}
-
 int
 set_surface_item (struct coordinates chunk_coordinates, struct coordinates square_coordinates, int item_id)
 {
@@ -237,7 +188,7 @@ set_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
   snprintf (regex_str, REGEX_STR_SIZE, "([^;]|^)%d[^;]", item_id);
   if (reti)
     {
-      // Not Matched !
+      // Square_coordinates Not Matched !
       // we search the provided item_id
       reti = regcomp (&regex, regex_str, REG_EXTENDED);
       if (reti)
@@ -245,8 +196,10 @@ set_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
 	  fprintf (stderr, "Could not compile regex\n");
 	  return 0;
 	}
+
       reti = regexec (&regex, tmp_line, 1, regmatch, 0);
       regfree (&regex);
+
       if (reti)
 	{
 	  // item_id not found
@@ -290,6 +243,8 @@ set_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
 	  printf ("line: %s\n", line);
 	  printf ("right_part_of_line: %s\n", right_part_of_line);
 	  printf ("left_part_of_line: %s\n", left_part_of_line);
+
+	  
 	}
     }
   else
@@ -309,23 +264,4 @@ set_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
   // search by regexp the square_coordinates  
   
   return 1;
-}
-
-char*
-coordinates_to_string (struct coordinates coordinates, char *dst, size_t dst_size)
-{
-  const unsigned int STR_SIZE = dst_size;
-  char str[STR_SIZE], tmp_str[STR_SIZE];
-  memset (str, 0, STR_SIZE);
-  memset (tmp_str, 0, STR_SIZE);
-
-  snprintf (tmp_str, STR_SIZE, "%d", coordinates.x);
-  strncat (str, tmp_str, STR_SIZE);
-  strncat (str, ";", STR_SIZE);
-  memset (tmp_str, 0, STR_SIZE);
-  snprintf (tmp_str, STR_SIZE, "%d", coordinates.y);
-  strncat (str, tmp_str, STR_SIZE);
-
-  strncpy (dst, str, dst_size);
-  return dst;
 }
