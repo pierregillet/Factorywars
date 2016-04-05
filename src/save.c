@@ -44,7 +44,6 @@ get_surface_item (struct coordinates chunk_coordinates,
   const unsigned int LINE_SIZE = 512;
   const unsigned int COORDINATES_STR_SIZE = 20;
   char line[LINE_SIZE], chunk_coordinates_str[COORDINATES_STR_SIZE];
-  bool matched(false);
 
   find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, "save");
   if (line == NULL)
@@ -80,9 +79,10 @@ get_surface_item (struct coordinates chunk_coordinates,
   int spaces = 0;
   int value = 0;
   int pos = 0;
-  std::string item_id = "";
+  char item_id[LINE_SIZE];
+  memset (item_id, 0, LINE_SIZE);
 
-  // We isolate the item_id
+  // We isolate the item id
   for (int i = regmatch[0].rm_eo-1+chunk_coordinates_len; i>0; i--)
     {
       if (line[i] == ';')
@@ -100,10 +100,10 @@ get_surface_item (struct coordinates chunk_coordinates,
 
   for (int i = pos+1; line[i] != ' '; i++)
     {
-      item_id += line[i];
+      item_id[i] = line[i];
     }
 
-  return std::atoi(item_id.c_str ());
+  return atoi(item_id);
 }
 
 int

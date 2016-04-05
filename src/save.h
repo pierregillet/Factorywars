@@ -37,7 +37,6 @@
 #include "structures.h"
 #include "utils.h"
 #include <sys/types.h>
-#include <string>
 #include <string.h>
 #include <regex.h>
 
