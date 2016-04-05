@@ -26,6 +26,8 @@
  * game_mechanics.h the header file of game_mechanics.cpp
  */
 
+#pragma once
+
 #include <string>
 #include "structures.h"
 

@@ -30,6 +30,8 @@
  * utils.h is the header of utils.cpp
  */
 
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

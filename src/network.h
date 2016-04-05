@@ -24,6 +24,8 @@
  * network.h the header file of network.c
  */
 
+#pragma once
+
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>

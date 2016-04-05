@@ -30,6 +30,8 @@
  * gui.h is the header of gui.cpp
  */
 
+#pragma once
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>

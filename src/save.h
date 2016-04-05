@@ -30,6 +30,8 @@
  * save.h is the header of save.cpp
  */
 
+#pragma once
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "structures.h"
