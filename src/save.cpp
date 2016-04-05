@@ -1,4 +1,3 @@
-
 /**
  * @file
  * @author Corentin Bocquillon <0x539@nybble.fr>
@@ -34,7 +33,8 @@
 #include "save.h"
 
 int
-get_surface_item (struct coordinates chunk_coordinates, struct coordinates square_coordinates)
+get_surface_item (struct coordinates chunk_coordinates,
+		  struct coordinates square_coordinates)
 {
   regex_t regex;
   int reti;
@@ -54,7 +54,10 @@ get_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
     }
   // Else: Matched !
   // We need to ignore the chunk coordinates because it could be the same as the square_coordinates
-  int chunk_coordinates_len = strlen (coordinates_to_string (chunk_coordinates, chunk_coordinates_str, COORDINATES_STR_SIZE)) + 1;
+  int chunk_coordinates_len = strlen (coordinates_to_string
+				      (chunk_coordinates,
+				       chunk_coordinates_str,
+				       COORDINATES_STR_SIZE)) + 1;
   
   coordinates_to_string (square_coordinates, regex_str, REGEX_STR_SIZE);
   
@@ -114,7 +117,8 @@ get_biome_id (struct coordinates chunk_coordinates)
   memset (line, 0, LINE_SIZE);
   memset (biome_id_str, 0, BIOME_ID_STR_SIZE);
 
-  if (find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, SAVE_FILE_PATH) == NULL)
+  if (find_chunk_line_in_file (chunk_coordinates,
+			       line, LINE_SIZE, SAVE_FILE_PATH) == NULL)
     return 0;
 
   int spaces_number = 0;
@@ -134,7 +138,8 @@ get_biome_id (struct coordinates chunk_coordinates)
 }
 
 int
-set_surface_item (struct coordinates chunk_coordinates, struct coordinates square_coordinates, int item_id)
+set_surface_item (struct coordinates chunk_coordinates,
+		  struct coordinates square_coordinates, int item_id)
 {
   const unsigned int LINE_SIZE = 512;
   const unsigned int REGEX_STR_SIZE = 512;
@@ -147,13 +152,16 @@ set_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
 
   memset (line, 0, LINE_SIZE);
   memset (tmp_line, 0, LINE_SIZE);
-  if (find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, SAVE_FILE_PATH) == NULL)
+  if (find_chunk_line_in_file (chunk_coordinates, line,
+			       LINE_SIZE, SAVE_FILE_PATH) == NULL)
     return 0;
 
-  int line_number = find_line_number_using_chunk_coordinates (chunk_coordinates, SAVE_FILE_PATH);
+  int line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
+							      SAVE_FILE_PATH);
 
-  // We need to delete the chunk coordinates and the biome_id from the line to avoid
-  // matching the chunk coordinates instead of the square coordinates and because we don’t need the biome_id
+  // We need to delete the chunk coordinates and the biome_id from the line
+  // to avoid matching the chunk coordinates instead of the square coordinates
+  // and because we don’t need the biome_id
   int chunk_coordinates_str_len = strlen (coordinates_to_string
 					  (chunk_coordinates,
 					   chunk_coordinates_str,
@@ -178,7 +186,8 @@ set_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
   int reti;
   char regex_str[REGEX_STR_SIZE];
   memset (regex_str, 0, REGEX_STR_SIZE);
-  coordinates_to_string (square_coordinates, square_coordinates_str, COORDINATES_STR_SIZE);
+  coordinates_to_string (square_coordinates, square_coordinates_str,
+			 COORDINATES_STR_SIZE);
   strncpy (regex_str, square_coordinates_str, REGEX_STR_SIZE);
 
   reti = regcomp (&regex, regex_str, REG_EXTENDED);
@@ -214,7 +223,8 @@ set_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
 	  // item_id not found
 	  // so we add it at the end of line with square_coordinates
 	  memset (tmp_line, 0, LINE_SIZE);
-	  snprintf (tmp_line, LINE_SIZE, " %d %s", item_id, square_coordinates_str);
+	  snprintf (tmp_line, LINE_SIZE, " %d %s", item_id,
+		    square_coordinates_str);
 
 	  // We delete the “\n” at the end of the line
 	  line[strlen (line) - 1] = 0;
@@ -235,10 +245,6 @@ set_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
 
 	  memset (right_part_of_line, 0, LINE_SIZE);
 	  memset (left_part_of_line, 0, LINE_SIZE);
-
-	  printf ("rm_so: %d, rm_eo: %d\nLongueur de la partie de la ligne supprimée : %d\n",
-		  regmatch[0].rm_so,
-		  regmatch[0].rm_eo, len_of_deleted_part_of_line);
 
 	  strncpy (right_part_of_line,
 		   line+regmatch[0].rm_eo + len_of_deleted_part_of_line,
@@ -273,6 +279,7 @@ set_surface_item (struct coordinates chunk_coordinates, struct coordinates squar
       //   If it does not exist, we add at the end of the line the item id, a space and the square coordinates
       //   If it is already present in the line, we add the square coordinates and a space just after the item_id and a space
       printf ("line: %sMatched, rm_so: %d, rm_eo: %d\n", line, regmatch[0].rm_so, regmatch[0].rm_eo);
+      
     }
   
   return 1;
