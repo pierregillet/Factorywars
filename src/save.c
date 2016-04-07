@@ -81,8 +81,7 @@ get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
   	  break;
   	}
     }
-  /* if (spaces != 2) */
-  /*   return 0; */
+
   item_id_end = item_id_beg;
 
   for (int i = item_id_beg; line[i] != ' '; i++)
@@ -153,31 +152,13 @@ set_surface_item (struct coordinates chunk_coordinates,
   // We need to delete the chunk coordinates and the biome_id from the line
   // to avoid matching the chunk coordinates instead of the square coordinates
   // and because we don’t need the biome_id
-
   int len_of_deleted_part_of_line = get_len_of_chunk_and_biome (chunk_coordinates,
 							   save_file_path);
 
-  /* int chunk_coordinates_str_len = strlen (coordinates_to_string */
-  /* 					  (chunk_coordinates, */
-  /* 					   chunk_coordinates_str, */
-  /* 					   COORDINATES_STR_SIZE) */
-  /* 					  ) + 1; */
-  /* int len_of_deleted_part_of_line = chunk_coordinates_str_len; */
-  /* strncpy (tmp_line, line+chunk_coordinates_str_len, LINE_SIZE); */
-
-  /* // Then we delete the biome_id */
-  /* for (int i = 0; i < LINE_SIZE; i++) */
-  /*   { */
-  /*     if (tmp_line[i] == ' ') */
-  /* 	{ */
-  /* 	  strncpy (tmp_line, tmp_line + i + 1, LINE_SIZE); */
-  /* 	  len_of_deleted_part_of_line += i + 1; */
-  /* 	  break; */
-  /* 	} */
-  /*   } */
   strncpy (tmp_line, line + len_of_deleted_part_of_line, LINE_SIZE);
 
   // We search the square_coordinates with regexp
+  /* Can be recoded with the function find_square_coordinate_pos */
   regex_t regex;
   int reti;
   char regex_str[REGEX_STR_SIZE];
@@ -202,6 +183,7 @@ set_surface_item (struct coordinates chunk_coordinates,
     {
       // Square_coordinates Not Matched !
       // we search the provided item_id
+      /* Should use get_item_id_by_square_coordinates */
       snprintf (regex_str, REGEX_STR_SIZE, "([^;]|^)%d[^;]", item_id);
       reti = regcomp (&regex, regex_str, REG_EXTENDED);
       if (reti)
