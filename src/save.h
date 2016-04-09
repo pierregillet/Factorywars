@@ -75,9 +75,10 @@ int set_surface_item (struct coordinates chunk_coordinates,
  * Set the biome id for the given chunk.
  * @param chunk_coordinates is the chunk coordinates.
  * @param biome_id is the biome id.
+ * @param save_file_path it the path to the save file
  * @return 0 if there is an error, 1 if not.
  */
-int set_biome_id (struct coordinates chunk_coordinates, int biome_id);
+int set_biome_id (struct coordinates chunk_coordinates, int biome_id, char* save_file_path);
 
 /**
  * Get the position of the item id in the line describing the chunk.
