@@ -501,3 +501,45 @@ regmatch_t get_item_id_pos_using_item_id (struct coordinates chunk_coordinates,
 
   return regmatch;
 }
+
+int
+set_biome_id (struct coordinates chunk_coordinates, int biome_id, char* save_file_path)
+{
+  const int LINE_SIZE = 512;
+  const int BIOME_ID_STR_SIZE = 20;
+
+  char line[LINE_SIZE], tmp_line[LINE_SIZE], biome_id_str[BIOME_ID_STR_SIZE];
+  line[0] = 0;
+  tmp_line[0] = 0;
+  biome_id_str[0] = 0;
+
+  find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
+  if (line == NULL)
+    return 0;
+
+  snprintf (biome_id_str, BIOME_ID_STR_SIZE, "%d", biome_id);
+
+  int beg_of_biome_id = 0;
+  for (int i = 0; i < LINE_SIZE; i++)
+    {
+      if (line[i] == ' ')
+	{
+	  strncpy (tmp_line, line + i, LINE_SIZE - i);
+	  tmp_line[i + 1] = 0;
+	  beg_of_biome_id = i + 1;
+	  break;
+	}
+    }
+  strncat (tmp_line, biome_id_str, BIOME_ID_STR_SIZE);
+
+  for (int i = beg_of_biome_id; i < LINE_SIZE - beg_of_biome_id; i++)
+  {
+    if (line[i] == ' ')
+      strncat (tmp_line, line + i, LINE_SIZE - i);
+  }
+
+  int line_number = find_line_number_using_chunk_coordinates (chunk_coordinates, save_file_path);
+  insert_line_in_file (tmp_line, LINE_SIZE, line_number, save_file_path, 1);
+
+  return 1;
+}
