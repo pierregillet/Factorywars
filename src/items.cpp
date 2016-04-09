@@ -38,7 +38,7 @@ ItemsName::ItemsName()
 				"Electric inserter"};
   for (std::string i : m_items_name)
     {
-      m_items_map[i] = m_items_name[i];
+      //      m_items_map[i] = m_items_name[i];
     }
 }
 
