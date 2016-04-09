@@ -28,7 +28,7 @@
 
 #include "items.h"
 
-ItemsName::ItemsName()
+ItemsName::ItemsName ()
 {
   std::string m_items_name[] = {"Iron ore",
 				"Iron plate",
@@ -36,9 +36,9 @@ ItemsName::ItemsName()
 				"Copper plate",
 				"Wood",
 				"Electric inserter"};
-  for (std::string i : m_items_name)
+  for (int i ; sizeof(m_items_name) / sizeof (m_items_name[0]) ; i++)
     {
-      //      m_items_map[i] = m_items_name[i];
+      m_items_map[i] = m_items_name[i];
     }
 }
 
