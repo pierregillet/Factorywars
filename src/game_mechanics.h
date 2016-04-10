@@ -103,7 +103,8 @@ Trees
 class
 Ores
 {
-  
+ public:
+  Ores();
 };
 
 class
