@@ -29,8 +29,7 @@
  * structures.h the header file containing most of the structures
  */
 
-#ifndef STRUCTURES_H
-#define STRUCTURES_H
+#pragma once
 
 struct coordinates
 {
@@ -43,5 +42,3 @@ struct size
   int x;
   int y;
 };
-
-#endif	/* STRUCTURES_H */
