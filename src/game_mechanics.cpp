@@ -118,6 +118,11 @@ Trees::Trees ()
 
 }
 
+Ores::Ores ()
+{
+
+}
+
 Armor::Armor ()
 {
 

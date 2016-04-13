@@ -26,11 +26,11 @@
  * items.h the header file containing the conversion between item's names and IDs
  */
 
-#ifndef ITEMS_H
-#define ITEMS_H
+#pragma once
 
 #include <map>
 #include <string>
+
 
 class
 ItemsName
@@ -42,5 +42,3 @@ ItemsName
   std::map<int, std::string> m_items_map;
   std::string m_items_name[];
 };
-
-#endif	/* ITEMS_H */
