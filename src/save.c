@@ -513,33 +513,46 @@ set_biome_id (struct coordinates chunk_coordinates, int biome_id, char* save_fil
   tmp_line[0] = 0;
   biome_id_str[0] = 0;
 
+  /* Finding the line */
   find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
   if (line == NULL)
     return 0;
 
+  /* Store the biome id as a string in biome_id_str */
   snprintf (biome_id_str, BIOME_ID_STR_SIZE, "%d", biome_id);
 
+  /* Copy the begining of the string until we reached the */
+  /* first space (it’s included) */
   int beg_of_biome_id = 0;
   for (int i = 0; i < LINE_SIZE; i++)
     {
       if (line[i] == ' ')
 	{
-	  strncpy (tmp_line, line + i, LINE_SIZE - i);
+	  strncpy (tmp_line, line, i + 1);
 	  tmp_line[i + 1] = 0;
 	  beg_of_biome_id = i + 1;
 	  break;
 	}
     }
+
+  /* Concatenate the string with the biome id */
   strncat (tmp_line, biome_id_str, BIOME_ID_STR_SIZE);
 
+  /* Then we add the rest of the line without the old biome id */
   for (int i = beg_of_biome_id; i < LINE_SIZE - beg_of_biome_id; i++)
   {
     if (line[i] == ' ')
-      strncat (tmp_line, line + i, LINE_SIZE - i);
+      {
+	strncat (tmp_line, line + i, LINE_SIZE - i);
+	break;
+      }
   }
 
-  int line_number = find_line_number_using_chunk_coordinates (chunk_coordinates, save_file_path);
-  insert_line_in_file (tmp_line, LINE_SIZE, line_number, save_file_path, 1);
+  /* Write the new line with the good biome id in the save file */
+  int line_number;
+  line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
+							  save_file_path);
+  insert_line_in_file (tmp_line, strlen (tmp_line), line_number, save_file_path, 1);
 
   return 1;
 }
