@@ -48,6 +48,7 @@ Player
   coordinates m_coordinates;
   int m_velocity;
   int m_inventory[100][2];
+  unsigned short m_id;
 };
 
 class
@@ -113,6 +114,4 @@ Armor
  public:
   Armor();
 };
-
-
 
