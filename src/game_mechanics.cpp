@@ -50,6 +50,7 @@ Player::Player(int health,
   m_coordinates.x = 0;
   m_coordinates.y = 0;
   m_velocity = velocity;
+  m_id = 1;
 }
 
 inline int
@@ -127,3 +128,4 @@ Armor::Armor ()
 {
 
 }
+

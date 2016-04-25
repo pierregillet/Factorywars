@@ -30,7 +30,8 @@
 
 ItemsName::ItemsName ()
 {
-  std::string m_items_name[] = {"Iron ore",
+  std::string m_items_name[] = {"Player",
+				"Iron ore",
 				"Iron plate",
 				"Copper ore",
 				"Copper plate",
