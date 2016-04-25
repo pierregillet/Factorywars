@@ -6,7 +6,7 @@
  *
  * @section LICENSE
  *
- * Copyright (C) 2016 Corentin Bocquillon <0x539@nybble.fr>
+ * Copyright (C) 2016 Corentin Bocquillon <corentin@nybble.fr>
  *
  * Copyright (C) 2016 Loup Fourment
  *
@@ -23,44 +23,31 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with factorywars.  If not, see <http://www.gnu.org/licenses/
+ * along with factorywars.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @section DESCRIPTION
  *
  * gui.h is the header of gui.cpp
  */
 
-#pragma once
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
-#include <unistd.h>
-
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+#include <string>
 
 /**
- * Initialize the SDL and SDL_image libraries.
- */
-int init_SDL (SDL_Window** window, SDL_Texture** renderer);
+  * Blit Textures at given coordonates x,y
+  * Returns a bool named success, true or false
+  * The Texture needs a Renderer for being blited
+  */
+bool blit (int x, int y, SDL_Texture*, SDL_Renderer* gRenderer);
 
 /**
- * Load the textures.
- */
-int load_media (SDL_Renderer** renderer, SDL_Texture** texture);
+  * Initiates the SDL basics, like Window and Renderer
+  */
+bool init (SDL_Window** Window, SDL_Renderer** gRenderer);
+bool loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer);  
+void close ();                //fermeture
+int run_gui ();
+SDL_Texture* loadTexture (std::string path, SDL_Renderer* gRenderer);
 
-/**
- * Load PNG file.
- */
-SDL_Texture* load_texture (char* path, SDL_Renderer** renderer);
-
-/**
- * Run the gui.
- */
-void gui ();
-
-/**
- * Exit the SDL and SDL_image libraries.
- */
-void exit_SDL (SDL_Texture** texture, SDL_Renderer** renderer, SDL_Window** window);
