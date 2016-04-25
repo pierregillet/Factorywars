@@ -35,6 +35,6 @@
 int
 main (int argc, char *argv[])
 {
-  gui ();
+  run_gui ();
   return 0;
 }
