@@ -103,12 +103,12 @@ get_biome_id (struct coordinates chunk_coordinates, char* save_file_path)
   const unsigned int BIOME_ID_STR_SIZE = 4;
   char line[LINE_SIZE], biome_id_str[BIOME_ID_STR_SIZE];
 
-  memset (line, 0, LINE_SIZE);
-  memset (biome_id_str, 0, BIOME_ID_STR_SIZE);
+  /* memset (line, 0, LINE_SIZE); */
+  /* memset (biome_id_str, 0, BIOME_ID_STR_SIZE); */
 
   if (find_chunk_line_in_file (chunk_coordinates,
 			       line, LINE_SIZE, save_file_path) == NULL)
-    return 0;
+    return -1;
 
   int spaces_number = 0;
   for (int i= 0; i < LINE_SIZE; i++)
@@ -140,10 +140,17 @@ set_surface_item (struct coordinates chunk_coordinates,
     square_coordinates_str[COORDINATES_STR_SIZE];
 
   memset (line, 0, LINE_SIZE);
-  memset (tmp_line, 0, LINE_SIZE);
+  /* memset (tmp_line, 0, LINE_SIZE); */
+  tmp_line[0] = '\0';
+
+  /* If it is true, the chunk line does not exist */
+  /* Si c’est vrai, la ligne décrivant le chunk n’existe pas */
   if (find_chunk_line_in_file (chunk_coordinates, line,
 			       LINE_SIZE, save_file_path) == NULL)
-    return 0;
+    {
+      fprintf (stderr, "Could not find the chunk line in the save file.\n");
+      return 0;
+    }
 
   int line_number;
   line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
@@ -171,7 +178,7 @@ set_surface_item (struct coordinates chunk_coordinates,
   if (reti)
     {
       fprintf (stderr, "Could not compile regex\n");
-      return 0;
+      return 2;
     }
   
   regmatch_t regmatch;
@@ -189,7 +196,7 @@ set_surface_item (struct coordinates chunk_coordinates,
       if (reti)
 	{
 	  fprintf (stderr, "Could not compile regex\n");
-	  return 0;
+	  return 2;
 	}
 
       reti = regexec (&regex, tmp_line, 1, &regmatch, 0);
@@ -354,7 +361,14 @@ get_surface_item (struct coordinates chunk_coordinates,
   char item_id_str[ITEM_ID_LEN], line[LINE_SIZE];
   int item_id = -1;
 
+  /* We fill the variable line with the line describing the chunk */
+  /* On rempli la variable line avec la ligne décrivant le chunk */
   find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
+
+  /* If the line does not exist we return -1 */
+  /* Si la ligne n’existe pas, on retourne -1 */
+  if (line == NULL)
+    return -1;
 
   regmatch_t regmatch;
   regmatch = get_item_id_pos_by_square_coordinates (chunk_coordinates,

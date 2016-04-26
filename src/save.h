@@ -55,7 +55,7 @@ int get_surface_item (struct coordinates chunk_coordinates,
  * Get the biome id of the given chunk.
  * @param chunk_coordinates is the coordinates of the chunk.
  * @param save_file_path is the path to the save file.
- * @return 0 if there is an error, 1 if not.
+ * @return -1 if there is an error, anything else if not.
  */
 int get_biome_id (struct coordinates chunk_coordinates, char* save_file_path);
 
@@ -65,7 +65,8 @@ int get_biome_id (struct coordinates chunk_coordinates, char* save_file_path);
  * @param square_coordinates is the square coordinates.
  * @param item_id is the item id.
  * @param save_file_path is the path to the save file
- * @return 0 if there is an error, 1 if not.
+ * @return 1 if there are no errors, 0 if the chunk line does not exist
+ * and 2 for other errors.
  */
 int set_surface_item (struct coordinates chunk_coordinates,
 		      struct coordinates square_coordinates, int item_id,
