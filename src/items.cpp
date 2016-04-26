@@ -31,13 +31,29 @@
 ItemsName::ItemsName ()
 {
   std::string m_items_name[] = {"Player",
+				
+				// Ores
 				"Iron ore",
-				"Iron plate",
 				"Copper ore",
+				"Coal ore",
+				"Stone ore",
+
+				// Plates
+				"Iron plate",
 				"Copper plate",
+				
+				// Inserters
+				"Burner inserter",
+				"Inserter",
+				"Fast inserter",
+
+				// Assembling machines
+				"Assembling machine",
+
+				// Other
 				"Wood",
-				"Electric inserter"};
-  for (int i ; sizeof(m_items_name) / sizeof (m_items_name[0]) ; i++)
+				"Stone block"};
+  for (int i ; sizeof (m_items_name) / sizeof (m_items_name[0]) ; i++)
     {
       m_items_map[i] = m_items_name[i];
     }
