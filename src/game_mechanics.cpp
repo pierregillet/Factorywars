@@ -30,7 +30,7 @@
 
 Player::Player(void)
 {
-  m_id = 
+  m_id = 1;
   m_health = 100;
   m_name = "Foobar";
   m_coordinates.x = 0;
