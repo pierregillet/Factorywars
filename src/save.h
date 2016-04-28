@@ -126,3 +126,14 @@ regmatch_t find_square_coordinates_pos (struct coordinates chunk_coordinates,
  */
 int get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
 				char* save_file_path);
+
+/**
+  * Create a chunk line in the save file.
+  * @param chunk_coordinates is the chunk_coordinates.
+  * @param biome_id is the biome id.
+  * @param save_file_path is the path to the save file.
+  * @return 0 if there is an error, 1 if not.
+  */
+int create_chunk_line (struct coordinates chunk_coordinates,
+		       int biome_id,
+		       char* save_file_path);

@@ -570,3 +570,32 @@ set_biome_id (struct coordinates chunk_coordinates, int biome_id, char* save_fil
 
   return 1;
 }
+
+int
+create_chunk_line (struct coordinates chunk_coordinates,
+		   int biome_id,
+		   char* save_file_path)
+{
+  const int LINE_SIZE = 512;
+  const int COORDINATES_STR_SIZE = 20;
+  char line[LINE_SIZE], coordinates_str[COORDINATES_STR_SIZE], *ret;
+
+  ret = find_chunk_line_in_file (chunk_coordinates, line,
+				 LINE_SIZE, save_file_path);
+  if (ret != NULL)
+    return 0;
+
+  /* On construit la ligne que l’on va écrire */
+  /* We build the line we will write */
+  line[0] = '\0';
+  coordinates_to_string (chunk_coordinates, coordinates_str, COORDINATES_STR_SIZE);
+  snprintf (line, LINE_SIZE, "%s %d\n", coordinates_str, biome_id);
+
+  /* On écrit la ligne dans le fichier */
+  /* We write the line in the file */
+  FILE *file = fopen (save_file_path, "a");
+  fprintf (file, "%s", line);
+  fclose (file);
+
+  return 1;
+}
