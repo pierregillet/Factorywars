@@ -155,8 +155,9 @@ run_gui ()
   
   SDL_Event e;
   SDL_Texture *CurrentTexture = NULL;
-  CurrentTexture = key_press_texture [ KEY_PRESS_SURFACE_DEFAULT ];
+  CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
 
+  blit(x, y, 50, 82, CurrentTexture, gRenderer);
   while (!quit)
     {
       while (SDL_PollEvent (&e) != 0)
@@ -190,10 +191,11 @@ run_gui ()
 		default:
 		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
 		  break;
-		}            
+		}
+	      blit(x, y, 50, 82, CurrentTexture, gRenderer);
 	    }
-	  blit(x, y, 50, 82, CurrentTexture, gRenderer);
-	}         
+	}
+      SDL_Delay (100/6);
     }
   return 1;
 }  
