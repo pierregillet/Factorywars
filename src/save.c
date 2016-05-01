@@ -203,7 +203,8 @@ set_surface_item (struct coordinates chunk_coordinates,
 	{
 	  // item_id not found
 	  // so we add it at the end of line with square_coordinates
-	  memset (tmp_line, 0, LINE_SIZE);
+	  /* memset (tmp_line, 0, LINE_SIZE); */
+	  tmp_line[0] = '\0';
 	  snprintf (tmp_line, LINE_SIZE, " %d %s", item_id,
 		    square_coordinates_str);
 
@@ -285,8 +286,9 @@ set_surface_item (struct coordinates chunk_coordinates,
 	    }
 	}
 
-      /* if a semicolon was not found we search forward */
       spaces_number = 0;
+
+      /* if a semicolon was not found we search forward */
       if (delete_coordinates_and_item_id)
 	{
 	  for (unsigned int i = match_end; i < LINE_SIZE; i++)
@@ -332,13 +334,16 @@ set_surface_item (struct coordinates chunk_coordinates,
       else
 	{
 	  /* The item id exists */
-	  /* We just add a space and the coordinates right after */
-	  /* the item id */
+	  /* We just add a space and the coordinates right after it */
 	  tmp_line[0] = 0;
 	  strncat (tmp_line, line, regmatch.rm_eo + 1);
-	  snprintf (tmp_line + strlen(tmp_line), LINE_SIZE - strlen(tmp_line), " %s", square_coordinates_str);
+	  snprintf (tmp_line + strlen(tmp_line), LINE_SIZE - strlen(tmp_line),
+		    " %s", square_coordinates_str);
 	  strncat (tmp_line, line + regmatch.rm_eo + 1, LINE_SIZE);
+
+	  /* We add a newline character at the end of the line */
 	  tmp_line[strlen (tmp_line)] = '\n';
+
 	  insert_line_in_file (tmp_line, strlen(tmp_line), line_number, save_file_path, 1);
 	}
     }
