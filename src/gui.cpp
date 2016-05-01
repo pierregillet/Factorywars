@@ -31,58 +31,60 @@
  */
 
 #include "gui.h"
- 
-enum KeyPressTexture
-{
-  KEY_PRESS_SURFACE_DEFAULT, 
-  KEY_PRESS_SURFACE_UP, 
-  KEY_PRESS_SURFACE_DOWN,        
-  KEY_PRESS_SURFACE_LEFT, 
-  KEY_PRESS_SURFACE_RIGHT, 
-  KEY_PRESS_SURFACE_TOTAL
-};
-SDL_Texture* KeyPressTexture [KEY_PRESS_SURFACE_TOTAL];
 
-SDL_Texture* loadTexture(std::string path, SDL_Renderer* gRenderer)
+enum KeyPressTexture
+  {
+    KEY_PRESS_SURFACE_DEFAULT, 
+    KEY_PRESS_SURFACE_UP, 
+    KEY_PRESS_SURFACE_DOWN,        
+    KEY_PRESS_SURFACE_LEFT, 
+    KEY_PRESS_SURFACE_RIGHT, 
+    KEY_PRESS_SURFACE_TOTAL
+  };
+ 
+SDL_Texture*
+loadTexture(std::string path, SDL_Renderer* gRenderer)
 {
   SDL_Texture* NewTexture = NULL;
-  printf("%s\n", path.c_str());
-  SDL_Surface* loadedSurface = IMG_Load(path.c_str() );
-  NewTexture = SDL_CreateTextureFromSurface (gRenderer , loadedSurface);
+  SDL_Surface* loadedSurface = IMG_Load(path.c_str ());
+
+  NewTexture = SDL_CreateTextureFromSurface (gRenderer, loadedSurface);
   SDL_FreeSurface (loadedSurface);
+
   return NewTexture;
 }
 
 bool 
-init (SDL_Window** Window, SDL_Renderer** gRenderer)
+init (SDL_Window** Window, SDL_Renderer** gRenderer, SDL_Texture** KeyPressTexture)
 {
-	bool success = true;
+  bool success = true;
 	
-	if (SDL_Init (SDL_INIT_VIDEO) < 0)
+  if (SDL_Init (SDL_INIT_VIDEO) < 0)
+    {
+      printf ("Error: %s\n", SDL_GetError ());
+      success = false;
+    }
+	
+  else //si la SDL s'est bien lancee	
+    {
+      *Window = SDL_CreateWindow ("TEST",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,640,480, SDL_WINDOW_SHOWN);
+	  
+      if (Window == NULL) 
 	{
-		printf ("Error: %s\n", SDL_GetError ());
-		success = false;
+	  success = false;
+	  printf ("Couldn’t create window: %s\n", SDL_GetError());
 	}
-	
-	else //si la SDL s'est bien lancee	
+	  
+      else //si la fenetre est bien cree
 	{
-	  SDL_Window* Window = NULL;
-	  Window = SDL_CreateWindow ("TEST",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,640,480, SDL_WINDOW_SHOWN);
-	  
-	  if (Window == NULL) 
-	  {
-	    success = false;
-	    printf (SDL_GetError());
-	  }
-	  
-	  else //si la fenetre est bien cree
-	  {
-	    SDL_Renderer* gRenderer = NULL;
-	    gRenderer = SDL_CreateRenderer (Window, -1, SDL_RENDERER_ACCELERATED);
-	    SDL_SetRenderDrawColor (gRenderer, 0xFF,0xFF,0xFF,0xFF);
-	  }
-	  
-  }
+	  *gRenderer = SDL_CreateRenderer (*Window, -1, SDL_RENDERER_ACCELERATED);
+	  SDL_SetRenderDrawColor (*gRenderer, 0xFF,0xFF,0xFF,0xFF);
+	}
+    }
+
+  if (!loadMedia (KeyPressTexture, *gRenderer))
+    success = false;
+
   return success;
 }
 
@@ -90,54 +92,56 @@ init (SDL_Window** Window, SDL_Renderer** gRenderer)
 bool 
 loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer)
 {
-  bool success = true; 
+  bool success = true;
+  
   //chaque case du tableau se voit atribuer une image
-  KeyPressTexture[ KEY_PRESS_SURFACE_DEFAULT ] = loadTexture ("Hello_world.png", gRenderer); 
+  KeyPressTexture[ KEY_PRESS_SURFACE_DEFAULT ] = loadTexture ("media/textures/LEFT.png", gRenderer); 
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT ] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_UP ] = loadTexture ("up.png", gRenderer);
+  KeyPressTexture[KEY_PRESS_SURFACE_UP ] = loadTexture ("media/textures/LEFT.png", gRenderer);
   if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture ("down.png", gRenderer);
+  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture ("media/textures/RIGHT.png", gRenderer);
   if (KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture ("left.png", gRenderer);
+  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture ("media/textures/LEFT.png", gRenderer);
   if (KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] == NULL)
     success = false;  
     
-  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture ("right.png", gRenderer);
-  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT ] == NULL)
+  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture ("media/textures/RIGHT.png", gRenderer);
+  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
-    
+
   return success;
 }
 
 
 bool
-blit (int x,int y, SDL_Texture* texture, SDL_Renderer* gRenderer)
+blit (int x, int y, SDL_Texture* texture, SDL_Renderer* gRenderer)
 {
-  bool success=true;
-  SDL_Rect Rect;
-  Rect.x = x;
-  Rect.y = y;
-  Rect.w = 640;
-  Rect.h = 480;
+  bool success = true;
+  SDL_Rect Rect = {.x = x, .y = y, .w = 640, .h = 480};
+  
   SDL_RenderSetViewport(gRenderer, &Rect);
   SDL_RenderClear (gRenderer);
   SDL_RenderCopy (gRenderer, texture, NULL,NULL);
   SDL_RenderPresent (gRenderer);
+
   return success;
 }
 
 int 
 run_gui ()
 {
-  SDL_Window* Window = NULL;
-  SDL_Renderer* gRenderer = NULL;
-  if (!init (&Window, &gRenderer))
+  SDL_Window *Window = NULL;
+  SDL_Renderer *gRenderer = NULL;
+
+  SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
+
+  if (!init (&Window, &gRenderer, key_press_texture))
     return 1;
   
   int x = 0;
@@ -145,11 +149,12 @@ run_gui ()
   bool quit = false;
   
   SDL_Event e;
-  SDL_Texture* CurrentTexture = NULL;
-  CurrentTexture = KeyPressTexture [ KEY_PRESS_SURFACE_DEFAULT ];
-  while ( !quit )
+  SDL_Texture *CurrentTexture = NULL;
+  CurrentTexture = key_press_texture [ KEY_PRESS_SURFACE_DEFAULT ];
+
+  while (!quit)
   {
-    while (SDL_PollEvent(&e) != 0)
+    while (SDL_PollEvent (&e) != 0)
     {
       if (e.type == SDL_QUIT)
         quit = true;
@@ -159,26 +164,26 @@ run_gui ()
         {
           case SDLK_UP:
           y--;
-          CurrentTexture= KeyPressTexture[KEY_PRESS_SURFACE_UP];
+          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_UP];
           break;
          
           case SDLK_DOWN:
           y++;
-          CurrentTexture= KeyPressTexture[KEY_PRESS_SURFACE_DOWN];
+          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DOWN];
           break;
             
           case SDLK_LEFT:
           x--;
-          CurrentTexture= KeyPressTexture[KEY_PRESS_SURFACE_LEFT];
+          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
           break;
             
           case SDLK_RIGHT:
           x++; 
-          CurrentTexture= KeyPressTexture[KEY_PRESS_SURFACE_RIGHT];
+          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
           break;
             
           default:  
-          CurrentTexture= KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT];
+          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
           break;
         }            
       }
