@@ -154,43 +154,43 @@ run_gui ()
   CurrentTexture = key_press_texture [ KEY_PRESS_SURFACE_DEFAULT ];
 
   while (!quit)
-  {
-    while (SDL_PollEvent (&e) != 0)
     {
-      if (e.type == SDL_QUIT)
-        quit = true;
-      else if (e.type == SDL_KEYDOWN)
-      {
-        switch (e.key.keysym.sym)
-        {
-          case SDLK_UP:
-          y--;
-          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_UP];
-          break;
+      while (SDL_PollEvent (&e) != 0)
+	{
+	  if (e.type == SDL_QUIT)
+	    quit = true;
+	  else if (e.type == SDL_KEYDOWN)
+	    {
+	      switch (e.key.keysym.sym)
+		{
+		case SDLK_UP:
+		  y -= 5;
+		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_UP];
+		  break;
          
-          case SDLK_DOWN:
-          y++;
-          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DOWN];
-          break;
+		case SDLK_DOWN:
+		  y += 5;
+		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DOWN];
+		  break;
             
-          case SDLK_LEFT:
-          x--;
-          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
-          break;
+		case SDLK_LEFT:
+		  x -= 5;
+		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
+		  break;
             
-          case SDLK_RIGHT:
-          x++; 
-          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
-          break;
+		case SDLK_RIGHT:
+		  x += 5; 
+		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
+		  break;
             
-          default:  
-          CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
-          break;
-        }            
-      }
-      blit(x, y, 50, 82, CurrentTexture, gRenderer);
-    }         
-  }
+		default:
+		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
+		  break;
+		}            
+	    }
+	  blit(x, y, 50, 82, CurrentTexture, gRenderer);
+	}         
+    }
   return 1;
 }  
 
