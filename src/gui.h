@@ -40,14 +40,13 @@
   * Returns a bool named success, true or false
   * The Texture needs a Renderer for being blited
   */
-bool blit (int x, int y, SDL_Texture*, SDL_Renderer* gRenderer);
+bool blit (int x, int y, int width, int height, SDL_Texture*, SDL_Renderer* gRenderer);
 
 /**
   * Initiates the SDL basics, like Window and Renderer
   */
-bool init (SDL_Window** Window, SDL_Renderer** gRenderer);
-bool loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer);  
-void close ();                //fermeture
+bool init (SDL_Window** Window, SDL_Renderer** gRenderer, SDL_Texture** KeyPressTexture);
+bool loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer);
 int run_gui ();
 SDL_Texture* loadTexture (std::string path, SDL_Renderer* gRenderer);
 
