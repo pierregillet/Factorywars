@@ -120,11 +120,12 @@ loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer)
 
 
 bool
-blit (int x, int y, SDL_Texture* texture, SDL_Renderer* gRenderer)
+blit (int x, int y, int width, int height, SDL_Texture* texture, SDL_Renderer* gRenderer)
 {
   bool success = true;
-  SDL_Rect Rect = {.x = x, .y = y, .w = 640, .h = 480};
-  
+  SDL_Rect Rect = {.x = x, .y = y, .w = width, .h = height};
+  // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
+ 
   SDL_RenderSetViewport(gRenderer, &Rect);
   SDL_RenderClear (gRenderer);
   SDL_RenderCopy (gRenderer, texture, NULL,NULL);
@@ -187,7 +188,7 @@ run_gui ()
           break;
         }            
       }
-      blit(x, y, CurrentTexture, gRenderer);    
+      blit(x, y, 50, 82, CurrentTexture, gRenderer);
     }         
   }
   return 1;
