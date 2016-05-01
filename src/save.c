@@ -37,9 +37,8 @@ get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
 		 struct coordinates square_coordinates, char* save_file_path)
 {
   const unsigned int LINE_SIZE = 512;
-  const unsigned int COORDINATES_STR_SIZE = 20;
 
-  char line[LINE_SIZE], chunk_coordinates_str[COORDINATES_STR_SIZE];
+  char line[LINE_SIZE];
 
   regmatch_t item_id_pos;
   item_id_pos.rm_so = 0;
@@ -110,12 +109,11 @@ get_biome_id (struct coordinates chunk_coordinates, char* save_file_path)
 			       line, LINE_SIZE, save_file_path) == NULL)
     return -1;
 
-  int spaces_number = 0;
-  for (int i= 0; i < LINE_SIZE; i++)
+  for (unsigned int i= 0; i < LINE_SIZE; i++)
     {
       if (line[i] == ' ')
 	{
-	  for (int j = i+1; line[j] != ' ' && j < LINE_SIZE; j++)
+	  for (unsigned int j = i+1; line[j] != ' ' && j < LINE_SIZE; j++)
 	    {
 	      biome_id_str[j-(i+1)] = line[j];
 	    }
@@ -136,7 +134,6 @@ set_surface_item (struct coordinates chunk_coordinates,
   const unsigned int COORDINATES_STR_SIZE = 20;
   
   char line[LINE_SIZE], tmp_line[LINE_SIZE],
-    chunk_coordinates_str[COORDINATES_STR_SIZE],
     square_coordinates_str[COORDINATES_STR_SIZE];
 
   memset (line, 0, LINE_SIZE);
@@ -266,7 +263,7 @@ set_surface_item (struct coordinates chunk_coordinates,
       int match_beg = regmatch.rm_so + len_of_deleted_part_of_line;
       int match_end = regmatch.rm_eo + len_of_deleted_part_of_line;
       int spaces_number = 0;
-      int beg_of_item_id, end_of_item_id;
+      int beg_of_item_id;
 
       /* We search backward */
       for (int i = match_beg; i > 0; i--)
@@ -276,8 +273,6 @@ set_surface_item (struct coordinates chunk_coordinates,
 	      beg_of_item_id = i + 2;
 	      break;
 	    }
-	  else if (spaces_number == 1)
-	    end_of_item_id = i + 1;
 
 	  switch (line[i])
 	    {
@@ -294,7 +289,7 @@ set_surface_item (struct coordinates chunk_coordinates,
       spaces_number = 0;
       if (delete_coordinates_and_item_id)
 	{
-	  for (int i = match_end; i < LINE_SIZE; i++)
+	  for (unsigned int i = match_end; i < LINE_SIZE; i++)
 	    {
 	      if (spaces_number == 2)
 		  break;
@@ -359,14 +354,11 @@ get_surface_item (struct coordinates chunk_coordinates,
   const int LINE_SIZE = 512;
 
   char item_id_str[ITEM_ID_LEN], line[LINE_SIZE];
-  int item_id = -1;
 
   /* We fill the variable line with the line describing the chunk */
-  /* On rempli la variable line avec la ligne décrivant le chunk */
   find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
 
   /* If the line does not exist we return -1 */
-  /* Si la ligne n’existe pas, on retourne -1 */
   if (line == NULL)
     return -1;
 

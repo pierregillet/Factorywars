@@ -60,7 +60,7 @@ init (SDL_Window** Window, SDL_Renderer** gRenderer)
 	
 	if (SDL_Init (SDL_INIT_VIDEO) < 0)
 	{
-		printf ("\n erreur: ", SDL_GetError ());
+		printf ("Error: %s\n", SDL_GetError ());
 		success = false;
 	}
 	
@@ -184,6 +184,7 @@ run_gui ()
       }
       blit(x, y, CurrentTexture, gRenderer);    
     }         
-  } 
+  }
+  return 1;
 }  
 

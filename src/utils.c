@@ -138,11 +138,11 @@ coordinates_to_string (struct coordinates coordinates, char *dst, size_t dst_siz
   memset (str, 0, STR_SIZE);
   memset (tmp_str, 0, STR_SIZE);
 
-  snprintf (tmp_str, STR_SIZE, "%d", coordinates.x);
+  snprintf (tmp_str, STR_SIZE, "%ld", coordinates.x);
   strncat (str, tmp_str, STR_SIZE);
   strncat (str, ";", STR_SIZE);
   memset (tmp_str, 0, STR_SIZE);
-  snprintf (tmp_str, STR_SIZE, "%d", coordinates.y);
+  snprintf (tmp_str, STR_SIZE, "%ld", coordinates.y);
   strncat (str, tmp_str, STR_SIZE);
 
   strncpy (dst, str, dst_size);
