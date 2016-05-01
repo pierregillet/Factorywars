@@ -55,7 +55,8 @@ loadTexture(std::string path, SDL_Renderer* gRenderer)
 }
 
 bool 
-init (SDL_Window** Window, SDL_Renderer** gRenderer, SDL_Texture** KeyPressTexture)
+init (SDL_Window** Window, SDL_Renderer** gRenderer,
+      SDL_Texture** KeyPressTexture)
 {
   bool success = true;
 	
@@ -67,7 +68,9 @@ init (SDL_Window** Window, SDL_Renderer** gRenderer, SDL_Texture** KeyPressTextu
 	
   else //si la SDL s'est bien lancee	
     {
-      *Window = SDL_CreateWindow ("TEST",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,640,480, SDL_WINDOW_SHOWN);
+      *Window = SDL_CreateWindow ("factorywars", SDL_WINDOWPOS_UNDEFINED,
+				  SDL_WINDOWPOS_UNDEFINED, 640, 480,
+				  SDL_WINDOW_SHOWN);
 	  
       if (Window == NULL) 
 	{
@@ -77,7 +80,8 @@ init (SDL_Window** Window, SDL_Renderer** gRenderer, SDL_Texture** KeyPressTextu
 	  
       else //si la fenetre est bien cree
 	{
-	  *gRenderer = SDL_CreateRenderer (*Window, -1, SDL_RENDERER_ACCELERATED);
+	  *gRenderer = SDL_CreateRenderer (*Window, -1,
+					   SDL_RENDERER_ACCELERATED);
 	  SDL_SetRenderDrawColor (*gRenderer, 0xFF,0xFF,0xFF,0xFF);
 	}
     }
@@ -95,11 +99,11 @@ loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer)
   bool success = true;
   
   //chaque case du tableau se voit atribuer une image
-  KeyPressTexture[ KEY_PRESS_SURFACE_DEFAULT ] = loadTexture ("media/textures/LEFT.png", gRenderer); 
-  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT ] == NULL)
+  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture ("media/textures/LEFT.png", gRenderer);
+  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_UP ] = loadTexture ("media/textures/LEFT.png", gRenderer);
+  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture ("media/textures/LEFT.png", gRenderer);
   if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
     success = false;
     
