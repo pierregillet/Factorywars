@@ -6,3 +6,4 @@
 + Display the player at the center of the screen.
 + Move the map when the move keys are pressed.
 + Fill the Readme.
++ Add a configuration file to store the screen resolution.
