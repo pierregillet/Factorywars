@@ -111,7 +111,7 @@ regmatch_t get_item_id_pos_using_item_id (struct coordinates chunk_coordinates,
  * @param square_coordinates are the coordinates of the square.
  * @param save_file_path is the path to the save file.
  * @return the position of the square coordinates in the string or -1
- * if it doesn’t exist.
+ * for rm_so and rm_eo if it doesn’t exist.
  */
 regmatch_t find_square_coordinates_pos (struct coordinates chunk_coordinates,
 					struct coordinates square_coordinates,
