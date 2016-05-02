@@ -61,28 +61,27 @@ Player::getPlayerHealth () const
 }
 
 inline int
-Player::playerGetsAttacked (std::string enemy_name,
-			    int damage)
+Player::playerIsAttacked (std::string enemy_name,
+			  int damage)
 {
   this->m_health -= damage;
+  return this->m_health;
 }
 
 inline void
-Player::playerWalks (bool vertical,
-		     bool horizontal)
+Player::playerWalks (bool horizontal,
+		     bool vertical)
 {
-  if (vertical == 1) 
-    // We'll maybe have to add this-> before every m_coordinates, gotta check
-    m_coordinates.y ++;
-
-  else
-    m_coordinates.y --;
-  
+  // We'll maybe have to add this-> before every m_coordinates, gotta check
   if (horizontal == 1)
     m_coordinates.x ++;
-  
   else
     m_coordinates.x --;
+
+  if (vertical == 1) 
+    m_coordinates.y ++;
+  else
+    m_coordinates.y --;
 }
 
 Machines::Machines()

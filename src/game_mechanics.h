@@ -36,11 +36,44 @@ class
 Player
 {
  public:
+  
+  /**
+   * Constructor that creates a player with default values.
+   * It should only be used for testing purpose.
+   */
   Player ();
-  Player (int, std::string, coordinates, int);
+
+  /**
+   * Constructor that creates a player object.
+   * @param health is the player's initial health.
+   * @param name is the player's name.
+   * @param m_coordinates are the coordinates of the player.
+   * @param velocity is the velocity of the player.
+   */
+  Player (int health, std::string name, struct coordinates m_coordinates, int velocity);
+
+  /**
+   * Get the player's health.
+   * @return The player's health.
+   */
   int getPlayerHealth () const;
-  int playerGetsAttacked (std::string, int);
-  void playerWalks (bool, bool);
+
+  /**
+   * Decrease the player health when attacked.
+   * @param enemy_name is the name of the enemy attacking.
+   * @param damage is the number of health points withdrawn to the player.
+   * @return The new player health
+   */
+  int playerIsAttacked (std::string enemy_name, int damage);
+
+  /**
+   * Changes the player's coordinates by making him walk.
+   * It isn't right because like this you can only walk in two directions, not only one
+   * (e.g : you can't just go horizontally). We must change it.
+   * @param horizontal is True if the player goes up, False if he goes down
+   * @param vertical is True if the player goes up, False if he goes down
+   */
+  void playerWalks (bool horizontal, bool vertical);
 
  private:
   int m_health;
@@ -55,8 +88,17 @@ class
 Machines
 {
  public:
+  
+  /*
+   * Creates a machine object with default values.
+   */
   Machines();
-  Machines(int);
+
+  /*
+   * Creates a machine object
+   * @param size is the size that the object will take on the map.
+   */
+  Machines(int size);
  private:
   int m_size;
   std::string m_path_to_image;
@@ -66,6 +108,10 @@ class
 Inserters
 {
  public :
+
+  /*
+   *
+   */
   Inserters();
  private:
   int m_inserter_type;
@@ -75,6 +121,10 @@ class
 BurnerMachines : Machines
 {
  public:
+
+  /*
+   *
+   */
   BurnerMachines();
  private:
   int m_energy_consumption;
@@ -84,6 +134,10 @@ class
 BurnerInserters : BurnerMachines, Inserters
 {
  public:
+
+  /*
+   *
+   */
   BurnerInserters();
 };
 
@@ -91,6 +145,10 @@ class
 ElectricMachines : Machines
 {
  public:
+
+  /*
+   *
+   */
   ElectricMachines();
 };
 
@@ -98,6 +156,10 @@ class
 Trees
 {
  public:
+
+  /*
+   *
+   */
   Trees();
 };
 
@@ -105,6 +167,10 @@ class
 Ores
 {
  public:
+
+  /*
+   *
+   */
   Ores();
 };
 
@@ -112,6 +178,10 @@ class
 Armor
 {
  public:
+
+  /*
+   *
+   */
   Armor();
 };
 
