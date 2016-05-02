@@ -66,9 +66,9 @@ init (SDL_Window** Window, SDL_Renderer** gRenderer,
       success = false;
     }
 	
-  else //si la SDL s'est bien lancee	
+  else // if the SDL launched correctly
     {
-      *Window = SDL_CreateWindow ("factorywars", SDL_WINDOWPOS_UNDEFINED,
+      *Window = SDL_CreateWindow ("Factorywars", SDL_WINDOWPOS_UNDEFINED,
 				  SDL_WINDOWPOS_UNDEFINED, 640, 480,
 				  SDL_WINDOW_SHOWN);
 	  
@@ -78,7 +78,7 @@ init (SDL_Window** Window, SDL_Renderer** gRenderer,
 	  printf ("Couldn’t create window: %s\n", SDL_GetError());
 	}
 	  
-      else //si la fenetre est bien cree
+      else // if window has been created without errors
 	{
 	  *gRenderer = SDL_CreateRenderer (*Window, -1,
 					   SDL_RENDERER_ACCELERATED);
@@ -98,7 +98,7 @@ loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer)
 {
   bool success = true;
   
-  //chaque case du tableau se voit atribuer une image
+  // every box of the table is associated to an image
   KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture ("media/textures/LEFT.png", gRenderer);
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
@@ -123,10 +123,9 @@ loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer)
 }
 
 
-bool
+int
 blit (int x, int y, int width, int height, SDL_Texture* texture, SDL_Renderer* gRenderer)
 {
-  bool success = true;
   SDL_Rect Rect = {.x = x, .y = y, .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
  
@@ -135,7 +134,7 @@ blit (int x, int y, int width, int height, SDL_Texture* texture, SDL_Renderer* g
   SDL_RenderCopy (gRenderer, texture, NULL,NULL);
   SDL_RenderPresent (gRenderer);
 
-  return success;
+  return 1;
 }
 
 int 
@@ -200,3 +199,11 @@ run_gui ()
   return 1;
 }  
 
+/*
+int
+handle_event ()
+{
+  SDL_Event e;
+  
+}
+*/
