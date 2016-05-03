@@ -18,6 +18,16 @@ college project is over. We do not have much experience nor knowledge in
  advanced programming or math algorithms but we are very motivated, and 
 try to figure out every one of the issues, by learning how things works.
 
+# How to build #
+
+## Dependencies ##
+
+Make sure that SDL2 and SDL2_Image libraries are installed
+
+## Compile ##
+
+Just type ``make``!
+
 # Contact #
 
 You can contact us for any questions via our emails :
@@ -48,6 +58,16 @@ Nous n’avons pas beaucoup d’expériences ni de connaissances en programmatio
 avancée ou en algorithmique mais nous sommes motivés et nous essayons de
 trouver des solutions à tout les problèmes que nous rencontrons en apprenant
 comment les choses fonctionnent.
+
+# Comment compiler #
+
+## Dépendences ##
+
+Vérifiez que les bibliothèques SDL2 et SDL2_Image soient installées.
+
+## Compiler ##
+
+Tapez juste ``make`` !
 
 # Nous contacter #
 
