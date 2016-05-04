@@ -1,7 +1,7 @@
-OBJS = src/main.cpp src/gui.cpp src/game_mechanics.cpp src/save.c src/utils.c src/items.cpp
+OBJS = src/main.cpp src/gui.cpp src/game_mechanics.cpp src/save.c src/utils.c src/items.cpp src/XMLParser.c
 CC = g++
-COMPILER_FLAGS = -std=c++11 -Wall
-LINKER_FLAGS = -lSDL2 -lSDL2_image
+COMPILER_FLAGS = -std=c++11 -Wall `xml2-config --cflags`
+LINKER_FLAGS = -lSDL2 -lSDL2_image `xml2-config --libs`
 OBJ_NAME = factorywars
 
 all : $(OBJS)

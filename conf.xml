@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration [
+<!ELEMENT configuration (resolution)>
+<!ELEMENT lang (#PCDATA)>
+]>
+<configuration>
+	<resolution>1280*800</resolution>
+</configuration>
