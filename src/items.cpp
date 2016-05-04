@@ -65,3 +65,47 @@ ItemsName::getItemName(int id)
   return m_items_map[id];
 }
 
+Machines::Machines()
+{
+  
+}
+
+Machines::Machines(int size)
+{
+  m_size = size;
+}
+
+Inserters::Inserters()
+{
+
+}
+
+BurnerMachines::BurnerMachines ()
+{
+
+}
+
+BurnerInserters::BurnerInserters()
+{
+  
+}
+
+ElectricMachines::ElectricMachines ()
+{
+
+}
+
+Trees::Trees ()
+{
+
+}
+
+Ores::Ores ()
+{
+
+}
+
+Armor::Armor ()
+{
+
+}
