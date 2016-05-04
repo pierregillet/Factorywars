@@ -3,11 +3,13 @@
 
 ### Dependencies ###
 
-Make sure that SDL2 and SDL2_Image libraries are installed
++ libxml2
++ SDL2
++ SDL2_Image
 
 ### Compile ###
 
-Just type ``make`` at the root of the project !
+Just type ``make`` at the root of the project!
 
 # French #
 
@@ -15,7 +17,9 @@ Just type ``make`` at the root of the project !
 
 ## Dépendences ##
 
-Vérifiez que les bibliothèques SDL2 et SDL2_Image soient installées.
++ libxml2
++ SDL2
++ SDL2_Image
 
 ## Compiler ##
 
