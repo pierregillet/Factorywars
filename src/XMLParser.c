@@ -57,49 +57,73 @@ getNbOfElement (const char *elementName, const char *filename)
 }
 
 char*
-getValueOfElement (const char *elementName, const int no, const char *attributeName, const char *attributeValue, const char *filename)
+getValueOfElement (const char *elementName, const int no,
+		   const char *attributeName, const char *attributeValue,
+		   const char *filename)
 {
   const xmlChar *value;
   int elementNumber = -1;
-  int close = 1;
+  int end_tag = 0;
 
   LIBXML_TEST_VERSION;
 
   xmlTextReaderPtr reader;
-  int ret;
 
   reader = xmlReaderForFile (filename, NULL, 0);
   if (reader == NULL)
     return NULL;
 
-  ret = xmlTextReaderRead (reader);
-  while (ret == 1)
+  int same_or_null_attribute = 0;
+  int same_element_name = 0;
+  int success = 0;
+  char* cur_attribute_name, *cur_element_name;
+
+  while (xmlTextReaderRead (reader))
     {
-      if (strcmp (elementName, (char* ) xmlTextReaderConstName (reader)) == 0)
+      cur_attribute_name = (char*) xmlTextReaderGetAttribute
+	(reader, (unsigned char*) attributeName);
+
+      cur_element_name = (char*) xmlTextReaderConstName (reader);
+
+      if (attributeValue == NULL)
+	same_or_null_attribute = 1;
+      else if (strcmp (attributeValue, cur_attribute_name ) == 0)
+	same_or_null_attribute = 1;
+      else
+	same_or_null_attribute = 0;
+
+      if (strcmp (elementName, cur_element_name) == 0)
+	same_element_name = 1;
+      else
+	same_element_name = 0;
+
+      if (same_element_name && same_or_null_attribute)
 	{
-	  if ((attributeName == NULL
-	       || strcmp (attributeValue, 
-			  (char*) xmlTextReaderGetAttribute (reader, (const unsigned char*) attributeName)) == 0))
+	  if (!end_tag)	/* Is it the end-tag? */
 	    {
-	      if (close)	/* Is it the end-tag? */
-		{
-		  ++elementNumber;
-		  close=0;
-		}
-	      else
-		close=1;
-	      ret = xmlTextReaderRead (reader);
-	      if (elementNumber == no && xmlTextReaderNodeType (reader) == 3)
-		{
-		  value = xmlTextReaderConstValue (reader);
-		  break;
-		}
+	      ++elementNumber;
+	      end_tag = 1;
+
+	      /* Read one further */
+	      xmlTextReaderRead (reader);
+	    }
+	  else
+	    end_tag = 0;
+
+	  if (elementNumber == no && xmlTextReaderNodeType (reader) == 3)
+	    {
+	      value = xmlTextReaderConstValue (reader);
+	      success = 1;
+	      break;
 	    }
 	}
-      ret = xmlTextReaderRead (reader);
+
     }
 
   xmlCleanupParser ();
   xmlMemoryDump ();
+
+  value = (success) ? value : NULL;
+
   return (char*) value;
 }
