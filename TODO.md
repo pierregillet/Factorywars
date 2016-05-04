@@ -7,4 +7,3 @@
 + Move the map when the move keys are pressed.
 + Fill the index page of the documentation generated with doxygen with the 
 content of the README.md file.
-+ Add a configuration file to store the screen resolution.
