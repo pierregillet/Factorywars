@@ -19,7 +19,7 @@
  *
  * @section DESCRIPTION
  *
- * XMLParser.c is used to parse XML files.
+ * XMLParser.c parse XML files.
  */
 
 #include <string.h>
@@ -27,7 +27,7 @@
 #include <stdio.h>
 
 int
-getNbOfElement(const char *elementName, const char *filename)
+getNbOfElement (const char *elementName, const char *filename)
 {
   int nbOfElement = 0;
 
@@ -36,28 +36,28 @@ getNbOfElement(const char *elementName, const char *filename)
   xmlTextReaderPtr reader;
   int ret;
 
-  reader = xmlReaderForFile(filename, NULL, 0);
-  if(reader == NULL)
+  reader = xmlReaderForFile (filename, NULL, 0);
+  if (reader == NULL)
     return -1;
 
-  ret = xmlTextReaderRead(reader);
-  while(ret == 1)
+  ret = xmlTextReaderRead (reader);
+  while (ret == 1)
     {
-      if(strcmp(elementName, xmlTextReaderConstName(reader)) == 0)
+      if (strcmp (elementName, (char*) xmlTextReaderConstName (reader)) == 0)
 	{
 	  ++nbOfElement;
 	}
-      ret = xmlTextReaderRead(reader);
+      ret = xmlTextReaderRead (reader);
     }
 
-  xmlCleanupParser();
-  xmlMemoryDump();
+  xmlCleanupParser ();
+  xmlMemoryDump ();
 
   return nbOfElement /= 2;
 }
 
 char*
-getValueOfElement(const char *elementName, const int no, const char *attributeName, const char *attributeValue, const char *filename)
+getValueOfElement (const char *elementName, const int no, const char *attributeName, const char *attributeValue, const char *filename)
 {
   const xmlChar *value;
   int elementNumber = -1;
@@ -68,38 +68,38 @@ getValueOfElement(const char *elementName, const int no, const char *attributeNa
   xmlTextReaderPtr reader;
   int ret;
 
-  reader = xmlReaderForFile(filename, NULL, 0);
-  if(reader == NULL)
+  reader = xmlReaderForFile (filename, NULL, 0);
+  if (reader == NULL)
     return NULL;
 
-  ret = xmlTextReaderRead(reader);
-  while(ret == 1)
+  ret = xmlTextReaderRead (reader);
+  while (ret == 1)
     {
-      if(strcmp(elementName, xmlTextReaderConstName(reader)) == 0)
+      if (strcmp (elementName, (char* ) xmlTextReaderConstName (reader)) == 0)
 	{
-	  if((attributeName == NULL
-	      || strcmp(attributeValue, 
-			xmlTextReaderGetAttribute(reader, attributeName)) == 0))
+	  if ((attributeName == NULL
+	       || strcmp (attributeValue, 
+			  (char*) xmlTextReaderGetAttribute (reader, (const unsigned char*) attributeName)) == 0))
 	    {
-	      if(close)		/* Is it the end-tag? */
+	      if (close)		/* Is it the end-tag? */
 		{
-		++elementNumber;
-		close=0;
+		  ++elementNumber;
+		  close=0;
 		}
 	      else
 		close=1;
-	      ret = xmlTextReaderRead(reader);
-	      if(elementNumber == no && xmlTextReaderNodeType(reader) == 3)
+	      ret = xmlTextReaderRead (reader);
+	      if (elementNumber == no && xmlTextReaderNodeType (reader) == 3)
 		{
-		  value = xmlTextReaderConstValue(reader);
+		  value = xmlTextReaderConstValue (reader);
 		  break;
 		}
 	    }
 	}
-      ret = xmlTextReaderRead(reader);
+      ret = xmlTextReaderRead (reader);
     }
 
-  xmlCleanupParser();
-  xmlMemoryDump();
-  return value;
+  xmlCleanupParser ();
+  xmlMemoryDump ();
+  return (char*) value;
 }
