@@ -30,12 +30,10 @@
  * config.c handle the config file.
  */
 
-#pragma once
-
 #include "config.h"
 
 char*
 get_config_value (const char* key)
 {
-  return getValueOfElement (key, 0, NULL, NULL, "config.xml");
+  return getValueOfElement (key, 0, NULL, NULL, "conf.xml");
 }

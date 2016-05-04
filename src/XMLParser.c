@@ -81,7 +81,7 @@ getValueOfElement (const char *elementName, const int no, const char *attributeN
 	       || strcmp (attributeValue, 
 			  (char*) xmlTextReaderGetAttribute (reader, (const unsigned char*) attributeName)) == 0))
 	    {
-	      if (close)		/* Is it the end-tag? */
+	      if (close)	/* Is it the end-tag? */
 		{
 		  ++elementNumber;
 		  close=0;
