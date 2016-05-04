@@ -23,10 +23,10 @@
  *
  * @section DESCRIPTION
  *
- * game_mechanics.cpp contain all the code for the game mechanics
+ * player.cpp contain all the code about the player
  */
 
-#include "game_mechanics.h"
+#include "player.h"
 
 Player::Player(void)
 {
@@ -83,49 +83,3 @@ Player::playerWalks (bool horizontal,
   else
     m_coordinates.y --;
 }
-
-Machines::Machines()
-{
-  
-}
-
-Machines::Machines(int size)
-{
-  m_size = size;
-}
-
-Inserters::Inserters()
-{
-
-}
-
-BurnerMachines::BurnerMachines ()
-{
-
-}
-
-BurnerInserters::BurnerInserters()
-{
-  
-}
-
-ElectricMachines::ElectricMachines ()
-{
-
-}
-
-Trees::Trees ()
-{
-
-}
-
-Ores::Ores ()
-{
-
-}
-
-Armor::Armor ()
-{
-
-}
-

@@ -23,7 +23,7 @@
  *
  * @section DESCRIPTION
  *
- * game_mechanics.h the header file of game_mechanics.cpp
+ * player.h the header file of player.cpp
  */
 
 #pragma once
@@ -83,105 +83,3 @@ Player
   int m_inventory[100][2];
   unsigned short m_id;
 };
-
-class
-Machines
-{
- public:
-  
-  /*
-   * Creates a machine object with default values.
-   */
-  Machines();
-
-  /*
-   * Creates a machine object
-   * @param size is the size that the object will take on the map.
-   */
-  Machines(int size);
- private:
-  int m_size;
-  std::string m_path_to_image;
-};
-
-class
-Inserters
-{
- public :
-
-  /*
-   *
-   */
-  Inserters();
- private:
-  int m_inserter_type;
-};
-
-class
-BurnerMachines : Machines
-{
- public:
-
-  /*
-   *
-   */
-  BurnerMachines();
- private:
-  int m_energy_consumption;
-};
-
-class
-BurnerInserters : BurnerMachines, Inserters
-{
- public:
-
-  /*
-   *
-   */
-  BurnerInserters();
-};
-
-class
-ElectricMachines : Machines
-{
- public:
-
-  /*
-   *
-   */
-  ElectricMachines();
-};
-
-class
-Trees
-{
- public:
-
-  /*
-   *
-   */
-  Trees();
-};
-
-class
-Ores
-{
- public:
-
-  /*
-   *
-   */
-  Ores();
-};
-
-class
-Armor
-{
- public:
-
-  /*
-   *
-   */
-  Armor();
-};
-
