@@ -24,6 +24,8 @@
  * network.c contain the code for everything about the network
  */
 
+#include "network.h"
+
 int
 client (char *ip, unsigned short port, char* data)
 {
@@ -76,5 +78,4 @@ client (char *ip, unsigned short port, char* data)
       return -1;
     }
 }
-
 

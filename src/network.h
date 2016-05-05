@@ -40,9 +40,9 @@
 /**
  * Send data
  * 
- * @param *ip is the ip where the message will be sent.
+ * @param ip is the ip where the message will be sent.
  * @param port is the port where the server is listening.
- * @param *data is the string which will be sent.
+ * @param data is the string which will be sent.
  * @return 0 if success, -1 if there is an error.
  */
 int client (char *ip, unsigned short port, char* data);
