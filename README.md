@@ -3,7 +3,7 @@
 Factorywars is a game which is inspired of the indie game Factorio, but 
 we aim to make it a lot more focused on the multiplayer and PvP 
 experience. It is a free software! Factorywars is released under the
-GNU GPLv3.
+GNU GPLv3 or later.
 
 
 ## Current progress ##
@@ -34,7 +34,7 @@ Factorywars est un jeu inspiré du jeu indépendant Factorio, mais nous avons po
 objectifs de le rendre beaucoup plus axé multijoueur ainsi que joueur
 contre joueur.
 Et c’est un logiciel libre ! Factorywars est distribué sous la licence GNU GPLv3
-.
+ ou toute version ultérieure.
 
 ## État actuel du développement ##
 
