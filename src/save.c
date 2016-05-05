@@ -102,9 +102,6 @@ get_biome_id (struct coordinates chunk_coordinates, char* save_file_path)
   const unsigned int BIOME_ID_STR_SIZE = 4;
   char line[LINE_SIZE], biome_id_str[BIOME_ID_STR_SIZE];
 
-  /* memset (line, 0, LINE_SIZE); */
-  /* memset (biome_id_str, 0, BIOME_ID_STR_SIZE); */
-
   if (find_chunk_line_in_file (chunk_coordinates,
 			       line, LINE_SIZE, save_file_path) == NULL)
     return -1;
@@ -136,8 +133,6 @@ set_surface_item (struct coordinates chunk_coordinates,
 
   line[0] = '\0';
   tmp_line[0] = '\0';
-  /* memset (line, 0, LINE_SIZE); */
-  /* memset (tmp_line, 0, LINE_SIZE); */
 
   /* If it’s true, the chunk line does not exist */
   /* Si c’est vrai, la ligne décrivant le chunk n’existe pas */
