@@ -27,31 +27,14 @@
  *
  * @section DESCRIPTION
  *
- * gui.h is the header of gui.cpp
+ * action.cpp contains functions to handle user actions/input
  */
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <stdio.h>
-#include <string>
+#include "action.h"
 
-/**
-  * Blit Textures at given coordonates x,y.
-  * Returns an int, which is true if there is no error.
-  * The Texture needs a Renderer for being blited.
-  */
-int blit (int x, int y, int width, int height, SDL_Texture*, SDL_Renderer* gRenderer);
 
-/**
-  * Initiates the SDL basics, like Window and Renderer.
-  */
-bool init (SDL_Window** Window, SDL_Renderer** gRenderer, SDL_Texture** KeyPressTexture);
-
-bool loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer);
-
-int run_gui ();
-
-SDL_Texture* loadTexture (std::string path, SDL_Renderer* gRenderer);
-
-int get_event ();
-
+int handle_keydown (SDL_Keycode event)
+{
+  // WORK IN PROGRESS
+  return 1;
+}
