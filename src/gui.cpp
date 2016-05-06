@@ -31,6 +31,8 @@
  */
 
 #include "gui.h"
+#include "player.h"
+#include "action.h"
 
 enum KeyPressTexture
   {
@@ -215,11 +217,23 @@ run_gui ()
   return 1;
 }  
 
-/*
+
 int
-handle_event ()
+get_event ()
 {
-  SDL_Event e;
-  
+  SDL_Event event;
+  while (SDL_PollEvent(&event))
+    {
+      switch (event.type)
+	{
+	case SDL_KEYDOWN:
+	  handle_keydown (event.key.keysym.sym);
+	  break;
+	default:
+	  break;
+	}
+    }
+  return 1;
 }
-*/
+
+
