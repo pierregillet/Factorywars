@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration [
-<!ELEMENT configuration (resolution)>
-<!ELEMENT lang (#PCDATA)>
+<!ELEMENT configuration (width, height)>
+<!ELEMENT width (#PCDATA)>
+<!ELEMENT height (#PCDATA)>
 ]>
 <configuration>
-	<resolution>1280*800</resolution>
+  <width>1280</width>
+  <height>800</height>
 </configuration>

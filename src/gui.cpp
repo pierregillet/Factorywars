@@ -156,7 +156,11 @@ run_gui ()
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
 
+  int move_state[4] = {0};
+  int keydown = 0;
+
   blit(x, y, 50, 82, CurrentTexture, gRenderer);
+
   while (!quit)
     {
       while (SDL_PollEvent (&e) != 0)
@@ -165,35 +169,47 @@ run_gui ()
 	    quit = true;
 	  else if (e.type == SDL_KEYDOWN)
 	    {
-	      switch (e.key.keysym.sym)
-		{
-		case SDLK_UP:
-		  y -= 5;
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_UP];
-		  break;
+	      keydown = 1;
+	      if (e.key.repeat != 0)
+		continue;
+	    }
+	  else if (e.type == SDL_KEYUP)
+	    keydown = 0;
+
+	  switch (e.key.keysym.sym)
+	    {
+	    case SDLK_UP:
+	      move_state[0] = keydown;
+	      break;
          
-		case SDLK_DOWN:
-		  y += 5;
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DOWN];
-		  break;
+	    case SDLK_DOWN:
+	      move_state[1] = keydown;
+	      break;
             
-		case SDLK_LEFT:
-		  x -= 5;
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
-		  break;
+	    case SDLK_LEFT:
+	      move_state[2] = keydown;
+	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
+	      break;
             
-		case SDLK_RIGHT:
-		  x += 5; 
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
-		  break;
+	    case SDLK_RIGHT:
+	      move_state[3] = keydown;
+	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
+	      break;
             
-		default:
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
-		  break;
-		}
-	      blit(x, y, 50, 82, CurrentTexture, gRenderer);
+	    default:
+	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
+	      break;
 	    }
 	}
+
+      // Update x and y
+      y += (move_state[0])? (-5) : 0;
+      y += (move_state[1])? 5 : 0;
+      x += (move_state[2])? (-5) : 0;
+      x += (move_state[3])? 5 : 0;
+
+      // Blit and sleep
+      blit(x, y, 50, 82, CurrentTexture, gRenderer);
       SDL_Delay (100/6);
     }
   return 1;
