@@ -41,7 +41,7 @@ ItemsName
   std::string getItemName(int);
  private:
   std::map<int, std::string> m_items_map;
-  std::string m_items_name[];
+  std::string m_items_name[13];
 };
 
 
