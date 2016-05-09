@@ -41,9 +41,11 @@ enum KeyPressTexture
     KEY_PRESS_SURFACE_RIGHT, 
     KEY_PRESS_SURFACE_TOTAL
   };
- 
+  
+SDL_Renderer* gRenderer = NULL; 
+
 SDL_Texture*
-loadTexture(std::string path, SDL_Renderer* gRenderer)
+loadTexture(std::string path)
 {
   SDL_Texture* NewTexture = NULL;
   SDL_Surface* loadedSurface = IMG_Load(path.c_str ());
@@ -55,7 +57,7 @@ loadTexture(std::string path, SDL_Renderer* gRenderer)
 }
 
 bool 
-init (SDL_Window** Window, SDL_Renderer** gRenderer,
+init (SDL_Window** Window,
       SDL_Texture** KeyPressTexture)
 {
   bool success = true;
@@ -80,13 +82,13 @@ init (SDL_Window** Window, SDL_Renderer** gRenderer,
 	  
       else //si la fenetre est bien cree
 	{
-	  *gRenderer = SDL_CreateRenderer (*Window, -1,
+	  gRenderer = SDL_CreateRenderer (*Window, -1,
 					   SDL_RENDERER_ACCELERATED);
-	  SDL_SetRenderDrawColor (*gRenderer, 0xFF,0xFF,0xFF,0xFF);
+	  SDL_SetRenderDrawColor (gRenderer, 0xFF,0xFF,0xFF,0xFF);
 	}
     }
 
-  if (!loadMedia (KeyPressTexture, *gRenderer))
+  if (!loadMedia (KeyPressTexture))
     success = false;
 
   return success;
@@ -94,28 +96,28 @@ init (SDL_Window** Window, SDL_Renderer** gRenderer,
 
 
 bool 
-loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer)
+loadMedia (SDL_Texture** KeyPressTexture)
 {
   bool success = true;
   
   //chaque case du tableau se voit atribuer une image
-  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture ("media/textures/LEFT.png", gRenderer);
+  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture ("media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture ("media/textures/LEFT.png", gRenderer);
+  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture ("media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture ("media/textures/RIGHT.png", gRenderer);
+  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture ("media/textures/RIGHT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture ("media/textures/LEFT.png", gRenderer);
+  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture ("media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] == NULL)
     success = false;  
     
-  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture ("media/textures/RIGHT.png", gRenderer);
+  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture ("media/textures/RIGHT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
 
@@ -124,7 +126,7 @@ loadMedia (SDL_Texture** KeyPressTexture, SDL_Renderer* gRenderer)
 
 
 bool
-blit (int x, int y, int width, int height, SDL_Texture* texture, SDL_Renderer* gRenderer)
+blit (int x, int y, int width, int height, SDL_Texture* texture)
 {
   bool success = true;
   SDL_Rect Rect = {.x = x, .y = y, .w = width, .h = height};
@@ -142,11 +144,9 @@ int
 run_gui ()
 {
   SDL_Window *Window = NULL;
-  SDL_Renderer *gRenderer = NULL;
-
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
-  if (!init (&Window, &gRenderer, key_press_texture))
+  if (!init (&Window, key_press_texture))
     return 1;
   
   int x = 0;
@@ -157,7 +157,7 @@ run_gui ()
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
 
-  blit(x, y, 50, 82, CurrentTexture, gRenderer);
+  blit(x, y, 50, 82, CurrentTexture);
   while (!quit)
     {
       while (SDL_PollEvent (&e) != 0)
@@ -184,7 +184,7 @@ run_gui ()
 		  break;
             
 		case SDLK_RIGHT:
-		  x += 5; 
+		  x += 5;
 		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
 		  break;
             
@@ -192,7 +192,7 @@ run_gui ()
 		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
 		  break;
 		}
-	      blit(x, y, 50, 82, CurrentTexture, gRenderer);
+	      blit(x, y, 50, 82, CurrentTexture);
 	    }
 	}
       SDL_Delay (100/6);
