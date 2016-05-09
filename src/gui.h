@@ -36,17 +36,19 @@
 #include <string>
 
 /**
-  * Blit Textures at given coordonates x,y
-  * Returns a bool named success, true or false
-  * The Texture needs a Renderer for being blited
+  * Blit Textures at given coordonates x,y.
+  * Returns an int, which is true if there is no error.
+  * The Texture needs a Renderer for being blited.
   */
 bool blit (int x, int y, int width, int height, SDL_Texture*);
 
 /**
-  * Initiates the SDL basics, like Window and Renderer
+  * Initiates the SDL basics, like Window and Renderer.
   */
 bool init (SDL_Window** Window, SDL_Texture** KeyPressTexture);
 bool loadMedia (SDL_Texture** KeyPressTexture);
 int run_gui ();
 SDL_Texture* loadTexture (std::string path);
+
+int get_event ();
 

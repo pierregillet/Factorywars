@@ -128,7 +128,7 @@ int get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
 				char* save_file_path);
 
 /**
-  * Create a chunk line in the save file.
+  * Create a line describing a new chunk in the save file.
   * @param chunk_coordinates is the chunk_coordinates.
   * @param biome_id is the biome id.
   * @param save_file_path is the path to the save file.

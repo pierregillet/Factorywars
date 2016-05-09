@@ -24,6 +24,8 @@
  * network.c contain the code for everything about the network
  */
 
+#include "network.h"
+
 int
 client (char *ip, unsigned short port, char* data)
 {
@@ -37,20 +39,20 @@ client (char *ip, unsigned short port, char* data)
   /* Convert port to a string */
   snprintf (port_str, 6, "%d", port);
 
-  memset(&hints, 0, sizeof(struct addrinfo));
+  memset (&hints, 0, sizeof (struct addrinfo));
   hints.ai_family = AF_UNSPEC; // Allow IPv4 and IPv6
   hints.ai_socktype = SOCK_DGRAM; // Datagram socket
   hints.ai_flags = 0;
   hints.ai_protocol = 0; //Any protocol
 
   s = getaddrinfo (ip, port_str, &hints, &result);
-  if(s != 0)
+  if (s != 0)
     {
-      fprintf (stderr, "Getaddrinfo: %s\n", gai_strerror(s));
+      fprintf (stderr, "Getaddrinfo: %s\n", gai_strerror (s));
       return -1;
     }
 
-  for(rp = result; rp != NULL; rp = rp->ai_next)
+  for (rp = result; rp != NULL; rp = rp->ai_next)
     {
       sockfd6 = socket (rp->ai_family, rp->ai_socktype, rp->ai_protocol);
       
@@ -76,5 +78,4 @@ client (char *ip, unsigned short port, char* data)
       return -1;
     }
 }
-
 

@@ -31,6 +31,8 @@
  */
 
 #include "gui.h"
+#include "player.h"
+#include "action.h"
 
 enum KeyPressTexture
   {
@@ -68,9 +70,9 @@ init (SDL_Window** Window,
       success = false;
     }
 	
-  else //si la SDL s'est bien lancee	
+  else // if the SDL launched correctly
     {
-      *Window = SDL_CreateWindow ("factorywars", SDL_WINDOWPOS_UNDEFINED,
+      *Window = SDL_CreateWindow ("Factorywars", SDL_WINDOWPOS_UNDEFINED,
 				  SDL_WINDOWPOS_UNDEFINED, 640, 480,
 				  SDL_WINDOW_SHOWN);
 	  
@@ -80,7 +82,7 @@ init (SDL_Window** Window,
 	  printf ("Couldn’t create window: %s\n", SDL_GetError());
 	}
 	  
-      else //si la fenetre est bien cree
+      else // if window has been created without errors
 	{
 	  gRenderer = SDL_CreateRenderer (*Window, -1,
 					   SDL_RENDERER_ACCELERATED);
@@ -100,7 +102,7 @@ loadMedia (SDL_Texture** KeyPressTexture)
 {
   bool success = true;
   
-  //chaque case du tableau se voit atribuer une image
+  // every box of the table is associated to an image
   KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture ("media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
@@ -125,10 +127,9 @@ loadMedia (SDL_Texture** KeyPressTexture)
 }
 
 
-bool
+int
 blit (int x, int y, int width, int height, SDL_Texture* texture)
 {
-  bool success = true;
   SDL_Rect Rect = {.x = x, .y = y, .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
  
@@ -137,7 +138,7 @@ blit (int x, int y, int width, int height, SDL_Texture* texture)
   SDL_RenderCopy (gRenderer, texture, NULL,NULL);
   SDL_RenderPresent (gRenderer);
 
-  return success;
+  return 1;
 }
 
 int 
@@ -158,6 +159,9 @@ run_gui ()
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
 
   blit(x, y, 50, 82, CurrentTexture);
+  int move_state[4] = {0};
+  int keydown = 0;
+
   while (!quit)
     {
       while (SDL_PollEvent (&e) != 0)
@@ -166,37 +170,69 @@ run_gui ()
 	    quit = true;
 	  else if (e.type == SDL_KEYDOWN)
 	    {
-	      switch (e.key.keysym.sym)
-		{
-		case SDLK_UP:
-		  y -= 5;
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_UP];
-		  break;
+	      keydown = 1;
+	      if (e.key.repeat != 0)
+		continue;
+	    }
+	  else if (e.type == SDL_KEYUP)
+	    keydown = 0;
+
+	  switch (e.key.keysym.sym)
+	    {
+	    case SDLK_UP:
+	      move_state[0] = keydown;
+	      break;
          
-		case SDLK_DOWN:
-		  y += 5;
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DOWN];
-		  break;
+	    case SDLK_DOWN:
+	      move_state[1] = keydown;
+	      break;
             
-		case SDLK_LEFT:
-		  x -= 5;
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
-		  break;
+	    case SDLK_LEFT:
+	      move_state[2] = keydown;
+	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
+	      break;
             
-		case SDLK_RIGHT:
-		  x += 5;
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
-		  break;
+	    case SDLK_RIGHT:
+	      move_state[3] = keydown;
+	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
+	      break;
             
-		default:
-		  CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
-		  break;
-		}
-	      blit(x, y, 50, 82, CurrentTexture);
+	    default:
+	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
+	      break;
 	    }
 	}
+
+      // Update x and y
+      y += (move_state[0])? (-5) : 0;
+      y += (move_state[1])? 5 : 0;
+      x += (move_state[2])? (-5) : 0;
+      x += (move_state[3])? 5 : 0;
+
+      // Blit and sleep
+      blit(x, y, 50, 82, CurrentTexture, gRenderer);
       SDL_Delay (100/6);
     }
   return 1;
 }  
+
+
+int
+get_event ()
+{
+  SDL_Event event;
+  while (SDL_PollEvent(&event))
+    {
+      switch (event.type)
+	{
+	case SDL_KEYDOWN:
+	  handle_keydown (event.key.keysym.sym);
+	  break;
+	default:
+	  break;
+	}
+    }
+  return 1;
+}
+
 

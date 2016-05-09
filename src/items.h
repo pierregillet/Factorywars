@@ -30,6 +30,7 @@
 
 #include <map>
 #include <string>
+#include "structures.h"
 
 
 class
@@ -40,5 +41,107 @@ ItemsName
   std::string getItemName(int);
  private:
   std::map<int, std::string> m_items_map;
-  std::string m_items_name[];
+  std::string m_items_name[13];
+};
+
+
+class
+Machines
+{
+ public:
+  
+  /*
+   * Creates a machine object with default values.
+   */
+  Machines();
+
+  /*
+   * Creates a machine object
+   * @param size is the size that the object will take on the map.
+   */
+  Machines(int size);
+ private:
+  int m_size;
+  std::string m_path_to_image;
+};
+
+class
+Inserters
+{
+ public :
+
+  /*
+   *
+   */
+  Inserters();
+ private:
+  int m_inserter_type;
+};
+
+class
+BurnerMachines : Machines
+{
+ public:
+
+  /*
+   *
+   */
+  BurnerMachines();
+ private:
+  int m_energy_consumption;
+};
+
+class
+BurnerInserters : BurnerMachines, Inserters
+{
+ public:
+
+  /*
+   *
+   */
+  BurnerInserters();
+};
+
+class
+ElectricMachines : Machines
+{
+ public:
+
+  /*
+   *
+   */
+  ElectricMachines();
+};
+
+class
+Trees
+{
+ public:
+
+  /*
+   *
+   */
+  Trees();
+};
+
+class
+Ores
+{
+ public:
+
+  /*
+   *
+   */
+  Ores();
+};
+
+class
+Armor
+{
+ public:
+
+  /*
+   *
+   */
+  Armor();
 };
