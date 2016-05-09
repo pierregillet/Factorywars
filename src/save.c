@@ -34,7 +34,7 @@
 
 regmatch_t
 get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
-		 struct coordinates square_coordinates, char* save_file_path)
+		 struct coordinates square_coordinates, const char* save_file_path)
 {
   const unsigned int LINE_SIZE = 512;
 
@@ -96,7 +96,7 @@ get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
 }
 
 int
-get_biome_id (struct coordinates chunk_coordinates, char* save_file_path)
+get_biome_id (struct coordinates chunk_coordinates, const char* save_file_path)
 {
   const unsigned int LINE_SIZE = 512;
   const unsigned int BIOME_ID_STR_SIZE = 4;
@@ -122,7 +122,7 @@ get_biome_id (struct coordinates chunk_coordinates, char* save_file_path)
 int
 set_surface_item (struct coordinates chunk_coordinates,
 		  struct coordinates square_coordinates, int item_id,
-		  char* save_file_path)
+		  const char* save_file_path)
 {
   const unsigned int LINE_SIZE = 512;
   const unsigned int REGEX_STR_SIZE = 512;
@@ -347,7 +347,7 @@ set_surface_item (struct coordinates chunk_coordinates,
 
 int
 get_surface_item (struct coordinates chunk_coordinates,
-		  struct coordinates square_coordinates, char* save_file_path)
+		  struct coordinates square_coordinates, const char* save_file_path)
 {
   const int ITEM_ID_LEN = 20;
   const int LINE_SIZE = 512;
@@ -385,7 +385,7 @@ get_surface_item (struct coordinates chunk_coordinates,
 regmatch_t
 find_square_coordinates_pos (struct coordinates chunk_coordinates,
 			     struct coordinates square_coordinates,
-			     char* save_file_path)
+			     const char* save_file_path)
 {
   const int COORDINATES_STR_SIZE = 20;
   const int REGEX_STR_SIZE = COORDINATES_STR_SIZE;
@@ -442,7 +442,7 @@ find_square_coordinates_pos (struct coordinates chunk_coordinates,
 
 int
 get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
-			    char* save_file_path)
+			    const char* save_file_path)
 {
   const int LINE_SIZE = 512;
 
@@ -463,7 +463,7 @@ get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
 }
 
 regmatch_t get_item_id_pos_using_item_id (struct coordinates chunk_coordinates,
-					  int item_id, char* save_file_path)
+					  int item_id, const char* save_file_path)
 {
   const int REGEX_STR_SIZE = 32;
   const int LINE_SIZE = 512;
@@ -508,7 +508,7 @@ regmatch_t get_item_id_pos_using_item_id (struct coordinates chunk_coordinates,
 }
 
 int
-set_biome_id (struct coordinates chunk_coordinates, int biome_id, char* save_file_path)
+set_biome_id (struct coordinates chunk_coordinates, int biome_id, const char* save_file_path)
 {
   const int LINE_SIZE = 512;
   const int BIOME_ID_STR_SIZE = 20;
@@ -565,7 +565,7 @@ set_biome_id (struct coordinates chunk_coordinates, int biome_id, char* save_fil
 int
 create_chunk_line (struct coordinates chunk_coordinates,
 		   int biome_id,
-		   char* save_file_path)
+		   const char* save_file_path)
 {
   const int LINE_SIZE = 512;
   const int COORDINATES_STR_SIZE = 20;

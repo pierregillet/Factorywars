@@ -51,7 +51,7 @@
  * @param file_path is the path of the file where we want to find the chunk line.
  * @return A pointer to the line or NULL if there is an error.
  */
-char* find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t dst_size, char* file_path);
+char* find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t dst_size, const char* file_path);
 
 /**
  * Find the line number of the line describing the given chunk.
@@ -59,7 +59,7 @@ char* find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, 
  * @param file_path is the path to the save file
  * @return the line number or -1 if there is an error. The line number begin at position zero for the first line.
  */
-int find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, char* file_path);
+int find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, const char* file_path);
 
 /**
  * Translate a struct coordinates to a string.
@@ -79,18 +79,18 @@ char* coordinates_to_string (struct coordinates coordinates, char* dst, size_t d
  * @param replace the line? 0 for no, anything else otherwise.
  * @return 0 if there is an error, something else otherwise.
  */
-int insert_line_in_file (char* line, int line_size, int position, char* file_path, int replace);
+int insert_line_in_file (char* line, int line_size, int position, const char* file_path, int replace);
 
 /**
  * Write an entire file to a pipe.
  * @param file_path is the path to the file.
  * @param pipe is the pipe where we will write the file.
  */
-void write_file_to_pipe (char* file_path, int pipe);
+void write_file_to_pipe (const char* file_path, int pipe);
 
 /**
  * Write an array of char to the pipe.
  * @param pipe is the pipe’s file descriptor.
  * @param message is the array of char which will be written to the pipe.
  */
-void write_to_pipe (int pipe, char* message);
+void write_to_pipe (int pipe, const char* message);

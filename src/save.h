@@ -49,7 +49,7 @@
  */
 int get_surface_item (struct coordinates chunk_coordinates,
 		      struct coordinates square_coordinates,
-		      char* save_file_path);
+		      const char* save_file_path);
 
 /**
  * Get the biome id of the given chunk.
@@ -57,7 +57,7 @@ int get_surface_item (struct coordinates chunk_coordinates,
  * @param save_file_path is the path to the save file.
  * @return -1 if there is an error, anything else if not.
  */
-int get_biome_id (struct coordinates chunk_coordinates, char* save_file_path);
+int get_biome_id (struct coordinates chunk_coordinates, const char* save_file_path);
 
 /**
  * Set the surface item at given coordinates.
@@ -70,7 +70,7 @@ int get_biome_id (struct coordinates chunk_coordinates, char* save_file_path);
  */
 int set_surface_item (struct coordinates chunk_coordinates,
 		      struct coordinates square_coordinates, int item_id,
-		      char* save_file_path);
+		      const char* save_file_path);
 
 /**
  * Set the biome id for the given chunk.
@@ -79,7 +79,7 @@ int set_surface_item (struct coordinates chunk_coordinates,
  * @param save_file_path it the path to the save file
  * @return 0 if there is an error, 1 if not.
  */
-int set_biome_id (struct coordinates chunk_coordinates, int biome_id, char* save_file_path);
+int set_biome_id (struct coordinates chunk_coordinates, int biome_id, const char* save_file_path);
 
 /**
  * Get the position of the item id in the line describing the chunk.
@@ -91,7 +91,7 @@ int set_biome_id (struct coordinates chunk_coordinates, int biome_id, char* save
 regmatch_t
 get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
 				       struct coordinates square_coordinates,
-				       char* save_file_path);
+				       const char* save_file_path);
 
 
 /**
@@ -103,7 +103,7 @@ get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
  * @return the position
  */
 regmatch_t get_item_id_pos_using_item_id (struct coordinates chunk_coordinates,
-					  int item_id, char* save_file_path);
+					  int item_id, const char* save_file_path);
 
 /**
  * Get the position of the square coordinates in the line describing the chunk.
@@ -115,7 +115,7 @@ regmatch_t get_item_id_pos_using_item_id (struct coordinates chunk_coordinates,
  */
 regmatch_t find_square_coordinates_pos (struct coordinates chunk_coordinates,
 					struct coordinates square_coordinates,
-					char* save_file_path);
+					const char* save_file_path);
 
 /**
  * Return the length of the chunk coordinates plus
@@ -125,7 +125,7 @@ regmatch_t find_square_coordinates_pos (struct coordinates chunk_coordinates,
  * @return the length of the chunk coordinates plus biome_id.
  */
 int get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
-				char* save_file_path);
+				const char* save_file_path);
 
 /**
   * Create a line describing a new chunk in the save file.
@@ -136,4 +136,4 @@ int get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
   */
 int create_chunk_line (struct coordinates chunk_coordinates,
 		       int biome_id,
-		       char* save_file_path);
+		       const char* save_file_path);

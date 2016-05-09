@@ -33,7 +33,7 @@
 #include "utils.h"
 
 char*
-find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t dst_size, char* file_path)
+find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t dst_size, const char* file_path)
 {
   const unsigned int LINE_SIZE = dst_size;
   const unsigned int REGEX_STR_SIZE = 14;
@@ -83,7 +83,7 @@ find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t
 }
 
 int
-find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, char* file_path)
+find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, const char* file_path)
 {
   const unsigned int LINE_SIZE = 512;
   const unsigned int REGEX_STR_SIZE = 14;
@@ -150,7 +150,7 @@ coordinates_to_string (struct coordinates coordinates, char *dst, size_t dst_siz
 }
 
 int
-insert_line_in_file (char* line, int line_size, int position, char* file_path, int replace)
+insert_line_in_file (char* line, int line_size, int position, const char* file_path, int replace)
 {
   int pipe_read_file[2];
 
@@ -202,7 +202,7 @@ insert_line_in_file (char* line, int line_size, int position, char* file_path, i
 
 
 void
-write_file_to_pipe (char* file_path, int pipe)
+write_file_to_pipe (const char* file_path, int pipe)
 {
   FILE *file = fopen (file_path, "r");
   const int LINE_SIZE = 512;
@@ -216,7 +216,7 @@ write_file_to_pipe (char* file_path, int pipe)
 }
 
 void
-write_to_pipe (int file, char* message)
+write_to_pipe (int file, const char* message)
 {
   write (file, message, strlen (message));
 }
