@@ -210,7 +210,7 @@ run_gui ()
       x += (move_state[3])? 5 : 0;
 
       // Blit and sleep
-      blit(x, y, 50, 82, CurrentTexture, gRenderer);
+      blit(x, y, 50, 82, CurrentTexture);
       SDL_Delay (100/6);
     }
   return 1;

@@ -40,7 +40,7 @@
   * Returns an int, which is true if there is no error.
   * The Texture needs a Renderer for being blited.
   */
-bool blit (int x, int y, int width, int height, SDL_Texture*);
+int blit (int x, int y, int width, int height, SDL_Texture* texture);
 
 /**
   * Initiates the SDL basics, like Window and Renderer.
