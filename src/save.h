@@ -137,3 +137,12 @@ int get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
 int create_chunk_line (struct coordinates chunk_coordinates,
 		       int biome_id,
 		       const char* save_file_path);
+
+/**
+ * Get the chunk coordinates of the bottom left corner chunk for displaying it.
+ * @param player_offset is the number of pixels from the left bottom corner
+ * of the map.
+ * @return the chunk coordinates of the bottom left corner chunk.
+ */
+struct coordinates
+get_chunk_coordinates_from_player_movement (struct coordinates player_offset);
