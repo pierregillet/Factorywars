@@ -33,6 +33,7 @@
 #include "gui.h"
 #include "player.h"
 #include "action.h"
+#include "display_map.cpp"
 
 enum KeyPressTexture
   {
@@ -60,7 +61,8 @@ loadTexture(std::string path)
 
 bool 
 init (SDL_Window** Window,
-      SDL_Texture** KeyPressTexture)
+      SDL_Texture** KeyPressTexture,
+      SDL_Texture** biomes)
 {
   bool success = true;
 	
@@ -92,7 +94,7 @@ init (SDL_Window** Window,
 
   if (!loadMedia (KeyPressTexture))
     success = false;
-
+  load_biomes(biomes);
   return success;
 }
 
@@ -134,7 +136,7 @@ blit (int x, int y, int width, int height, SDL_Texture* texture)
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
  
   SDL_RenderSetViewport(gRenderer, &Rect);
-  SDL_RenderClear (gRenderer);
+  //SDL_RenderClear (gRenderer);
   SDL_RenderCopy (gRenderer, texture, NULL,NULL);
   SDL_RenderPresent (gRenderer);
 
@@ -144,10 +146,12 @@ blit (int x, int y, int width, int height, SDL_Texture* texture)
 int 
 run_gui ()
 {
+  SDL_Texture *biomes[4];
+
   SDL_Window *Window = NULL;
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
-  if (!init (&Window, key_press_texture))
+  if (!init (&Window, key_press_texture, biomes))
     return 1;
   
   int x = 0;
@@ -157,11 +161,12 @@ run_gui ()
   SDL_Event e;
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
-
-  blit(x, y, 50, 82, CurrentTexture);
+  
+  // we don't use CurrentTexture for now
+  // cause we don't display the hero, just the map
+  // blit(x, y, 50, 82, CurrentTexture);
   int move_state[4] = {0};
   int keydown = 0;
-
   while (!quit)
     {
       while (SDL_PollEvent (&e) != 0)
@@ -210,7 +215,7 @@ run_gui ()
       x += (move_state[3])? 5 : 0;
 
       // Blit and sleep
-      blit(x, y, 50, 82, CurrentTexture);
+      display_background("save", biomes);
       SDL_Delay (100/6);
     }
   return 1;

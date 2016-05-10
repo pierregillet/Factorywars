@@ -34,6 +34,7 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <string>
+#include "display_map.h"
 
 /**
   * Blit Textures at given coordonates x,y.
@@ -45,7 +46,7 @@ int blit (int x, int y, int width, int height, SDL_Texture* texture);
 /**
   * Initiates the SDL basics, like Window and Renderer.
   */
-bool init (SDL_Window** Window, SDL_Texture** KeyPressTexture);
+bool init (SDL_Window** Window, SDL_Texture** KeyPressTexture, SDL_Texture** biomes);
 bool loadMedia (SDL_Texture** KeyPressTexture);
 int run_gui ();
 SDL_Texture* loadTexture (std::string path);
