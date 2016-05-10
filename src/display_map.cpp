@@ -16,7 +16,7 @@ void load_biomes(SDL_Texture** table)
 
 
 void
-display_background (std::string path, SDL_Texture** table)
+display_background (std::string path, SDL_Texture** table, int x, int y)
 {
   for(int i(0) ; i<2; i+=1)
   {
@@ -26,18 +26,17 @@ display_background (std::string path, SDL_Texture** table)
         int id = get_biome_id (coords, path.c_str ());
         SDL_Texture* display_id = table[id];  
         
-        int xmax = i*380 + 380;
-        int ymax = j*380 + 380;        
+        int xmax = i*384 + 384;
+        int ymax = j*384 + 384;        
         
-        for(int x(i*380); x<xmax; x+=24)
+        for(int l(i*384); l<xmax; l+=24)
         {
-          for(int y(j*380); y<ymax; y+=24)
+          for(int m(j*384); m<ymax; m+=24)
           {
-            blit(x, y,24,24, display_id);
+            blit(l-x, m-y,24,24, display_id);
           }
         }
       }  
-  
-  }  
+  }
 }  
   

@@ -128,6 +128,17 @@ loadMedia (SDL_Texture** KeyPressTexture)
   return success;
 }
 
+void 
+refresh_renderer ()
+{
+  SDL_RenderClear (gRenderer);
+}
+
+void
+display_blits()
+{
+  SDL_RenderPresent (gRenderer);
+}
 
 int
 blit (int x, int y, int width, int height, SDL_Texture* texture)
@@ -136,9 +147,7 @@ blit (int x, int y, int width, int height, SDL_Texture* texture)
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
  
   SDL_RenderSetViewport(gRenderer, &Rect);
-  //SDL_RenderClear (gRenderer);
   SDL_RenderCopy (gRenderer, texture, NULL,NULL);
-  SDL_RenderPresent (gRenderer);
 
   return 1;
 }
@@ -164,7 +173,6 @@ run_gui ()
   
   // we don't use CurrentTexture for now
   // cause we don't display the hero, just the map
-  // blit(x, y, 50, 82, CurrentTexture);
   int move_state[4] = {0};
   int keydown = 0;
   while (!quit)
@@ -215,7 +223,10 @@ run_gui ()
       x += (move_state[3])? 5 : 0;
 
       // Blit and sleep
-      display_background("save", biomes);
+      refresh_renderer();
+      display_background("save", biomes,x,y);
+      blit(320, 240, 25, 41, CurrentTexture);
+      display_blits();
       SDL_Delay (100/6);
     }
   return 1;

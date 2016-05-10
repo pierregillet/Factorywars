@@ -50,6 +50,8 @@ bool init (SDL_Window** Window, SDL_Texture** KeyPressTexture, SDL_Texture** bio
 bool loadMedia (SDL_Texture** KeyPressTexture);
 int run_gui ();
 SDL_Texture* loadTexture (std::string path);
+void refresh_renderer();
+void display_blits();
 
 int get_event ();
 
