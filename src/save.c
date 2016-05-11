@@ -594,14 +594,12 @@ create_chunk_line (struct coordinates chunk_coordinates,
 struct coordinates
 get_chunk_coordinates_from_player_movement (struct coordinates player_offset)
 {
-  const int NUMBER_OF_SQUARE_PER_ROW = 16;
-  const int SQUARE_WIDTH = 24;
 
   struct coordinates chunk_coordinates;
   chunk_coordinates.x =
-    player_offset.x / NUMBER_OF_SQUARE_PER_ROW * SQUARE_WIDTH;
+    player_offset.x / 384;
   chunk_coordinates.y =
-    player_offset.y / NUMBER_OF_SQUARE_PER_ROW * SQUARE_WIDTH;
+    player_offset.y / 384;
 
   return chunk_coordinates;
 }

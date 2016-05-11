@@ -224,7 +224,7 @@ run_gui ()
 
       // Blit and sleep
       refresh_renderer();
-      display_background("save", biomes,x,y);
+      display_background("save", biomes,-x,-y);
       blit(320, 240, 25, 41, CurrentTexture);
       display_blits();
       SDL_Delay (100/6);
