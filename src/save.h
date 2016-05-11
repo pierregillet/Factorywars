@@ -35,10 +35,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "structures.h"
+#include "config.h"
 #include "utils.h"
 #include <sys/types.h>
 #include <string.h>
 #include <regex.h>
+#include <math.h>
 
 /**
  * Get the surface item at given coordinates.
