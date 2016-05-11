@@ -602,16 +602,25 @@ get_chunk_coordinates_from_player_movement (struct coordinates player_offset)
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
 
-  const int number_of_chunk_per_column = (int) ceil (screen_height / (float) chunk_width);
-  const int number_of_chunk_per_row = (int) ceil (screen_width / (float) chunk_width);
+  const int number_of_chunk_per_column =
+    (int) ceil (screen_height / (float) chunk_width);
+
+  const int number_of_chunk_per_row =
+    (int) ceil (screen_width / (float) chunk_width);
   
   struct coordinates center_chunk_coordinates, top_left_chunk_coordinates;
 
-  center_chunk_coordinates.x = (long int) ceil (player_offset.x / (float) chunk_width);
-  center_chunk_coordinates.y = (long int) ceil (player_offset.y / (float) chunk_width);
+  center_chunk_coordinates.x =
+    (long int) ceil (player_offset.x / (float) chunk_width);
 
-  top_left_chunk_coordinates.x = center_chunk_coordinates.x - number_of_chunk_per_column / 2;
-  top_left_chunk_coordinates.y = center_chunk_coordinates.y - number_of_chunk_per_row / 2;
+  center_chunk_coordinates.y =
+    (long int) ceil (player_offset.y / (float) chunk_width);
+
+  top_left_chunk_coordinates.x =
+    center_chunk_coordinates.x - number_of_chunk_per_column / 2;
+
+  top_left_chunk_coordinates.y =
+    center_chunk_coordinates.y - number_of_chunk_per_row / 2;
 
   return top_left_chunk_coordinates;
 }
