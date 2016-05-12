@@ -22,10 +22,10 @@ display_background (std::string path, SDL_Texture** table, int x, int y)
   const int SQUARE_WIDTH = 24;
 
   const int chunk_width = NUMBER_OF_SQUARE_PER_ROW * SQUARE_WIDTH;
-  // const int screen_height = atoi (get_config_value ("height"));
-  // const int screen_width = atoi (get_config_value ("width"));
-  const int screen_height = 800;
-  const int screen_width = 1280;
+  const int screen_height = atoi (get_config_value ("height"));
+  const int screen_width = atoi (get_config_value ("width"));
+  // const int screen_height = 800;
+  // const int screen_width = 1280;
 
   for(int i(0) ; i < screen_width; i += chunk_width)
     {

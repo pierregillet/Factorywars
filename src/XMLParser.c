@@ -49,7 +49,8 @@ getNbOfElement (const char *elementName, const char *filename)
 	}
       ret = xmlTextReaderRead (reader);
     }
-
+  
+  xmlFreeTextReader (reader);
   xmlCleanupParser ();
   xmlMemoryDump ();
 
@@ -120,6 +121,7 @@ getValueOfElement (const char *elementName, const int no,
 
     }
 
+  xmlFreeTextReader (reader);
   xmlCleanupParser ();
   xmlMemoryDump ();
 
