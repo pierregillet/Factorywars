@@ -180,12 +180,14 @@ run_gui ()
   // cause we don't display the hero, just the map
   int move_state[4] = {0};
   int keydown = 0;
+
+  const int screen_height = atoi (get_config_value ("height"));
+  const int screen_width = atoi (get_config_value ("width"));
+
   while (!quit)
     {
-      printf ("hello1\n");
       while (SDL_PollEvent (&e) != 0)
 	{
-	  printf ("hello2\n");
 	  if (e.type == SDL_QUIT)
 	    quit = true;
 	  else if (e.type == SDL_KEYDOWN)
@@ -230,12 +232,11 @@ run_gui ()
       x += (move_state[3])? 5 : 0;
 
       // Blit and sleep
-      refresh_renderer();
-      display_background("save", biomes,x,y);
-      printf ("test\n");
-      blit(320, 240, 25, 41, CurrentTexture);
+      refresh_renderer ();
+      display_background ("save", biomes, x, y);
+      blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+      printf ("x : %d y : %d\n", x, y);
       display_blits();
-      printf ("test2\n");
       SDL_Delay (100/6);
     }
   return 1;
