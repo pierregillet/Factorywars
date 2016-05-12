@@ -594,11 +594,11 @@ create_chunk_line (struct coordinates chunk_coordinates,
 struct coordinates
 get_chunk_coordinates_from_player_movement (struct coordinates player_offset)
 {
+  /* We initialize constants */
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
   const int SQUARE_WIDTH = 24;
 
   const int chunk_width = NUMBER_OF_SQUARE_PER_ROW * SQUARE_WIDTH;
-
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
 
@@ -622,5 +622,6 @@ get_chunk_coordinates_from_player_movement (struct coordinates player_offset)
   top_left_chunk_coordinates.y =
     center_chunk_coordinates.y - number_of_chunk_per_row / 2;
 
-  return top_left_chunk_coordinates;
+  /* return top_left_chunk_coordinates; */
+  return center_chunk_coordinates;
 }

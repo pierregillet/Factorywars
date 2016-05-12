@@ -35,6 +35,7 @@
 #include <stdio.h>
 #include <string>
 #include "display_map.h"
+#include "config.h"
 
 /**
   * Blit Textures at given coordonates x,y.

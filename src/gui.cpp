@@ -64,6 +64,9 @@ init (SDL_Window** Window,
       SDL_Texture** KeyPressTexture,
       SDL_Texture** biomes)
 {
+  const int screen_height = atoi (get_config_value ("height"));
+  const int screen_width = atoi (get_config_value ("width"));
+
   bool success = true;
 	
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
@@ -74,8 +77,10 @@ init (SDL_Window** Window,
 	
   else // if the SDL launched correctly
     {
-      *Window = SDL_CreateWindow ("Factorywars", SDL_WINDOWPOS_UNDEFINED,
-				  SDL_WINDOWPOS_UNDEFINED, 640, 480,
+      *Window = SDL_CreateWindow ("Factorywars",
+				  SDL_WINDOWPOS_UNDEFINED,
+				  SDL_WINDOWPOS_UNDEFINED,
+				  screen_width, screen_height,
 				  SDL_WINDOW_SHOWN);
 	  
       if (Window == NULL) 
@@ -177,8 +182,10 @@ run_gui ()
   int keydown = 0;
   while (!quit)
     {
+      printf ("hello1\n");
       while (SDL_PollEvent (&e) != 0)
 	{
+	  printf ("hello2\n");
 	  if (e.type == SDL_QUIT)
 	    quit = true;
 	  else if (e.type == SDL_KEYDOWN)
@@ -224,9 +231,11 @@ run_gui ()
 
       // Blit and sleep
       refresh_renderer();
-      display_background("save", biomes,-x,-y);
+      display_background("save", biomes,x,y);
+      printf ("test\n");
       blit(320, 240, 25, 41, CurrentTexture);
       display_blits();
+      printf ("test2\n");
       SDL_Delay (100/6);
     }
   return 1;
