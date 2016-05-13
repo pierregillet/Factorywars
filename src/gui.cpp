@@ -235,7 +235,6 @@ run_gui ()
       refresh_renderer ();
       display_background ("save", biomes, x, y);
       blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
-      printf ("x : %d y : %d\n", x, y);
       display_blits();
       SDL_Delay (100/6);
     }

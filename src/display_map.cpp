@@ -25,9 +25,9 @@ display_background (std::string path, SDL_Texture** table, int x, int y)
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
 
-  for(int i(0) ; i < screen_width; i += chunk_width)
+  for(int i(0) ; i <= screen_width; i += chunk_width)
     {
-      for(int j(0); j < screen_height; j += chunk_width)
+      for(int j(0); j <= screen_height; j += chunk_width)
 	{
 	  struct coordinates hero_coords= {.x = i, .y = j};
 
@@ -35,8 +35,6 @@ display_background (std::string path, SDL_Texture** table, int x, int y)
 
   
 	  int id = get_biome_id (coords, path.c_str ());
-	  printf ("%ld;%ld id : %d\n", coords.x, coords.y, id);
-	  printf ("hero_coords : %d %d\n", hero_coords.x, hero_coords.y);
 	  if (id == -1)
 	    {
 	      fprintf (stderr, "Wrong chunk coordinates.\n");
@@ -45,8 +43,7 @@ display_background (std::string path, SDL_Texture** table, int x, int y)
 
 	  SDL_Texture* display_id = table[id];
 
-	  blit (-x + i, -y + j, chunk_width, chunk_width,  display_id);
+	  blit (i - x, j - y, chunk_width, chunk_width,  display_id);
 	}
     }
 }  
-  
