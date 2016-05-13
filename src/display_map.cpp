@@ -29,7 +29,8 @@ display_background (std::string path, SDL_Texture** table, int x, int y)
     {
       for(int j(0); j < screen_height; j += chunk_width)
 	{
-	  struct coordinates hero_coords= {.x = x+i, .y = y+j};
+	  struct coordinates hero_coords= {.x = i, .y = j};
+
 	  struct coordinates coords = get_chunk_coordinates_from_player_movement (hero_coords);
 
   
