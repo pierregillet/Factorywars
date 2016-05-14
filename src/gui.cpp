@@ -184,6 +184,11 @@ run_gui ()
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
 
+  // We need to display the map at the beginning
+  display_background ("save", biomes, x, y);
+  blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+  display_blits();
+
   while (!quit)
     {
       while (SDL_PollEvent (&e) != 0)
@@ -231,11 +236,19 @@ run_gui ()
       x += (move_state[2])? (-5) : 0;
       x += (move_state[3])? 5 : 0;
 
+      for (int i = 0; i < 4; i++)
+	{
+	  if (move_state[i])
+	    {
+	      refresh_renderer ();
+	      display_background ("save", biomes, x, y);
+	      blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+	      display_blits();
+	      break;
+	    }
+	}
+
       // Blit and sleep
-      refresh_renderer ();
-      display_background ("save", biomes, x, y);
-      blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
-      display_blits();
       SDL_Delay (100/6);
     }
   return 1;
