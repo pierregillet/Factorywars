@@ -33,14 +33,12 @@ display_background (std::string path, SDL_Texture** table, int x, int y)
       for(int j(0); j < screen_width + x % chunk_width; j += chunk_width)
 	{
 	  struct coordinates hero_coords = {.x = x + j, .y = y + i};
-
 	  struct coordinates coords = get_chunk_coordinates_from_player_movement (hero_coords);
   
 	  int id = get_biome_id (coords, path.c_str ());
 	  if (id == -1)
 	    {
-	      fprintf (stderr, "Wrong chunk coordinates.\n");
-	      continue;
+	      id = 2;
 	    }
 
 	  SDL_Texture* display_id = table[id];
