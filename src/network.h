@@ -45,4 +45,23 @@
  * @param data is the string which will be sent.
  * @return 0 if success, -1 if there is an error.
  */
-int client (char *ip, unsigned short port, char* data);
+int send (const char *ip, unsigned short port, char* data);
+
+/**
+ * Run the network process and create pipes to communicate with.
+ *
+ * @param port is the port the server will be listening on.
+ * @param pipes is an integer array of four elements.
+ * @return 1 if there is no error.
+ */
+int run_network_process (unsigned short port, int* pipes);
+
+/**
+ * This is the networking loop.
+ *
+ * @param port is the port the server will be listening on.
+ * @param read_pipe is the pipe where we send information to send through the network.
+ * @param write_pipe is the pipe where we send the information from the network.
+ */
+void handle_network_communication (unsigned short port, int read_pipe,
+				   int write_pipe);

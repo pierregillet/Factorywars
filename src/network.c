@@ -27,7 +27,7 @@
 #include "network.h"
 
 int
-client (char *ip, unsigned short port, char* data)
+send (const char *ip, unsigned short port, char* data)
 {
   int sockfd6, n, s;
   char port_str[6];
@@ -79,3 +79,47 @@ client (char *ip, unsigned short port, char* data)
     }
 }
 
+int
+run_network_process (unsigned short port, int* pipes)
+{
+  if (pipe (pipes) && pipe (pipes + 2))
+    {
+      fprintf (stderr, "Pipe failed.\n");
+      return 0;
+    }
+
+  pid_t pid;
+
+  pid = fork ();
+  if (pid == (pid_t) 0)
+    {
+      /* Child */
+      close (pipes[1]);
+      close (pipes[2]);
+      handle_network_communication;
+    }
+  else if (pid < (pid_t) 0)
+    {
+      /* The fork failed */
+      fprintf (stderr, "Fork failed.\n");
+      return EXIT_FAILURE;
+    }
+  else
+    {
+      /* Parent */
+      close (pipes[0]);
+      close (pipes[3]);
+    }
+}
+
+void
+handle_network_communication (unsigned short port, int read_pipe,
+			      int write_pipe)
+{
+  /* Read the read_pipe */
+  /* Interpret */
+  /* Send if there is something to send */
+  /* Read the socket */
+  /* Interpret */
+  /* Send through the pipe if there is something to send */
+}
