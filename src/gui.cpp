@@ -161,7 +161,6 @@ int
 run_gui ()
 {
   SDL_Texture *biomes[4];
-
   SDL_Window *Window = NULL;
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
@@ -170,11 +169,8 @@ run_gui ()
   
   int x = 0;
   int y = 0;
-  
-  SDL_Event e;
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
-    coordinates offset;
   
   /* 
    * keys_state only has 4 elements
@@ -188,40 +184,15 @@ run_gui ()
 
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
-  int quit = 0;
 
   // We need to display the map at the beginning
   display_background ("save", biomes, x, y);
   blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
   display_blits();
 
-  while (!quit)
+  while (handle_events (&CurrentTexture, biomes, keys_state, key_press_texture) != 0)
     {
-      while (SDL_PollEvent (&e) != 0)
-	{
-	  if (e.type == SDL_QUIT)
-	    quit = true;
-	  else if (e.type == SDL_KEYDOWN)
-	    {
-	      handle_keydown (e.key.keysym.sym, keys_state, &CurrentTexture, key_press_texture);
-	      if (e.key.repeat != 0)
-		continue;
-	    }
-	  else if (e.type == SDL_KEYUP)
-	    {
-	      handle_keyup (e.key.keysym.sym, keys_state, &CurrentTexture, key_press_texture);
-	    }
-	}
-
-      // Update x and y
-      y += (keys_state[0])? (-5) : 0; 
-      y += (keys_state[1])? 5 : 0;
-      x += (keys_state[2])? (-5) : 0;
-      x += (keys_state[3])? 5 : 0;
-
-      // At least for now, we didn’t authorize negative coordinates
-      x = (x < 0)? 0 : x;
-      y = (y < 0)? 0 : y;
+      move_coordinates_on_keydown (&x, &y, keys_state);
 
       for (int i = 0; i < 4; i++)
 	{
@@ -235,27 +206,52 @@ run_gui ()
 	    }
 	}
       SDL_Delay (100/6);
-    }
-  
+    }  
   return 1;
 }  
 
-/*
+
 int
-handle_events (coordinates *offset, SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state)
-{  
+handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state, SDL_Texture** key_press_texture)
+{
+  SDL_Event event;
+  
+  while (SDL_PollEvent (&event) != 0)
+    {
+      if (event.key.repeat != 0)
+	continue;
+      switch (event.type)
+	{
+	case SDL_QUIT:
+	  return 0;
+	  break;
+	      
+	case SDL_KEYDOWN:
+	  handle_keydown (event.key.keysym.sym, keys_state, CurrentTexture, key_press_texture);
+	  break;
+
+	case SDL_KEYUP:
+	  handle_keyup (event.key.keysym.sym, keys_state, CurrentTexture, key_press_texture);
+	  break;
+	}
+    }
+  
   return 1;
 }
-  */
 
-coordinates
-move_coordinates (bool* keys_state, coordinates* offset)
+
+int
+move_coordinates_on_keydown (int* x, int* y, bool* keys_state)
 {
-  offset->y += (keys_state[0])? (-5) : 0;
-  offset->y += (keys_state[1])? 5 : 0;
-  offset->x += (keys_state[2])? (-5) : 0;
-  offset->x += (keys_state[3])? 5 : 0;
-  return *offset;
+  *y += (keys_state[0])? (-5) : 0;
+  *y += (keys_state[1])? 5 : 0;
+  *x += (keys_state[2])? (-5) : 0;
+  *x += (keys_state[3])? 5 : 0;
+  
+  // At least for now, we didn’t authorize negative coordinates
+  *x = (*x < 0)? 0 : *x;
+  *y = (*y < 0)? 0 : *y;
+  return 1;
 }
 
 int

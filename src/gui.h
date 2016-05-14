@@ -61,10 +61,10 @@ void refresh_renderer();
 
 void display_blits();
 
-// int handle_events (coordinates *offset, SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state);
+int handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state, SDL_Texture** key_press_texture);
 
-coordinates
-move_coordinates (bool* keys_state, coordinates* offset);
+int
+move_coordinates_on_keydown (int* x, int* y, bool* keys_state);
 
 int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
 
