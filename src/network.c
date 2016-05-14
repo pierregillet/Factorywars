@@ -116,10 +116,33 @@ void
 handle_network_communication (unsigned short port, int read_pipe,
 			      int write_pipe)
 {
-  /* Read the read_pipe */
-  /* Interpret */
-  /* Send if there is something to send */
-  /* Read the socket */
-  /* Interpret */
-  /* Send through the pipe if there is something to send */
+  int quit = 0;
+  while (!quit)
+    {
+      /* Read the read_pipe */
+
+      const int BUFFER_SIZE = 512;
+
+      char buffer[BUFFER_SIZE];
+
+      /* Non blocking read */
+      /* int flags = fcntl (read_pipe, F_GETFL, 0); */
+      /* fcntl (read_pipe, F_SETFL, flags | O_NONBLOCK); */
+
+      for (int i = 0; i < BUFFER_SIZE - 1; i++)
+	{
+	  read (read_pipe, buffer + i, sizeof (char)) < 0
+	  if (buffer[i] == '\0')
+	    break;
+	}
+  
+      /* Interpret */
+
+      
+
+      /* Send if there is something to send */
+      /* Read the socket */
+      /* Interpret */
+      /* Send through the pipe if there is something to send */
+    }
 }

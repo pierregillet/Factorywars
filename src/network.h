@@ -36,6 +36,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netdb.h>
+/* #include <fcntl.h> */
 
 /**
  * Send data
