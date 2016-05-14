@@ -33,9 +33,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include "display_map.h"
 #include "config.h"
+#include "structures.h"
 
 /**
   * Blit Textures at given coordonates x,y.
@@ -48,11 +50,23 @@ int blit (int x, int y, int width, int height, SDL_Texture* texture);
   * Initiates the SDL basics, like Window and Renderer.
   */
 bool init (SDL_Window** Window, SDL_Texture** KeyPressTexture, SDL_Texture** biomes);
+
 bool loadMedia (SDL_Texture** KeyPressTexture);
+
 int run_gui ();
+
 SDL_Texture* loadTexture (std::string path);
+
 void refresh_renderer();
+
 void display_blits();
 
-int get_event ();
+// int handle_events (coordinates *offset, SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state);
+
+coordinates
+move_coordinates (bool* keys_state, coordinates* offset);
+
+int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
+
+int handle_keyup (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
 

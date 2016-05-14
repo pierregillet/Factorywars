@@ -32,7 +32,7 @@
 
 #include "gui.h"
 #include "player.h"
-#include "action.h"
+// #include "action.h"
 #include "display_map.cpp"
 
 enum KeyPressTexture
@@ -150,7 +150,7 @@ blit (int x, int y, int width, int height, SDL_Texture* texture)
 {
   SDL_Rect Rect = {.x = x, .y = y, .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
- 
+  
   SDL_RenderSetViewport(gRenderer, &Rect);
   SDL_RenderCopy (gRenderer, texture, NULL,NULL);
 
@@ -170,67 +170,35 @@ run_gui ()
   
   int x = 0;
   int y = 0;
-  bool quit = false;
   
   SDL_Event e;
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
+    coordinates offset;
   
-  // we don't use CurrentTexture for now
-  // cause we don't display the hero, just the map
-  int move_state[4] = {0};
-  int keydown = 0;
+  /* 
+   * keys_state only has 4 elements
+   * because we only use 4 keys as of now
+   * keys_state[1] -> SDLK_UP
+   * keys_state[2] -> SDLK_DOWN
+   * keys_state[3] -> SDLK_LEFT
+   * keys_state[4] -> SDLK_RIGHT
+   */
+  bool keys_state[4] = {0};
 
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
+  int quit = 0;
 
-  while (!quit)
+  /*
+  while (handle_events (&offset, &CurrentTexture, biomes, keys_state) == 1)
     {
-      while (SDL_PollEvent (&e) != 0)
-	{
-	  if (e.type == SDL_QUIT)
-	    quit = true;
-	  else if (e.type == SDL_KEYDOWN)
-	    {
-	      keydown = 1;
-	      if (e.key.repeat != 0)
-		continue;
-	    }
-	  else if (e.type == SDL_KEYUP)
-	    keydown = 0;
-
-	  switch (e.key.keysym.sym)
-	    {
-	    case SDLK_UP:
-	      move_state[0] = keydown;
-	      break;
-         
-	    case SDLK_DOWN:
-	      move_state[1] = keydown;
-	      break;
-            
-	    case SDLK_LEFT:
-	      move_state[2] = keydown;
-	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
-	      break;
-            
-	    case SDLK_RIGHT:
-	      move_state[3] = keydown;
-	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
-	      break;
-            
-	    default:
-	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
-	      break;
-	    }
-	}
-
+      move_coordinates (keys_state, &offset);
       // Update x and y
       y += (move_state[0])? (-5) : 0;
       y += (move_state[1])? 5 : 0;
       x += (move_state[2])? (-5) : 0;
       x += (move_state[3])? 5 : 0;
-
       // Blit and sleep
       refresh_renderer ();
       display_background ("save", biomes, x, y);
@@ -239,26 +207,139 @@ run_gui ()
       display_blits();
       SDL_Delay (100/6);
     }
+  */
+    while (!quit)
+    {
+      while (SDL_PollEvent (&e) != 0)
+	{
+	  if (e.type == SDL_QUIT)
+	    quit = true;
+	  else if (e.type == SDL_KEYDOWN)
+	    {
+	      handle_keydown (e.key.keysym.sym, keys_state, &CurrentTexture, key_press_texture);
+	      if (e.key.repeat != 0)
+		continue;
+	    }
+	  else if (e.type == SDL_KEYUP)
+	    {
+	      handle_keyup (e.key.keysym.sym, keys_state, &CurrentTexture, key_press_texture);
+	    }
+	}
+
+      // Update x and y
+      y += (keys_state[0])? (-5) : 0; 
+      y += (keys_state[1])? 5 : 0;
+      x += (keys_state[2])? (-5) : 0;
+      x += (keys_state[3])? 5 : 0;
+
+      // Blit and sleep
+      refresh_renderer ();
+      display_background ("save", biomes, x, y);
+      blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+      display_blits();
+      SDL_Delay (100/6);
+    }
+  
   return 1;
 }  
 
-
+/*
 int
-get_event ()
-{
+handle_events (coordinates *offset, SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state)
+{  
   SDL_Event event;
-  while (SDL_PollEvent(&event))
+  SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
+  while (SDL_PollEvent (&event) != 0)
     {
+      if (event.key.repeat != 0)
+	continue;
       switch (event.type)
 	{
-	case SDL_KEYDOWN:
-	  handle_keydown (event.key.keysym.sym);
+ 	case SDL_KEYDOWN:
+	  handle_keydown (event.key.keysym.sym, keys_state, *CurrentTexture);
 	  break;
+	case SDL_KEYUP:
+	  handle_keyup (event.key.keysym.sym, keys_state, *CurrentTexture);
+	  break;
+	case SDL_QUIT:
+	  return 0;
 	default:
 	  break;
 	}
+      if (keys_state[3] == true && keys_state[4] == false)
+	*CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
+      else
+	*CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
+    }
+*/
+  // move_coordinates(keys_state, offset);
+  /*
+  refresh_renderer();
+  display_background ("save", biomes, offset->x, offset->y);
+  blit(320, 240, 25, 41, *CurrentTexture);
+  display_blits ();
+  SDL_Delay (100/6);
+  return 1;
+}
+  */
+
+coordinates
+move_coordinates (bool* keys_state, coordinates* offset)
+{
+  offset->y += (keys_state[0])? (-5) : 0;
+  offset->y += (keys_state[1])? 5 : 0;
+  offset->x += (keys_state[2])? (-5) : 0;
+  offset->x += (keys_state[3])? 5 : 0;
+  return *offset;
+}
+
+int
+handle_keydown (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture)
+{
+  bool keydown = 1;
+  switch (event_keycode)
+    {
+    case SDLK_UP:
+      keys_state[0] = keydown;
+      break;
+    case SDLK_DOWN:
+      keys_state[1] = keydown;
+      break;
+    case SDLK_LEFT:
+      keys_state[2] = keydown;
+      *CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
+      break;
+    case SDLK_RIGHT:
+      keys_state[3] = keydown;
+      *CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
+      break;
+    default:
+      break;
     }
   return 1;
 }
 
+int
+handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture)
+{
+  bool keyup = 0;
+  switch (event_keycode)
+    {
+    case SDLK_UP:
+      keys_state[0] = keyup;
+      break;
+    case SDLK_DOWN:
+      keys_state[1] = keyup;
+      break;
+    case SDLK_LEFT:
+      keys_state[2] = keyup;
+      break;
+    case SDLK_RIGHT:
+      keys_state[3] = keyup;
+      break;
+    default:
+      break;
+    }
+  return 1;
+}
 

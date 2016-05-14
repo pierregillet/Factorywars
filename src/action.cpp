@@ -33,8 +33,50 @@
 #include "action.h"
 
 
-int handle_keydown (SDL_Keycode event)
+int
+handle_keydown (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture CurrentTexture)
 {
-  // WORK IN PROGRESS
+  bool keydown = 1;
+  switch (event_keycode)
+    {
+    case SDLK_UP:
+      keys_state[0] = keydown;
+      break;
+    case SDLK_DOWN:
+      keys_state[1] = keydown;
+      break;
+    case SDLK_LEFT:
+      keys_state[2] = keydown;
+      break;
+    case SDLK_RIGHT:
+      keys_state[3] = keydown;
+      break;
+    default:
+      break;
+    }
+  return 1;
+}
+
+int
+handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture CurrentTexture)
+{
+  bool keyup = 0;
+  switch (event_keycode)
+    {
+    case SDLK_UP:
+      keys_state[0] = keyup;
+      break;
+    case SDLK_DOWN:
+      keys_state[1] = keyup;
+      break;
+    case SDLK_LEFT:
+      keys_state[2] = keyup;
+      break;
+    case SDLK_RIGHT:
+      keys_state[3] = keyup;
+      break;
+    default:
+      break;
+    }
   return 1;
 }

@@ -33,4 +33,6 @@
 #include <SDL2/SDL.h>
 
 
-int handle_keydown (SDL_Keycode event);
+int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture* CurrentTexture);
+
+int handle_keyup (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture CurrentTexture);
