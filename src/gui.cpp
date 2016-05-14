@@ -248,7 +248,6 @@ run_gui ()
 	    }
 	}
 
-      // Blit and sleep
       SDL_Delay (100/6);
     }
   return 1;
