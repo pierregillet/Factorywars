@@ -236,6 +236,10 @@ run_gui ()
       x += (move_state[2])? (-5) : 0;
       x += (move_state[3])? 5 : 0;
 
+      // At least for now, we didn’t authorize negative coordinates
+      x = (x < 0)? 0 : x;
+      y = (y < 0)? 0 : y;
+
       for (int i = 0; i < 4; i++)
 	{
 	  if (move_state[i])
