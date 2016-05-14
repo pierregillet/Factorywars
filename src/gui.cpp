@@ -190,25 +190,12 @@ run_gui ()
   const int screen_width = atoi (get_config_value ("width"));
   int quit = 0;
 
-  /*
-  while (handle_events (&offset, &CurrentTexture, biomes, keys_state) == 1)
-    {
-      move_coordinates (keys_state, &offset);
-      // Update x and y
-      y += (move_state[0])? (-5) : 0;
-      y += (move_state[1])? 5 : 0;
-      x += (move_state[2])? (-5) : 0;
-      x += (move_state[3])? 5 : 0;
-      // Blit and sleep
-      refresh_renderer ();
-      display_background ("save", biomes, x, y);
-      blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
-      printf ("x : %d y : %d\n", x, y);
-      display_blits();
-      SDL_Delay (100/6);
-    }
-  */
-    while (!quit)
+  // We need to display the map at the beginning
+  display_background ("save", biomes, x, y);
+  blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+  display_blits();
+
+  while (!quit)
     {
       while (SDL_PollEvent (&e) != 0)
 	{
@@ -232,11 +219,21 @@ run_gui ()
       x += (keys_state[2])? (-5) : 0;
       x += (keys_state[3])? 5 : 0;
 
-      // Blit and sleep
-      refresh_renderer ();
-      display_background ("save", biomes, x, y);
-      blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
-      display_blits();
+      // At least for now, we didn’t authorize negative coordinates
+      x = (x < 0)? 0 : x;
+      y = (y < 0)? 0 : y;
+
+      for (int i = 0; i < 4; i++)
+	{
+	  if (keys_state[i])
+	    {
+	      refresh_renderer ();
+	      display_background ("save", biomes, x, y);
+	      blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+	      display_blits();
+	      break;
+	    }
+	}
       SDL_Delay (100/6);
     }
   
@@ -247,38 +244,6 @@ run_gui ()
 int
 handle_events (coordinates *offset, SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state)
 {  
-  SDL_Event event;
-  SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
-  while (SDL_PollEvent (&event) != 0)
-    {
-      if (event.key.repeat != 0)
-	continue;
-      switch (event.type)
-	{
- 	case SDL_KEYDOWN:
-	  handle_keydown (event.key.keysym.sym, keys_state, *CurrentTexture);
-	  break;
-	case SDL_KEYUP:
-	  handle_keyup (event.key.keysym.sym, keys_state, *CurrentTexture);
-	  break;
-	case SDL_QUIT:
-	  return 0;
-	default:
-	  break;
-	}
-      if (keys_state[3] == true && keys_state[4] == false)
-	*CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
-      else
-	*CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
-    }
-*/
-  // move_coordinates(keys_state, offset);
-  /*
-  refresh_renderer();
-  display_background ("save", biomes, offset->x, offset->y);
-  blit(320, 240, 25, 41, *CurrentTexture);
-  display_blits ();
-  SDL_Delay (100/6);
   return 1;
 }
   */
