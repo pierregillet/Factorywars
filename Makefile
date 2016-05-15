@@ -7,6 +7,9 @@ OBJ_NAME = factorywars
 all : $(OBJS)
 	$(CC) $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
 
+debug : $(OBJS)
+	$(CC) $(OBJS) $(COMPILER_FLAGS) -g $(LINKER_FLAGS) -o $(OBJ_NAME)
+
 documentation :
 	doxygen doc/config
 
