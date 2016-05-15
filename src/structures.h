@@ -1,6 +1,6 @@
 /**
  * @file
- * @author Pierre Gillet <pierre.gillet@linuxw.info>
+ * @author Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
  * @author Corentin Bocquillon <0x539@nybble.fr>
  *
  * @section LICENSE
@@ -9,7 +9,7 @@
  *
  * Copyright (C) 2016 Loup Fourment
  *
- * Copyright (C) 2016 Pierre Gillet
+ * Copyright (C) 2016 Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
  *
  * factorywars is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
