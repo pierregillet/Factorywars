@@ -1,16 +1,16 @@
 /**
  * @file
  * @author Corentin Bocquillon <0x539@nybble.fr>
- * @author Pierre Gillet
+ * @author Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
  * @author Loup Fourment
  *
  * @section LICENSE
  *
- * Copyright (C) 2016 Corentin Bocquillon <corentin@nybble.fr>
+ * Copyright (C) 2016 Corentin Bocquillon <0x539@nybble.fr>
  *
  * Copyright (C) 2016 Loup Fourment
  *
- * Copyright (C) 2016 Pierre Gillet
+ * Copyright (C) 2016 Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
  *
  * factorywars is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,9 +32,11 @@
 
 #include "gui.h"
 #include "player.h"
-#include "action.h"
-#include "display_map.cpp"
+// #include "action.h"
+#include "display_map.h"
+#include "config.h"
 
+// Declaration of some global variables ==> to be included in function in the future.
 enum KeyPressTexture
   {
     KEY_PRESS_SURFACE_DEFAULT, 
@@ -43,8 +45,8 @@ enum KeyPressTexture
     KEY_PRESS_SURFACE_LEFT, 
     KEY_PRESS_SURFACE_RIGHT, 
     KEY_PRESS_SURFACE_TOTAL
-  };
-  
+  };  
+
 SDL_Renderer* gRenderer = NULL; 
 
 SDL_Texture*
@@ -57,6 +59,35 @@ loadTexture(std::string path)
   SDL_FreeSurface (loadedSurface);
 
   return NewTexture;
+}
+
+bool 
+loadMedia (SDL_Texture** KeyPressTexture)
+{
+  bool success = true;
+  
+  // every box of the table is associated to an image
+  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture ("media/textures/LEFT.png");
+  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
+    success = false;
+    
+  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture ("media/textures/LEFT.png");
+  if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
+    success = false;
+    
+  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture ("media/textures/RIGHT.png");
+  if (KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] == NULL)
+    success = false;
+    
+  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture ("media/textures/LEFT.png");
+  if (KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] == NULL)
+    success = false;  
+    
+  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture ("media/textures/RIGHT.png");
+  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
+    success = false;
+
+  return success;
 }
 
 bool 
@@ -103,34 +134,96 @@ init (SDL_Window** Window,
   return success;
 }
 
-
-bool 
-loadMedia (SDL_Texture** KeyPressTexture)
+int
+handle_keydown (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture)
 {
-  bool success = true;
-  
-  // every box of the table is associated to an image
-  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture ("media/textures/LEFT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
-    success = false;
-    
-  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture ("media/textures/LEFT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
-    success = false;
-    
-  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture ("media/textures/RIGHT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] == NULL)
-    success = false;
-    
-  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture ("media/textures/LEFT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] == NULL)
-    success = false;  
-    
-  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture ("media/textures/RIGHT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
-    success = false;
+  bool keydown = 1;
+  switch (event_keycode)
+    {
+    case SDLK_UP:
+      keys_state[0] = keydown;
+      break;
+    case SDLK_DOWN:
+      keys_state[1] = keydown;
+      break;
+    case SDLK_LEFT:
+      keys_state[2] = keydown;
+      *CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
+      break;
+    case SDLK_RIGHT:
+      keys_state[3] = keydown;
+      *CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
+      break;
+    default:
+      break;
+    }
+  return 1;
+}
 
-  return success;
+int
+handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture)
+{
+  bool keyup = 0;
+  switch (event_keycode)
+    {
+    case SDLK_UP:
+      keys_state[0] = keyup;
+      break;
+    case SDLK_DOWN:
+      keys_state[1] = keyup;
+      break;
+    case SDLK_LEFT:
+      keys_state[2] = keyup;
+      break;
+    case SDLK_RIGHT:
+      keys_state[3] = keyup;
+      break;
+    default:
+      break;
+    }
+  return 1;
+}
+
+int
+handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state, SDL_Texture** key_press_texture)
+{
+  SDL_Event event;
+  
+  while (SDL_PollEvent (&event) != 0)
+    {
+      if (event.key.repeat != 0)
+	continue;
+      switch (event.type)
+	{
+	case SDL_QUIT:
+	  return 0;
+	  break;
+	      
+	case SDL_KEYDOWN:
+	  handle_keydown (event.key.keysym.sym, keys_state, CurrentTexture, key_press_texture);
+	  break;
+
+	case SDL_KEYUP:
+	  handle_keyup (event.key.keysym.sym, keys_state, CurrentTexture, key_press_texture);
+	  break;
+	}
+    }
+  
+  return 1;
+}
+
+int
+move_coordinates_on_keydown (int* x, int* y, bool* keys_state)
+{
+  *y += (keys_state[0])? (-5) : 0;
+  *y += (keys_state[1])? 5 : 0;
+  *x += (keys_state[2])? (-5) : 0;
+  *x += (keys_state[3])? 5 : 0;
+  
+  // At least for now, we didn’t authorize negative coordinates
+  *x = (*x < 0)? 0 : *x;
+  *y = (*y < 0)? 0 : *y;
+  return 1;
 }
 
 void 
@@ -139,29 +232,43 @@ refresh_renderer ()
   SDL_RenderClear (gRenderer);
 }
 
-void
-display_blits()
-{
-  SDL_RenderPresent (gRenderer);
-}
-
 int
 blit (int x, int y, int width, int height, SDL_Texture* texture)
 {
   SDL_Rect Rect = {.x = x, .y = y, .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
- 
+  
   SDL_RenderSetViewport(gRenderer, &Rect);
   SDL_RenderCopy (gRenderer, texture, NULL,NULL);
 
   return 1;
 }
 
+void
+display_blits()
+{
+  SDL_RenderPresent (gRenderer);
+}
+
+void
+close()
+{
+  /*
+  //Deallocate surface
+  SDL_FreeSurface( gHelloWorld );
+  gHelloWorld = NULL;
+  //Destroy window
+  SDL_DestroyWindow( gWindow );
+  gWindow = NULL;
+  //Quit SDL subsystems
+  */
+  SDL_Quit();
+}
+
 int 
 run_gui ()
 {
   SDL_Texture *biomes[4];
-
   SDL_Window *Window = NULL;
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
@@ -170,16 +277,18 @@ run_gui ()
   
   int x = 0;
   int y = 0;
-  bool quit = false;
-  
-  SDL_Event e;
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
   
-  // we don't use CurrentTexture for now
-  // cause we don't display the hero, just the map
-  int move_state[4] = {0};
-  int keydown = 0;
+  /* 
+   * keys_state only has 4 elements
+   * because we only use 4 keys as of now
+   * keys_state[1] -> SDLK_UP
+   * keys_state[2] -> SDLK_DOWN
+   * keys_state[3] -> SDLK_LEFT
+   * keys_state[4] -> SDLK_RIGHT
+   */
+  bool keys_state[4] = {0};
 
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
@@ -189,60 +298,13 @@ run_gui ()
   blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
   display_blits();
 
-  while (!quit)
+  while (handle_events (&CurrentTexture, biomes, keys_state, key_press_texture) != 0)
     {
-      while (SDL_PollEvent (&e) != 0)
-	{
-	  if (e.type == SDL_QUIT)
-	    quit = true;
-	  else if (e.type == SDL_KEYDOWN)
-	    {
-	      keydown = 1;
-	      if (e.key.repeat != 0)
-		continue;
-	    }
-	  else if (e.type == SDL_KEYUP)
-	    keydown = 0;
-
-	  switch (e.key.keysym.sym)
-	    {
-	    case SDLK_UP:
-	      move_state[0] = keydown;
-	      break;
-         
-	    case SDLK_DOWN:
-	      move_state[1] = keydown;
-	      break;
-            
-	    case SDLK_LEFT:
-	      move_state[2] = keydown;
-	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
-	      break;
-            
-	    case SDLK_RIGHT:
-	      move_state[3] = keydown;
-	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
-	      break;
-            
-	    default:
-	      CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_DEFAULT];
-	      break;
-	    }
-	}
-
-      // Update x and y
-      y += (move_state[0])? (-5) : 0;
-      y += (move_state[1])? 5 : 0;
-      x += (move_state[2])? (-5) : 0;
-      x += (move_state[3])? 5 : 0;
-
-      // At least for now, we didn’t authorize negative coordinates
-      x = (x < 0)? 0 : x;
-      y = (y < 0)? 0 : y;
+      move_coordinates_on_keydown (&x, &y, keys_state);
 
       for (int i = 0; i < 4; i++)
 	{
-	  if (move_state[i])
+	  if (keys_state[i])
 	    {
 	      refresh_renderer ();
 	      display_background ("save", biomes, x, y);
@@ -251,29 +313,9 @@ run_gui ()
 	      break;
 	    }
 	}
-
       SDL_Delay (100/6);
     }
+  close();
   return 1;
 }  
-
-
-int
-get_event ()
-{
-  SDL_Event event;
-  while (SDL_PollEvent(&event))
-    {
-      switch (event.type)
-	{
-	case SDL_KEYDOWN:
-	  handle_keydown (event.key.keysym.sym);
-	  break;
-	default:
-	  break;
-	}
-    }
-  return 1;
-}
-
 

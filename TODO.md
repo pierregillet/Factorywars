@@ -1,9 +1,9 @@
 # TODO #
 
-+ Create the texture for the first biome.
-+ Display the map.
++ Create a contribution guide.
 + Create the player textures.
-+ Move the map when the move keys are pressed.
 + Fill the index page of the documentation generated with doxygen with the 
 content of the README.md file.
-+ Free the textures in gui.cpp
++ Free the textures in gui.cpp.
++ Find where the segfaults come from. Super important !
+
