@@ -49,14 +49,14 @@ enum KeyPressTexture
     KEY_PRESS_SURFACE_TOTAL
   };  
 
-SDL_Texture* loadTexture (std::string path);
+SDL_Texture* loadTexture (SDL_Renderer** Renderer, std::string path);
 
-bool loadMedia (SDL_Texture** KeyPressTexture);
+bool loadMedia (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture);
 
 /*
  * Initiates the SDL basics, like Window and Renderer.
  */
-bool init (SDL_Texture** KeyPressTexture, SDL_Texture** biomes, const int screen_height, const int screen_width);
+bool init (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture, SDL_Texture** biomes, const int screen_height, const int screen_width);
 
 int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
 
@@ -66,16 +66,16 @@ int handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* key
 
 int move_coordinates_on_keydown (int* x, int* y, bool* keys_state);
 
-void refresh_renderer();
+void refresh_renderer(SDL_Renderer** Renderer);
 
 /*
  * Blit Textures at given coordonates x,y.
  * Returns an int, which is true if there is no error.
  * The Texture needs a Renderer for being blited.
  */
-int blit (int x, int y, int width, int height, SDL_Texture* texture);
+int blit (SDL_Renderer** Renderer, int x, int y, int width, int height, SDL_Texture* texture);
 
-void display_blits();
+void display_blits(SDL_Renderer** Renderer);
 
 void close ();
 

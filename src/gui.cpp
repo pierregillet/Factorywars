@@ -36,44 +36,41 @@
 #include "display_map.h"
 #include "config.h"
 
-// Declaration of some global variables ==> to be included in function in the future.
-SDL_Renderer* gRenderer = NULL; 
-
 SDL_Texture*
-loadTexture(std::string path)
+loadTexture(SDL_Renderer** Renderer, std::string path)
 {
   SDL_Texture* NewTexture = NULL;
   SDL_Surface* loadedSurface = IMG_Load(path.c_str ());
 
-  NewTexture = SDL_CreateTextureFromSurface (gRenderer, loadedSurface);
+  NewTexture = SDL_CreateTextureFromSurface (*Renderer, loadedSurface);
   SDL_FreeSurface (loadedSurface);
 
   return NewTexture;
 }
 
 bool 
-loadMedia (SDL_Texture** KeyPressTexture)
+loadMedia (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture)
 {
   bool success = true;
   
   // every box of the table is associated to an image
-  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture ("media/textures/LEFT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture (Renderer, "media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture ("media/textures/LEFT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture (Renderer, "media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture ("media/textures/RIGHT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture (Renderer, "media/textures/RIGHT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture ("media/textures/LEFT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture (Renderer, "media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] == NULL)
     success = false;  
     
-  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture ("media/textures/RIGHT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture (Renderer, "media/textures/RIGHT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
 
@@ -81,7 +78,8 @@ loadMedia (SDL_Texture** KeyPressTexture)
 }
 
 bool 
-init (SDL_Texture** KeyPressTexture,
+init (SDL_Renderer** Renderer,
+      SDL_Texture** KeyPressTexture,
       SDL_Texture** biomes,
       const int screen_height,
       const int screen_width)
@@ -113,15 +111,15 @@ init (SDL_Texture** KeyPressTexture,
 	  
       else // if window has been created without errors
 	{
-	  gRenderer = SDL_CreateRenderer (Window, -1,
-					   SDL_RENDERER_ACCELERATED);
-	  SDL_SetRenderDrawColor (gRenderer, 0xFF,0xFF,0xFF,0xFF);
+	  *Renderer = SDL_CreateRenderer (Window, -1,
+						      SDL_RENDERER_ACCELERATED);
+	  SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 	}
     }
 
-  if (!loadMedia (KeyPressTexture))
+  if (!loadMedia (Renderer, KeyPressTexture))
     success = false;
-  load_biomes(biomes);
+  load_biomes (Renderer, biomes);
   return success;
 }
 
@@ -218,27 +216,27 @@ move_coordinates_on_keydown (int* x, int* y, bool* keys_state)
 }
 
 void 
-refresh_renderer ()
+refresh_renderer (SDL_Renderer** Renderer)
 {
-  SDL_RenderClear (gRenderer);
+  SDL_RenderClear (*Renderer);
 }
 
 int
-blit (int x, int y, int width, int height, SDL_Texture* texture)
+blit (SDL_Renderer** Renderer, int x, int y, int width, int height, SDL_Texture* texture)
 {
   SDL_Rect Rect = {.x = x, .y = y, .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
   
-  SDL_RenderSetViewport(gRenderer, &Rect);
-  SDL_RenderCopy (gRenderer, texture, NULL,NULL);
+  SDL_RenderSetViewport(*Renderer, &Rect);
+  SDL_RenderCopy (*Renderer, texture, NULL,NULL);
 
   return 1;
 }
 
 void
-display_blits()
+display_blits(SDL_Renderer** Renderer)
 {
-  SDL_RenderPresent (gRenderer);
+  SDL_RenderPresent (*Renderer);
 }
 
 void
@@ -261,11 +259,12 @@ run_gui ()
 {
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
+  SDL_Renderer* Renderer = NULL;
 
   SDL_Texture *biomes[5];
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
-  if (!init (key_press_texture, biomes, screen_height, screen_width))
+  if (!init (&Renderer, key_press_texture, biomes, screen_height, screen_width))
     return 1;
   
   int x = 0;
@@ -284,9 +283,9 @@ run_gui ()
   bool keys_state[4] = {0};
 
   // We need to display the map at the beginning
-  display_background ("save", biomes, x, y);
-  blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
-  display_blits();
+  display_background (&Renderer, "save", biomes, x, y);
+  blit (&Renderer, screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+  display_blits(&Renderer);
 
   while (handle_events (&CurrentTexture, biomes, keys_state, key_press_texture) != 0)
     {
@@ -296,10 +295,10 @@ run_gui ()
 	{
 	  if (keys_state[i])
 	    {
-	      refresh_renderer ();
-	      display_background ("save", biomes, x, y);
-	      blit (screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
-	      display_blits();
+	      refresh_renderer (&Renderer);
+	      display_background (&Renderer, "save", biomes, x, y);
+	      blit (&Renderer, screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+	      display_blits(&Renderer);
 	      break;
 	    }
 	}
