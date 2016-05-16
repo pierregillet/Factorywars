@@ -37,16 +37,6 @@
 #include "config.h"
 
 // Declaration of some global variables ==> to be included in function in the future.
-enum KeyPressTexture
-  {
-    KEY_PRESS_SURFACE_DEFAULT, 
-    KEY_PRESS_SURFACE_UP, 
-    KEY_PRESS_SURFACE_DOWN,        
-    KEY_PRESS_SURFACE_LEFT, 
-    KEY_PRESS_SURFACE_RIGHT, 
-    KEY_PRESS_SURFACE_TOTAL
-  };  
-
 SDL_Renderer* gRenderer = NULL; 
 
 SDL_Texture*
@@ -91,12 +81,12 @@ loadMedia (SDL_Texture** KeyPressTexture)
 }
 
 bool 
-init (SDL_Window** Window,
-      SDL_Texture** KeyPressTexture,
+init (SDL_Texture** KeyPressTexture,
       SDL_Texture** biomes)
 {
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
+  SDL_Window *Window = NULL;
 
   bool success = true;
 	
@@ -108,7 +98,7 @@ init (SDL_Window** Window,
 	
   else // if the SDL launched correctly
     {
-      *Window = SDL_CreateWindow ("Factorywars",
+      Window = SDL_CreateWindow ("Factorywars",
 				  SDL_WINDOWPOS_UNDEFINED,
 				  SDL_WINDOWPOS_UNDEFINED,
 				  screen_width, screen_height,
@@ -116,13 +106,14 @@ init (SDL_Window** Window,
 	  
       if (Window == NULL) 
 	{
-	  success = false;
 	  printf ("Couldn’t create window: %s\n", SDL_GetError());
+	  SDL_Quit();
+	  success = false;
 	}
 	  
       else // if window has been created without errors
 	{
-	  gRenderer = SDL_CreateRenderer (*Window, -1,
+	  gRenderer = SDL_CreateRenderer (Window, -1,
 					   SDL_RENDERER_ACCELERATED);
 	  SDL_SetRenderDrawColor (gRenderer, 0xFF,0xFF,0xFF,0xFF);
 	}
@@ -269,10 +260,9 @@ int
 run_gui ()
 {
   SDL_Texture *biomes[4];
-  SDL_Window *Window = NULL;
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
-  if (!init (&Window, key_press_texture, biomes))
+  if (!init (key_press_texture, biomes))
     return 1;
   
   int x = 0;

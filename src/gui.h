@@ -39,6 +39,16 @@
 #include <string>
 #include "structures.h"
 
+enum KeyPressTexture
+  {
+    KEY_PRESS_SURFACE_DEFAULT, 
+    KEY_PRESS_SURFACE_UP, 
+    KEY_PRESS_SURFACE_DOWN,        
+    KEY_PRESS_SURFACE_LEFT, 
+    KEY_PRESS_SURFACE_RIGHT, 
+    KEY_PRESS_SURFACE_TOTAL
+  };  
+
 SDL_Texture* loadTexture (std::string path);
 
 bool loadMedia (SDL_Texture** KeyPressTexture);
@@ -46,7 +56,7 @@ bool loadMedia (SDL_Texture** KeyPressTexture);
 /*
  * Initiates the SDL basics, like Window and Renderer.
  */
-bool init (SDL_Window** Window, SDL_Texture** KeyPressTexture, SDL_Texture** biomes);
+bool init (SDL_Texture** KeyPressTexture, SDL_Texture** biomes);
 
 int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
 
