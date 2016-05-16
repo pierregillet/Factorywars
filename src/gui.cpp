@@ -262,7 +262,7 @@ run_gui ()
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
 
-  SDL_Texture *biomes[4];
+  SDL_Texture *biomes[5];
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
   if (!init (key_press_texture, biomes, screen_height, screen_width))
