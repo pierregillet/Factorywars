@@ -82,10 +82,10 @@ loadMedia (SDL_Texture** KeyPressTexture)
 
 bool 
 init (SDL_Texture** KeyPressTexture,
-      SDL_Texture** biomes)
+      SDL_Texture** biomes,
+      const int screen_height,
+      const int screen_width)
 {
-  const int screen_height = atoi (get_config_value ("height"));
-  const int screen_width = atoi (get_config_value ("width"));
   SDL_Window *Window = NULL;
 
   bool success = true;
@@ -259,10 +259,13 @@ close()
 int 
 run_gui ()
 {
+  const int screen_height = atoi (get_config_value ("height"));
+  const int screen_width = atoi (get_config_value ("width"));
+
   SDL_Texture *biomes[4];
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
-  if (!init (key_press_texture, biomes))
+  if (!init (key_press_texture, biomes, screen_height, screen_width))
     return 1;
   
   int x = 0;
@@ -279,9 +282,6 @@ run_gui ()
    * keys_state[4] -> SDLK_RIGHT
    */
   bool keys_state[4] = {0};
-
-  const int screen_height = atoi (get_config_value ("height"));
-  const int screen_width = atoi (get_config_value ("width"));
 
   // We need to display the map at the beginning
   display_background ("save", biomes, x, y);
