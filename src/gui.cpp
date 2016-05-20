@@ -288,7 +288,7 @@ run_gui ()
 
   // We need to display the map at the beginning
   display_background (&Renderer, "save", biomes, x, y);
-  display_items (&Renderer, "save", items, x, y);
+  //display_items (&Renderer, "save", items, x, y);
   blit (&Renderer, screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
   display_blits(&Renderer);
 
