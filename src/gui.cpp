@@ -34,6 +34,7 @@
 #include "player.h"
 // #include "action.h"
 #include "display_map.h"
+#include "display_item.cpp"
 #include "config.h"
 
 SDL_Texture*
@@ -81,6 +82,7 @@ bool
 init (SDL_Renderer** Renderer,
       SDL_Texture** KeyPressTexture,
       SDL_Texture** biomes,
+      SDL_Texture** items,
       const int screen_height,
       const int screen_width)
 {
@@ -120,6 +122,7 @@ init (SDL_Renderer** Renderer,
   if (!loadMedia (Renderer, KeyPressTexture))
     success = false;
   load_biomes (Renderer, biomes);
+  load_items (Renderer, items);
   return success;
 }
 
@@ -262,9 +265,10 @@ run_gui ()
   SDL_Renderer* Renderer = NULL;
 
   SDL_Texture *biomes[5];
+  SDL_Texture *items[5];
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
-  if (!init (&Renderer, key_press_texture, biomes, screen_height, screen_width))
+  if (!init (&Renderer, key_press_texture, biomes, items, screen_height, screen_width))
     return 1;
   
   int x = 0;
@@ -284,6 +288,7 @@ run_gui ()
 
   // We need to display the map at the beginning
   display_background (&Renderer, "save", biomes, x, y);
+  display_items (&Renderer, "save", items, x, y);
   blit (&Renderer, screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
   display_blits(&Renderer);
 
