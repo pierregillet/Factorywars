@@ -177,9 +177,68 @@ handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** Current
 }
 
 int
-handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state, SDL_Texture** key_press_texture)
+handle_clickdown (int button, coordinates click_coords, bool* clicks_state)
+{
+  bool clickdown = 1;
+  get_map_coords (click_coords);
+
+  switch (button)
+    {
+    case SDL_BUTTON_LEFT:
+	clicks_state[0] = clickdown;
+	break;
+    case SDL_BUTTON_MIDDLE:
+	clicks_state[1] = clickdown;
+	break;
+    case SDL_BUTTON_RIGHT:
+      clicks_state[2] = clickdown;
+      break;
+    case SDL_BUTTON_X1:
+      clicks_state[3] = clickdown;
+      break;
+    case SDL_BUTTON_X2:
+      clicks_state[4] = clickdown;
+      break;
+    default:
+      break;
+    }
+  return 1;
+}
+
+int
+handle_clickup (int button, coordinates click_coords, bool* clicks_state)
+{
+  bool clickup = 0;
+  get_map_coords (click_coords);
+
+  switch (button)
+    {
+    case SDL_BUTTON_LEFT:
+      clicks_state[0] = clickup;
+      break;
+    case SDL_BUTTON_MIDDLE:
+      clicks_state[1] = clickup;
+      break;
+    case SDL_BUTTON_RIGHT:
+      clicks_state[2] = clickup;
+      break;
+    case SDL_BUTTON_X1:
+      clicks_state[3] = clickup;
+      break;
+    case SDL_BUTTON_X2:
+      clicks_state[4] = clickup;
+      break;
+    default:
+      break;
+    }
+  return 1;
+}
+
+int
+handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state, bool* clicks_state, SDL_Texture** key_press_texture)
 {
   SDL_Event event;
+  coordinates click_coords;
   
   while (SDL_PollEvent (&event) != 0)
     {
@@ -197,6 +256,18 @@ handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_st
 
 	case SDL_KEYUP:
 	  handle_keyup (event.key.keysym.sym, keys_state, CurrentTexture, key_press_texture);
+	  break;
+
+	case SDL_MOUSEBUTTONDOWN:
+	  click_coords.x = event.button.x;
+	  click_coords.y = event.button.y;
+	  handle_clickdown (event.button.button, click_coords, clicks_state);
+	  break;
+
+	case SDL_MOUSEBUTTONUP:
+	  click_coords.x = event.button.x;
+	  click_coords.y = event.button.y;
+	  handle_clickup (event.button.button, click_coords, clicks_state);
 	  break;
 	}
     }
@@ -277,7 +348,7 @@ run_gui ()
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
   
   /* 
-   * keys_state only has 4 elements
+   * keys_state only 4 elements
    * because we only use 4 keys as of now
    * keys_state[1] -> SDLK_UP
    * keys_state[2] -> SDLK_DOWN
@@ -286,13 +357,22 @@ run_gui ()
    */
   bool keys_state[4] = {0};
 
+  /* 
+   * clicks_state[1] -> SDL_BUTTON_LEFT
+   * clicks_state[2] -> SDL_BUTTON_MIDDLE
+   * clicks_state[3] -> SDL_BUTTON_RIGHT
+   * clicks_state[4] -> SDL_BUTTON_X1
+   * clicks_state[5] -> SDL_BUTTON_X2
+   */
+  bool clicks_state[5] = {0};
+
   // We need to display the map at the beginning
   display_background (&Renderer, "save", biomes, x, y);
   //display_items (&Renderer, "save", items, x, y);
   blit (&Renderer, screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
   display_blits(&Renderer);
 
-  while (handle_events (&CurrentTexture, biomes, keys_state, key_press_texture) != 0)
+  while (handle_events (&CurrentTexture, biomes, keys_state, clicks_state, key_press_texture) != 0)
     {
       move_coordinates_on_keydown (&x, &y, keys_state);
 
@@ -312,4 +392,11 @@ run_gui ()
   close();
   return 1;
 }  
+
+coordinates get_map_coords (coordinates click_coords)
+{
+  coordinates map_coords;
+  
+  return map_coords;
+}
 

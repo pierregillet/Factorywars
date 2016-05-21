@@ -62,16 +62,20 @@ int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** C
 
 int handle_keyup (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
 
-int handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state, SDL_Texture** key_press_texture);
+int handle_clickdown (int button, coordinates click_coords, bool *clicks_state);
+
+int handle_clickup (int button, coordinates click_coords, bool *clicks_state);
+
+int handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state, bool* clicks_state, SDL_Texture** key_press_texture);
 
 int move_coordinates_on_keydown (int* x, int* y, bool* keys_state);
 
 void refresh_renderer(SDL_Renderer** Renderer);
 
 /*
- * Blit Textures at given coordonates x,y.
- * Returns an int, which is true if there is no error.
- * The Texture needs a Renderer for being blited.
+ * Blit Textures at given coordinates x,y.
+ * @return int true if there is no error
+ * The Texture needs a Renderer to be blit.
  */
 int blit (SDL_Renderer** Renderer, int x, int y, int width, int height, SDL_Texture* texture);
 
@@ -80,4 +84,6 @@ void display_blits(SDL_Renderer** Renderer);
 void close ();
 
 int run_gui ();
+
+coordinates get_map_coords (coordinates click_coords);
 

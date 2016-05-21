@@ -1,3 +1,5 @@
+#pragma once
+
 #include "save.h"
 #include "structures.h"
 #include <stdio.h>
