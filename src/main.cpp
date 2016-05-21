@@ -27,14 +27,21 @@
  *
  * @section DESCRIPTION
  *
- * main.cpp contain the code of the main function
+ * main.cpp contain the code of the main function.
  */
 
 #include "gui.h"
+#include "network.h"
 
 int
 main (int argc, char *argv[])
 {
+  int pipes[4];
+  pipe (pipes);
+  pipe (pipes + 2);
+  
+  run_network_process (4284, pipes);
+
   run_gui ();
 
   return 0;

@@ -204,14 +204,16 @@ insert_line_in_file (char* line, int line_size, int position, const char* file_p
 void
 write_file_to_pipe (const char* file_path, int pipe)
 {
-  FILE *file = fopen (file_path, "r");
   const int LINE_SIZE = 512;
+  
+  FILE *file = fopen (file_path, "r");
   char line[LINE_SIZE];
   
   while (fgets (line, LINE_SIZE, file) != NULL)
     {
       write_to_pipe (pipe, line);
     }
+
   fclose (file);
 }
 
@@ -219,4 +221,35 @@ void
 write_to_pipe (int file, const char* message)
 {
   write (file, message, strlen (message));
+}
+
+int
+read_pipe_until_null (char* buffer, size_t buf_size, int pipe)
+{
+  /* number of bytes */
+  int n = 0;
+
+  int flags = fcntl (pipe, F_GETFL, 0);
+  fcntl (pipe, F_SETFL, flags | O_NONBLOCK);
+
+  if (read (pipe, buffer, sizeof (char)) == -1)
+    {
+      fcntl (pipe, F_SETFL, flags);
+      return n;
+    }
+  else
+    n++;
+
+  fcntl (pipe, F_SETFL, flags);
+
+  for (unsigned int i = 1; i < buf_size - 1; i++)
+    {
+      read (pipe, buffer + i, sizeof (char));
+      n++;
+
+      if (buffer[i] == '\0')
+	break;
+    }
+
+  return n;
 }
