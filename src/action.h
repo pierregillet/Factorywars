@@ -30,6 +30,8 @@
  * action.h contains functions to handle user actions/input
  */
 
+#pragma once
+
 #include <SDL2/SDL.h>
 
 

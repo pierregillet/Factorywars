@@ -37,20 +37,20 @@
 #include "config.h"
 
 
-void load_biomes(SDL_Texture** table)
+void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 {
-  table[0] = loadTexture ("media/textures/biome1.png");
-  table[1] = loadTexture ("media/textures/biome1.png");    
-  table[2] = loadTexture ("media/textures/biome2.png");    
-  table[3] = loadTexture ("media/textures/biome1.png");    
-  table[4] = loadTexture ("media/textures/biome1.png");                  
+  table[0] = loadTexture (Renderer, "media/textures/biome1.png");
+  table[1] = loadTexture (Renderer, "media/textures/biome1.png");    
+  table[2] = loadTexture (Renderer, "media/textures/biome2.png");    
+  table[3] = loadTexture (Renderer, "media/textures/biome1.png");    
+  table[4] = loadTexture (Renderer, "media/textures/biome1.png");                  
   if (table[0] == NULL)
     printf("erreur %s\n", SDL_GetError()); 
 }
 
 
 void
-display_background (std::string path, SDL_Texture** table, int x, int y)
+display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, int x, int y)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
   const int SQUARE_WIDTH = 24;
@@ -77,7 +77,7 @@ display_background (std::string path, SDL_Texture** table, int x, int y)
 
 	  SDL_Texture* display_id = table[id];
 
-	  blit (j - x % chunk_width, i - y % chunk_width, chunk_width, chunk_width,  display_id);
+	  blit (Renderer, j - x % chunk_width, i - y % chunk_width, chunk_width, chunk_width,  display_id);
 	}
     }
 }  
