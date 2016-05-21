@@ -55,7 +55,7 @@ ItemsName::ItemsName ()
 				// Other
 				"Wood",
 				"Stone block"};
-  for (int i ; sizeof (m_items_name) / sizeof (m_items_name[0]) ; i++)
+  for (int i = 0; sizeof (m_items_name) / sizeof (m_items_name[0]); i++)
     {
       m_items_map[i] = m_items_name[i];
     }
