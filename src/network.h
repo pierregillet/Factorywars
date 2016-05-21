@@ -36,7 +36,15 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <ifaddrs.h>
 #include "utils.h"
+#include "config.h"
+
+struct server_credentials
+{
+  char IP4[INET_ADDRSTRLEN], IP6[INET6_ADDRSTRLEN];
+  unsigned short port;
+};
 
 /**
  * Send data
@@ -44,20 +52,22 @@
  * @param ip is the ip where the message will be sent.
  * @param port is the port where the server is listening.
  * @param data is the string which will be sent.
+ * @param data_size is the number of bytes to send.
  * @return 1 if success, -1 if there is an error.
  */
-int send (const char* IP, unsigned short port, char* data);
+void send (const struct server_credentials server, const char* data,
+	   size_t data_size);
 
 /**
- * Send data to everyone
- * 
- * @param ip is the IPs where the message will be sent.
- * @param port is the ports where the servers are listening,
- * first port is for the first IP, etc.
+ * Send data to everyone.
+ *
+ * @param servers is the list of servers.
  * @param data is the string which will be sent.
- * @return 0 if success, -1 if there is an error.
+ * @param data_size is the number of bytes to send.
  */
-int send_to_everyone (const char** IPs, unsigned short* ports, const char* data);
+void broadcast (const struct server_credentials *servers,
+	       unsigned int number_of_servers, const char* data,
+	       size_t data_size);
 
 /**
  * Run the network process and create pipes to communicate with.
@@ -72,7 +82,7 @@ int run_network_process (unsigned short port, int* pipes);
  * Open a socket for a UDP server.
  *
  * @param port is the port where we will listen.
- * @return the socket.
+ * @return the socket or -1 if there is an error.
  */
 int get_socket (unsigned short port);
 
@@ -97,26 +107,28 @@ void handle_network_communication (unsigned short port, int read_pipe,
 				   int write_pipe);
 
 /**
- * Resize the IPs array.
- *
- * 
- */
-int resize_IPs_array (char** IPs, int new_size);
-
-/**
  * Interpret given data and return a code depending on what actions needs
  * to be performed.
  *
  * @param data is the data to interpret.
  * @param data_size is the size of the data array.
- * @return -1 on error and a value greater or equal than zero on success.
- *
- * 0 is returned if we just need to forward the message to the socket or pipe.
- *
- * 1 is returned if we need to stop the process.
- *
- * 2 is returned if it is a ping.
- *
- * 3 is returned if it is a pong.
+ * @return 
+ * + -1 on error and a value greater or equal than zero on success.
+ * + 0 is returned if we just need to forward the message to the socket
+ * or to the pipe.
+ * + 1 is returned if we need to stop the process.
+ * + 2 is returned if it is a ping.
+ * + 3 is returned if it is a pong.
+ * + 4 is returned if it is a connect command.
  */
-int interpret_data_for_networking_process (char* data, size_t data_size);
+int interpret_data_for_networking_process (char* data);
+
+/**
+ * Store in the servers’ crendentials array the new server credentials.
+ *
+ * @param data is the string containing the connect command and its parameters.
+ * @param servers is the servers’ credentials array.
+ * @return 0 if there is an error, 1 if success.
+ */
+int connect_command (const char* data, unsigned int* number_of_servers,
+		     struct server_credentials* servers);

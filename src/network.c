@@ -26,8 +26,9 @@
 
 #include "network.h"
 
-int
-send (const char *IP, unsigned short port, char* data)
+void
+send (const struct server_credentials server, const char* data,
+      size_t data_size)
 {
   int sockfd6, s;
   char port_str[6];
@@ -35,7 +36,7 @@ send (const char *IP, unsigned short port, char* data)
   struct addrinfo *result, *rp;
 
   /* Convert port to a string */
-  snprintf (port_str, 6, "%d", port);
+  snprintf (port_str, 6, "%d", server.port);
 
   memset (&hints, 0, sizeof (struct addrinfo));
   hints.ai_family = AF_UNSPEC; // Allow IPv4 and IPv6
@@ -43,11 +44,14 @@ send (const char *IP, unsigned short port, char* data)
   hints.ai_flags = 0;
   hints.ai_protocol = 0; //Any protocol
 
-  s = getaddrinfo (IP, port_str, &hints, &result);
+  if (server.IP6 != NULL)
+    s = getaddrinfo (server.IP6, port_str, &hints, &result);
+  else
+    s = getaddrinfo (server.IP4, port_str, &hints, &result);
   if (s != 0)
     {
       fprintf (stderr, "Getaddrinfo: %s\n", gai_strerror (s));
-      return -1;
+      return;
     }
 
   for (rp = result; rp != NULL; rp = rp->ai_next)
@@ -65,18 +69,16 @@ send (const char *IP, unsigned short port, char* data)
   if (rp == NULL)
     {
       fprintf (stderr, "Couldn't connect\n");
-      return -1;
+      return;
   }
 
   freeaddrinfo (result);
 
-  if ((unsigned) send (sockfd6, data, strlen (data), 0) != strlen (data))
+  if ((unsigned) send (sockfd6, data, data_size, 0) != data_size)
     {
       fprintf (stderr, "Error while writing on the socket\n");
-      return -1;
+      return;
     }
-
-  return 1;
 }
 
 int
@@ -115,6 +117,14 @@ run_network_process (unsigned short port, int* pipes)
 }
 
 void
+broadcast (const struct server_credentials *servers,
+	   unsigned int number_of_servers, const char* data, size_t data_size)
+{
+  for (unsigned int i = 0; i < number_of_servers; i++)
+    send (servers[i], data, data_size);
+}
+
+void
 handle_network_communication (unsigned short port, int read_pipe,
 			      int write_pipe)
 {
@@ -123,16 +133,15 @@ handle_network_communication (unsigned short port, int read_pipe,
   const int BUFFER_SIZE = 512;
   
   int quit = 0;
+  int command_type = 0;
   char buffer[BUFFER_SIZE];
 
   /* On crée le tableau qui contiendra les IP */
   /* We create the array that will contains the IPs */
   unsigned int number_of_player = 1;
-  char **IPs = (char**) malloc (number_of_player * sizeof (char*));
-  for (unsigned int i = 0; i < number_of_player; i++)
-    {
-      IPs[i] = (char*) malloc (40 * sizeof (char));
-    }
+  struct server_credentials *servers;
+  servers = (server_credentials*) malloc
+    (number_of_player * sizeof (struct server_credentials));
   
   while (!quit)
     {
@@ -141,14 +150,18 @@ handle_network_communication (unsigned short port, int read_pipe,
 
       buffer[0] = 0;
       read_pipe_until_null (buffer, BUFFER_SIZE, read_pipe);
+      command_type = interpret_data_for_networking_process (buffer);
       
-      if (strlen (buffer) >= 1)
+      switch (command_type)
 	{
-	  printf ("tampon : %s\n", buffer);
-	  if (strncmp (buffer, "QUIT", 5) == 0)
-	    quit = 1;
+	case 0:
+	  broadcast (servers, number_of_player, buffer, strlen (buffer));
+	  break;
+
+	case 1:
+	  quit = 1;
+	  break;
 	}
-  
       /* Send what is from the pipe to the socket */
       
       /* Read the socket */
@@ -158,23 +171,127 @@ handle_network_communication (unsigned short port, int read_pipe,
 
   close (read_pipe);
   close (write_pipe);
+  free (servers);
 }
 
 int
-interpret_data_for_networking_process (char* data, size_t data_size)
+interpret_data_for_networking_process (char* data)
 {
   int ret = 0;
-  /* On extrait la commande */
-  /* We extract the command */
-  char *token;
-  token = strtok (data, " ");
+  char *token = NULL;
 
+  if (strlen (data) < 1)
+    ret = -1;
+  
+  /* Il faut extraire la commande. */
+  /* We need to extract the command. */
+  if (ret != -1)
+    token = strtok (data, " ");
   if (token == NULL)
     ret = -1;
+  else if (strcmp (token, "QUIT") == 0)
+    ret = 1;
+  else if (strcmp (token, "PING") == 0)
+    ret = 2;
+  else if (strcmp (token, "PONG") == 0)
+    ret = 3;
+  else if (strcmp (token, "CONNECT") == 0)
+    ret = 4;
+  else ret = -1;
+
+  return ret;
+}
+
+int
+connect_command (char* data, unsigned int* number_of_servers,
+		 struct server_credentials* servers)
+{
+  char *token;
+  int ret = 1;
+
+  servers = (struct server_credentials*) realloc (servers,
+						  *number_of_servers + 1);
+  *number_of_servers += 1;
+
+  token = strtok (data, " ");
+  token = strtok (NULL, " ");
+  if (token != NULL && strlen (token) < 40)
+    strncpy (servers[*number_of_servers - 1].IP4, token, INET_ADDRSTRLEN);
   else
     {
-      
+      ret = 0;
+      servers = (struct server_credentials*) realloc (servers,
+						      *number_of_servers - 1);
+    }
+
+  if (ret != 0)
+    {
+      token = strtok (NULL, " ");
+      if (token != NULL && strlen (token) < 40)
+	strncpy (servers[*number_of_servers - 1].IP6, token, INET6_ADDRSTRLEN);
+      else
+	{
+	  ret = 0;
+	  servers = (struct server_credentials*) realloc (servers,
+							  *number_of_servers - 1);
+	}
+    }
+  
+  if (ret != 0)
+    {
+      token = strtok (NULL, " ");
+      if (token != NULL && strlen (token) < 6)
+	servers[*number_of_servers - 1].port = (unsigned short) atoi (token);
+      else
+	{
+	  ret = 0;
+	  servers = (struct server_credentials*) realloc (servers,
+							  *number_of_servers - 1);
+	}
     }
 
   return ret;
+}
+
+int
+get_socket (unsigned short port)
+{
+  int sockfd6, s;
+  struct addrinfo hints, *result, *rp;
+
+  memset(&hints, 0, sizeof(struct addrinfo));
+  hints.ai_family = AF_INET6; // Allow IPv4 and IPv6
+  hints.ai_socktype = SOCK_DGRAM; // Datagram socket
+  hints.ai_flags = AI_PASSIVE;	  // For wildcard IP address
+  hints.ai_protocol = 0; //Any protocol
+  hints.ai_canonname = NULL;
+  hints.ai_addr = NULL;
+  hints.ai_next = NULL;
+
+  char port_str[6];
+  snprintf (port_str, 6, "%d", port);
+
+  s = getaddrinfo(NULL, port_str, &hints, &result);
+  if(s != 0) {
+    exit (EXIT_FAILURE);
+  }
+
+  for(rp = result; rp != NULL; rp = rp->ai_next) {
+    sockfd6 = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+    if(sockfd6 == -1)
+      continue;
+
+    if (bind (sockfd6, rp->ai_addr, rp->ai_addrlen) != -1)
+      break; // Success
+
+    close(sockfd6);
+  }
+
+  if(rp==NULL) {
+    exit (EXIT_FAILURE);
+  }
+
+  freeaddrinfo(result);
+
+  return sockfd6;
 }
