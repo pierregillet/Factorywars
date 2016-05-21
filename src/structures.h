@@ -42,3 +42,9 @@ struct size
   int x;
   int y;
 };
+
+struct map_coordinates
+{
+  struct coordinates chunk;
+  struct coordinates square;
+};

@@ -56,17 +56,25 @@ bool loadMedia (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture);
 /*
  * Initiates the SDL basics, like Window and Renderer.
  */
-bool init (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture, SDL_Texture** biomes, SDL_Texture** items, const int screen_height, const int screen_width);
+bool init (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture, SDL_Texture** biomes, SDL_Texture** items, int* screen_height, int* screen_width);
 
 int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
 
 int handle_keyup (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
 
-int handle_clickdown (int button, coordinates click_coords, bool *clicks_state);
+int handle_clickdown (int button, coordinates click_coords, bool *clicks_state, int* x, int* y);
 
 int handle_clickup (int button, coordinates click_coords, bool *clicks_state);
 
-int handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state, bool* clicks_state, SDL_Texture** key_press_texture);
+int handle_events (SDL_Texture** CurrentTexture,
+		   SDL_Texture** biomes,
+		   bool* keys_state,
+		   bool* clicks_state,
+		   SDL_Texture** key_press_texture,
+		   int* screen_height,
+		   int* screen_width,
+		   int* x,
+		   int* y);
 
 int move_coordinates_on_keydown (int* x, int* y, bool* keys_state);
 
@@ -85,5 +93,5 @@ void close ();
 
 int run_gui ();
 
-coordinates get_map_coords (coordinates click_coords);
+struct map_coordinates get_map_coords (coordinates click_coords, int* screen_height, int* screen_width, int* x, int* y);
 
