@@ -5,7 +5,10 @@ LINKER_FLAGS = -lSDL2 -lSDL2_image `xml2-config --libs`
 OBJ_NAME = factorywars
 
 all : $(OBJS)
-	$(CC) $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+	$(CC) $(OBJS) $(COMPILER_FLAGS) -O3 $(LINKER_FLAGS) -o $(OBJ_NAME)
+
+fast : $(OBJS)
+	$(CC) $(OBJS) $(COMPILER_FLAGS) -O0 $(LINKER_FLAGS) -o $(OBJ_NAME)
 
 documentation :
 	doxygen doc/config

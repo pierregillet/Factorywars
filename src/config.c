@@ -35,5 +35,5 @@
 char*
 get_config_value (const char* key)
 {
-  return getValueOfElement (key, 0, NULL, NULL, "conf.xml");
+  return getValueOfElement (key, 0, NULL, NULL, "factorywars.conf");
 }
