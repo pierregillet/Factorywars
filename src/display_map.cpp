@@ -35,7 +35,7 @@
 #include "display_map.h"
 #include <stdio.h>
 #include "config.h"
-
+#include "display_item.h"
 
 void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 {
@@ -49,8 +49,9 @@ void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 }
 
 
+
 void
-display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, struct coordinates screen_origin)
+display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_biomes, SDL_Texture** table_items, struct coordinates screen_origin)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
   const int SQUARE_WIDTH = 24;
@@ -66,20 +67,23 @@ display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** tab
     {
       for(int j(0); j < screen_width + screen_origin.x % chunk_width; j += chunk_width)
 	{
-	  struct coordinates hero_coords = {.x = (int) screen_origin.x + j, .y = (int) screen_origin.y + i};
+	  struct coordinates hero_coords = {.x = (int) screen_origin.x + j,
+					    .y = (int) screen_origin.y + i};
 	  struct coordinates coords = get_chunk_coordinates_from_player_movement (hero_coords);
-  
+     
 	  int id = get_biome_id (coords, path.c_str ());
 	  if (id == -1)
 	    {
 	      id = 2;
 	    }
 
-	  SDL_Texture* display_id = table[id];
-
+	  SDL_Texture* display_id = table_biomes[id];
+	  
 	  struct coordinates temp = {.x = j - screen_origin.x % chunk_width,
 				     .y = i - screen_origin.y % chunk_width};
 	  blit (Renderer, temp, chunk_width, chunk_width,  display_id);
+	  
+	  display_items (Renderer, path.c_str(), table_items, coords, hero_coords);
 	}
     }
 }  

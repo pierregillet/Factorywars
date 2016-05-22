@@ -12,6 +12,7 @@ void load_items (SDL_Renderer** Renderer, SDL_Texture** table)
 }
 
 void
+/*
 display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, struct coordinates screen_origin)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
@@ -40,6 +41,7 @@ display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, s
 						    .y =m};
 	        int surface_id = get_surface_item(coords, square_coords, path.c_str());
 	        if (surface_id > 0)
+
 	          {
 	          SDL_Texture* display_id = table[surface_id];
 		  struct coordinates screen_origin = {.x = j - square_coords.x,
@@ -48,10 +50,24 @@ display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, s
 		  }
 	      }
 	    }
-    
-    
-	  
-
 	}
     }
 }  
+*/
+
+display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_items, struct coordinates chunk_coords, struct coordinates blited_chunk_coords)
+{ 
+  for (int i(0) ; i <= 384 ; i += 24)
+    {
+      for (int j(0) ; j <= 384 ; j += 24)
+	{
+	  struct coordinates square_coords = {.x = i , .y = j};
+	  int item_id; // = get_surface_item (chunk_coords, square_coords, path.c_str());
+	  if (item_id > 0)
+	    {
+	      SDL_Texture* item_texture = table_items[item_id];
+	      blit(Renderer, square_coords, 24, 24, item_texture);
+	    }
+	}
+    }
+}
