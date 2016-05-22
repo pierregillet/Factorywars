@@ -44,10 +44,7 @@ send (const struct server_credentials server, const char* data,
   hints.ai_flags = 0;
   hints.ai_protocol = 0; //Any protocol
 
-  if (server.IP6 != NULL)
-    s = getaddrinfo (server.IP6, port_str, &hints, &result);
-  else
-    s = getaddrinfo (server.IP4, port_str, &hints, &result);
+    s = getaddrinfo (server.IP, port_str, &hints, &result);
   if (s != 0)
     {
       fprintf (stderr, "Getaddrinfo: %s\n", gai_strerror (s));
@@ -134,14 +131,22 @@ handle_network_communication (unsigned short port, int read_pipe,
   
   int quit = 0;
   int command_type = 0;
-  char buffer[BUFFER_SIZE];
+
+  int sockfd6, nread;
+  struct sockaddr_storage peer_addr;
+  socklen_t peer_addr_len;
+
+  port = (unsigned short) atoi(get_config_value ("port"));
+  char buffer[BUFFER_SIZE], tmp_string[BUFFER_SIZE];
+
+  /* On récupère l’interface de connexion */
+  /* We get the socket */
+  sockfd6 = get_socket (port);
 
   /* On crée le tableau qui contiendra les IP */
   /* We create the array that will contains the IPs */
-  unsigned int number_of_player = 1;
-  struct server_credentials *servers;
-  servers = (server_credentials*) malloc
-    (number_of_player * sizeof (struct server_credentials));
+  unsigned int number_of_players = 0;
+  struct server_credentials *servers = NULL;
   
   while (!quit)
     {
@@ -155,18 +160,62 @@ handle_network_communication (unsigned short port, int read_pipe,
       switch (command_type)
 	{
 	case 0:
-	  broadcast (servers, number_of_player, buffer, strlen (buffer));
+	  /* Send what is from the pipe to the socket */
+	  broadcast (servers, number_of_players, buffer, strlen (buffer));
 	  break;
 
 	case 1:
 	  quit = 1;
 	  break;
 	}
-      /* Send what is from the pipe to the socket */
       
       /* Read the socket */
-      /* Interpret */
-      /* Send through the pipe if there is something to send */
+      nread = read_socket (buffer, BUFFER_SIZE, sockfd6, &peer_addr,
+			   &peer_addr_len);
+      if (nread > 0)
+	{
+	  strncpy (tmp_string, buffer, BUFFER_SIZE);
+	  command_type = interpret_data_for_networking_process (tmp_string);
+	  printf ("Buffer : %s, type de commande : %d\n", buffer, command_type);
+	}
+      else
+	continue;
+
+      switch (command_type)
+	{
+	case 0:
+	  write (write_pipe, buffer, nread);
+	  break;
+	case 2:
+	  sendto (sockfd6, "PONG", 5, 0, (struct sockaddr *) &peer_addr,
+		  peer_addr_len);
+	  break;
+	case 3:
+	  break;
+	case 4:
+	  strncpy (tmp_string, buffer, BUFFER_SIZE);
+
+	  servers = (struct server_credentials*)
+	    realloc (servers, (number_of_players + 1)
+		     * sizeof (struct server_credentials));
+
+	  if (!connect_command (tmp_string, &number_of_players, servers, peer_addr))
+	    servers = (struct server_credentials*)
+	      realloc (servers,
+		       number_of_players * sizeof (struct server_credentials));
+	  break;
+	default:
+	  break;
+	}
+      if (number_of_players > 0)
+	{
+	  printf ("Nombre de joueurs : %d\n", number_of_players);
+	  for (int j = 0; j < number_of_players; j++)
+	    {
+	      printf ("j : %d\n", j);
+	      printf ("IP : %s, port : %d, nom : %s\n", servers[j].IP, servers[j].port, servers[j].name);
+	    }
+	}
     }
 
   close (read_pipe);
@@ -197,58 +246,47 @@ interpret_data_for_networking_process (char* data)
     ret = 3;
   else if (strcmp (token, "CONNECT") == 0)
     ret = 4;
-  else ret = -1;
 
   return ret;
 }
 
 int
 connect_command (char* data, unsigned int* number_of_servers,
-		 struct server_credentials* servers)
+		 struct server_credentials* servers,
+		 struct sockaddr_storage peer_addr)
 {
   char *token;
   int ret = 1;
 
-  servers = (struct server_credentials*) realloc (servers,
-						  *number_of_servers + 1);
-  *number_of_servers += 1;
+  (*number_of_servers)++;
 
   token = strtok (data, " ");
   token = strtok (NULL, " ");
-  if (token != NULL && strlen (token) < 40)
-    strncpy (servers[*number_of_servers - 1].IP4, token, INET_ADDRSTRLEN);
+  if (token != NULL)
+    {
+      servers[*number_of_servers - 1].port = (unsigned short) atoi (token);
+    }
   else
     {
+      (*number_of_servers)--;
       ret = 0;
-      servers = (struct server_credentials*) realloc (servers,
-						      *number_of_servers - 1);
-    }
-
-  if (ret != 0)
-    {
-      token = strtok (NULL, " ");
-      if (token != NULL && strlen (token) < 40)
-	strncpy (servers[*number_of_servers - 1].IP6, token, INET6_ADDRSTRLEN);
-      else
-	{
-	  ret = 0;
-	  servers = (struct server_credentials*) realloc (servers,
-							  *number_of_servers - 1);
-	}
     }
   
   if (ret != 0)
     {
       token = strtok (NULL, " ");
-      if (token != NULL && strlen (token) < 6)
-	servers[*number_of_servers - 1].port = (unsigned short) atoi (token);
+      if (token != NULL && strlen (token) < 127)
+	strncpy (servers[*number_of_servers - 1].name, token, 128);
       else
 	{
+	  (*number_of_servers)--;
 	  ret = 0;
-	  servers = (struct server_credentials*) realloc (servers,
-							  *number_of_servers - 1);
 	}
     }
+  if (ret != 0)
+    inet_ntop (AF_INET6,
+	       (const void*) ((sockaddr_in6*)&peer_addr)->sin6_addr.s6_addr,
+	       servers[*number_of_servers - 1].IP, INET6_ADDRSTRLEN);
 
   return ret;
 }
@@ -259,7 +297,7 @@ get_socket (unsigned short port)
   int sockfd6, s;
   struct addrinfo hints, *result, *rp;
 
-  memset(&hints, 0, sizeof(struct addrinfo));
+  memset (&hints, 0, sizeof(struct addrinfo));
   hints.ai_family = AF_INET6; // Allow IPv4 and IPv6
   hints.ai_socktype = SOCK_DGRAM; // Datagram socket
   hints.ai_flags = AI_PASSIVE;	  // For wildcard IP address
@@ -271,27 +309,46 @@ get_socket (unsigned short port)
   char port_str[6];
   snprintf (port_str, 6, "%d", port);
 
-  s = getaddrinfo(NULL, port_str, &hints, &result);
-  if(s != 0) {
-    exit (EXIT_FAILURE);
-  }
+  s = getaddrinfo (NULL, port_str, &hints, &result);
+  if (s != 0)
+    {
+      exit (EXIT_FAILURE);
+    }
 
-  for(rp = result; rp != NULL; rp = rp->ai_next) {
-    sockfd6 = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-    if(sockfd6 == -1)
-      continue;
+  for (rp = result; rp != NULL; rp = rp->ai_next)
+    {
+      sockfd6 = socket (rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+      if(sockfd6 == -1)
+	continue;
+      
+      if (bind (sockfd6, rp->ai_addr, rp->ai_addrlen) != -1)
+	break; // Success
 
-    if (bind (sockfd6, rp->ai_addr, rp->ai_addrlen) != -1)
-      break; // Success
+      close(sockfd6);
+    }
 
-    close(sockfd6);
-  }
+  if (rp == NULL)
+    {
+      exit (EXIT_FAILURE);
+    }
 
-  if(rp==NULL) {
-    exit (EXIT_FAILURE);
-  }
+  freeaddrinfo (result);
 
-  freeaddrinfo(result);
+  int flags = fcntl (sockfd6, F_GETFL, 0);
+  fcntl (sockfd6, F_SETFL, flags | O_NONBLOCK);
 
   return sockfd6;
+}
+
+int
+read_socket (char* buffer, size_t buf_size, int sockfd6,
+	     struct sockaddr_storage* peer_addr, socklen_t* peer_addr_len)
+{
+  *peer_addr_len = sizeof (struct sockaddr_storage);
+  int nread = 0;
+
+  nread = recvfrom (sockfd6, buffer, buf_size, 0,
+		    (struct sockaddr*) peer_addr, peer_addr_len);
+
+  return nread;
 }

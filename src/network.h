@@ -42,7 +42,7 @@
 
 struct server_credentials
 {
-  char IP4[INET_ADDRSTRLEN], IP6[INET6_ADDRSTRLEN];
+  char IP[INET6_ADDRSTRLEN], name[128];
   unsigned short port;
 };
 
@@ -92,9 +92,12 @@ int get_socket (unsigned short port);
  * @param buffer is the buffer where we will store the informations.
  * @param buf_size is the size of the buffer.
  * @param sockfd6 is the socket we will read.
+ * @param peer_addr is the peer address.
+ * @param peer_addr_len is the length of the peer address.
  * @return how many bytes has been read.
  */
-int read_socket (char* buffer, size_t buf_size, int sockfd6);
+int read_socket (char* buffer, size_t buf_size, int sockfd6,
+		 struct sockaddr_storage* peer_addr, socklen_t* peer_addr_len);
 
 /**
  * This is the networking loop.
@@ -130,5 +133,6 @@ int interpret_data_for_networking_process (char* data);
  * @param servers is the servers’ credentials array.
  * @return 0 if there is an error, 1 if success.
  */
-int connect_command (const char* data, unsigned int* number_of_servers,
-		     struct server_credentials* servers);
+int connect_command (char* data, unsigned int* number_of_servers,
+		     struct server_credentials* servers,
+		     struct sockaddr_storage peer_addr);
