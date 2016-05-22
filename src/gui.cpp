@@ -178,10 +178,10 @@ handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** Current
 }
 
 int
-handle_clickdown (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, int* x, int* y)
+handle_clickdown (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, struct coordinates* screen_origin)
 {
   bool clickdown = 1;
-  get_map_coords (click_coords, screen_height, screen_width, x, y);
+  get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
 
   switch (button)
     {
@@ -207,10 +207,10 @@ handle_clickdown (int button, coordinates click_coords, bool* clicks_state, int*
 }
 
 int
-handle_clickup (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, int* x, int* y)
+handle_clickup (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, struct coordinates* screen_origin)
 {
   bool clickup = 0;
-  get_map_coords (click_coords, screen_height, screen_width, x, y);
+  get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
 
   switch (button)
     {
@@ -236,7 +236,14 @@ handle_clickup (int button, coordinates click_coords, bool* clicks_state, int* s
 }
 
 int
-handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_state, bool* clicks_state, SDL_Texture** key_press_texture, int* screen_height, int* screen_width, int* x, int* y)
+handle_events (SDL_Texture** CurrentTexture,
+	       SDL_Texture** biomes,
+	       bool* keys_state,
+	       bool* clicks_state,
+	       SDL_Texture** key_press_texture,
+	       int* screen_height,
+	       int* screen_width,
+	       struct coordinates screen_origin)
 {
   SDL_Event event;
   coordinates click_coords;
@@ -267,8 +274,7 @@ handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_st
 			    clicks_state,
 			    screen_height,
 			    screen_width,
-			    x,
-			    y);
+			    &screen_origin);
 	  break;
 
 	case SDL_MOUSEBUTTONUP:
@@ -279,8 +285,7 @@ handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_st
 			  clicks_state,
 			  screen_height,
 			  screen_width,
-			  x,
-			  y);
+			  &screen_origin);
 	  break;
 	}
     }
@@ -289,16 +294,16 @@ handle_events (SDL_Texture** CurrentTexture, SDL_Texture** biomes, bool* keys_st
 }
 
 int
-move_coordinates_on_keydown (int* x, int* y, bool* keys_state)
+move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state)
 {
-  *y += (keys_state[0])? (-5) : 0;
-  *y += (keys_state[1])? 5 : 0;
-  *x += (keys_state[2])? (-5) : 0;
-  *x += (keys_state[3])? 5 : 0;
+  screen_origin->y += (keys_state[0])? (-5) : 0;
+  screen_origin->y += (keys_state[1])? 5 : 0;
+  screen_origin->x += (keys_state[2])? (-5) : 0;
+  screen_origin->x += (keys_state[3])? 5 : 0;
   
   // At least for now, we didn’t authorize negative coordinates
-  *x = (*x < 0)? 0 : *x;
-  *y = (*y < 0)? 0 : *y;
+  screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
+  screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
   return 1;
 }
 
@@ -309,9 +314,9 @@ refresh_renderer (SDL_Renderer** Renderer)
 }
 
 int
-blit (SDL_Renderer** Renderer, int x, int y, int width, int height, SDL_Texture* texture)
+blit (SDL_Renderer** Renderer, struct coordinates screen_origin, int width, int height, SDL_Texture* texture)
 {
-  SDL_Rect Rect = {.x = x, .y = y, .w = width, .h = height};
+  SDL_Rect Rect = {.x = screen_origin.x, .y = screen_origin.y, .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
   
   SDL_RenderSetViewport(*Renderer, &Rect);
@@ -355,8 +360,13 @@ run_gui ()
   if (!init (&Renderer, key_press_texture, biomes, items, &screen_height, &screen_width))
     return 1;
   
+  struct coordinates screen_origin;
+  screen_origin.x = 0;
+  screen_origin.y = 0;
+  /*
   int x = 0;
   int y = 0;
+  */
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
   
@@ -379,23 +389,32 @@ run_gui ()
    */
   bool clicks_state[5] = {0};
 
+  struct coordinates screen_center = {.x = screen_width / 2, .y = screen_height / 2};
+
   // We need to display the map at the beginning
-  display_background (&Renderer, "save", biomes, x, y);
+  display_background (&Renderer, "save", biomes, screen_origin);
   //display_items (&Renderer, "save", items, x, y);
-  blit (&Renderer, screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+  blit (&Renderer, screen_center, 25, 41, CurrentTexture);
   display_blits(&Renderer);
 
-  while (handle_events (&CurrentTexture, biomes, keys_state, clicks_state, key_press_texture, &screen_height, &screen_width, &x, &y) != 0)
+  while (handle_events (&CurrentTexture,
+			biomes,
+			keys_state,
+			clicks_state,
+			key_press_texture,
+			&screen_height,
+			&screen_width,
+			screen_origin) != 0)
     {
-      move_coordinates_on_keydown (&x, &y, keys_state);
+      move_coordinates_on_keydown (&screen_origin, keys_state);
 
       for (int i = 0; i < 4; i++)
 	{
 	  if (keys_state[i])
 	    {
 	      refresh_renderer (&Renderer);
-	      display_background (&Renderer, "save", biomes, x, y);
-	      blit (&Renderer, screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
+	      display_background (&Renderer, "save", biomes, screen_origin);
+	      blit (&Renderer, screen_center, 25, 41, CurrentTexture);
 	      display_blits(&Renderer);
 	      break;
 	    }
@@ -410,14 +429,13 @@ struct map_coordinates
 get_map_coords (coordinates click_coords,
 		int* screen_height,
 		int* screen_width,
-		int* x,
-		int* y)
+		struct coordinates screen_origin)
 {
   struct coordinates offset;
   struct map_coordinates click_map_coords;
 
-  float x_float = *x;
-  float y_float = *y;
+  float x_float = screen_origin.x;
+  float y_float = screen_origin.y;
 
   offset.x = click_coords.x - (*screen_width / 2);
   offset.y = click_coords.y - (*screen_height / 2);

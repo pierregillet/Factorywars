@@ -5,4 +5,4 @@
 #include <stdio.h>
 #include "config.h"
 
-void display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, int x, int y);
+void display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, struct coordinates screen_origin);

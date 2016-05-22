@@ -50,7 +50,7 @@ void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 
 
 void
-display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, int x, int y)
+display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, struct coordinates screen_origin)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
   const int SQUARE_WIDTH = 24;
@@ -59,14 +59,14 @@ display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** tab
   const int screen_height = atoi (get_config_value ("height"));
   const int screen_width = atoi (get_config_value ("width"));
 
-  x = (x < 0)? 0 : x;
-  y = (y < 0)? 0 : y;
+  screen_origin.x = (screen_origin.x < 0)? 0 : screen_origin.x;
+  screen_origin.y = (screen_origin.y < 0)? 0 : screen_origin.y;
 
-  for(int i(0) ; i < screen_height + y % chunk_width; i += chunk_width)
+  for(int i(0) ; i < screen_height + screen_origin.y % chunk_width; i += chunk_width)
     {
-      for(int j(0); j < screen_width + x % chunk_width; j += chunk_width)
+      for(int j(0); j < screen_width + screen_origin.x % chunk_width; j += chunk_width)
 	{
-	  struct coordinates hero_coords = {.x = x + j, .y = y + i};
+	  struct coordinates hero_coords = {.x = (int) screen_origin.x + j, .y = (int) screen_origin.y + i};
 	  struct coordinates coords = get_chunk_coordinates_from_player_movement (hero_coords);
   
 	  int id = get_biome_id (coords, path.c_str ());
@@ -77,7 +77,9 @@ display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** tab
 
 	  SDL_Texture* display_id = table[id];
 
-	  blit (Renderer, j - x % chunk_width, i - y % chunk_width, chunk_width, chunk_width,  display_id);
+	  struct coordinates temp = {.x = j - screen_origin.x % chunk_width,
+				     .y = i - screen_origin.y % chunk_width};
+	  blit (Renderer, temp, chunk_width, chunk_width,  display_id);
 	}
     }
 }  
