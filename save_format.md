@@ -1,6 +1,6 @@
 # The save format #
 
-The save will be stored as: `chunk_coordinates biome_id item_id square_id square_id item_id square_id`
+The save will be stored as: `chunk_coordinates, biome_id, item_id, square_coordinates, square_id, item_id, square_id`
 
 ## Example ##
 
