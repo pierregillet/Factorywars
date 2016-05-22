@@ -35,7 +35,7 @@
 #include "display_map.h"
 #include <stdio.h>
 #include "config.h"
-
+#include "display_item.h"
 
 void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 {
@@ -50,7 +50,7 @@ void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 
 
 void
-display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, int x, int y)
+display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_biomes, SDL_Texture** table_items, int x, int y)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
   const int SQUARE_WIDTH = 24;
@@ -68,16 +68,18 @@ display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** tab
 	{
 	  struct coordinates hero_coords = {.x = x + j, .y = y + i};
 	  struct coordinates coords = get_chunk_coordinates_from_player_movement (hero_coords);
-  
+     
 	  int id = get_biome_id (coords, path.c_str ());
 	  if (id == -1)
 	    {
 	      id = 2;
 	    }
 
-	  SDL_Texture* display_id = table[id];
-
-	  blit (Renderer, j - x % chunk_width, i - y % chunk_width, chunk_width, chunk_width,  display_id);
+	  SDL_Texture* display_id = table_biomes[id];
+	  
+	  blit (Renderer, new_coords.x, new_coords.y, chunk_width, chunk_width,  display_id);
+	  
+	  display_items (Renderer, path.c_str(), table_items, coords, hero_coords);
 	}
     }
 }  

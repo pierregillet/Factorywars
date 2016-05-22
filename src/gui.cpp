@@ -380,7 +380,7 @@ run_gui ()
   bool clicks_state[5] = {0};
 
   // We need to display the map at the beginning
-  display_background (&Renderer, "save", biomes, x, y);
+  display_background (&Renderer, "save", biomes, items, x, y);
   //display_items (&Renderer, "save", items, x, y);
   blit (&Renderer, screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
   display_blits(&Renderer);
@@ -394,7 +394,7 @@ run_gui ()
 	  if (keys_state[i])
 	    {
 	      refresh_renderer (&Renderer);
-	      display_background (&Renderer, "save", biomes, x, y);
+	      display_background (&Renderer, "save", biomes, items, x, y);
 	      blit (&Renderer, screen_width / 2, screen_height / 2, 25, 41, CurrentTexture);
 	      display_blits(&Renderer);
 	      break;
@@ -426,7 +426,7 @@ get_map_coords (coordinates click_coords,
   click_map_coords.chunk.y = (int) (y_float + (float) offset.y) / 24.0 / 16.0;
   click_map_coords.square.x = (int) ((x_float + (float) offset.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
   click_map_coords.square.y = (int) ((y_float + (float) offset.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
-
+  
   return click_map_coords;
 }
 

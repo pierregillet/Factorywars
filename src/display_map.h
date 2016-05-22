@@ -45,4 +45,4 @@ void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table);
   * it takes the save path file
   * and a table with biomes
   */ 
-void display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table, int x, int y);
+void display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_biomes, SDL_Texture** table_items, int x, int y);
