@@ -284,9 +284,22 @@ connect_command (char* data, unsigned int* number_of_servers,
 	}
     }
   if (ret != 0)
-    inet_ntop (AF_INET6,
-	       (const void*) ((sockaddr_in6*)&peer_addr)->sin6_addr.s6_addr,
-	       servers[*number_of_servers - 1].IP, INET6_ADDRSTRLEN);
+    {
+      inet_ntop (AF_INET6,
+		 (const void*) ((sockaddr_in6*)&peer_addr)->sin6_addr.s6_addr,
+		 servers[*number_of_servers - 1].IP, INET6_ADDRSTRLEN);
+
+      /* Est-ce que ce nom est déjà présent ? */
+      /* Does that name is already present? */
+      for (int i = 0; i < *(number_of_servers) - 1; i++)
+	{
+	  if (strcmp (servers[*(number_of_servers) - 1].name, servers[i].name) == 0)
+	    {
+	      (*number_of_servers)--;
+	      ret = 0;
+	    }
+	}
+    }
 
   return ret;
 }
