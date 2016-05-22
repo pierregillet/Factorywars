@@ -186,12 +186,15 @@ handle_network_communication (unsigned short port, int read_pipe,
 	case 0:
 	  write (write_pipe, buffer, nread);
 	  break;
+
 	case 2:
 	  sendto (sockfd6, "PONG", 5, 0, (struct sockaddr *) &peer_addr,
 		  peer_addr_len);
 	  break;
+
 	case 3:
 	  break;
+
 	case 4:
 	  strncpy (tmp_string, buffer, BUFFER_SIZE);
 
@@ -204,13 +207,18 @@ handle_network_communication (unsigned short port, int read_pipe,
 	      realloc (servers,
 		       number_of_players * sizeof (struct server_credentials));
 	  break;
+
+	case 5:
+	  move_command (buffer, &number_of_players, servers, peer_addr, write_pipe);
+	  break;
+
 	default:
 	  break;
 	}
       if (number_of_players > 0)
 	{
 	  printf ("Nombre de joueurs : %d\n", number_of_players);
-	  for (int j = 0; j < number_of_players; j++)
+	  for (unsigned int j = 0; j < number_of_players; j++)
 	    {
 	      printf ("j : %d\n", j);
 	      printf ("IP : %s, port : %d, nom : %s\n", servers[j].IP, servers[j].port, servers[j].name);
@@ -246,6 +254,8 @@ interpret_data_for_networking_process (char* data)
     ret = 3;
   else if (strcmp (token, "CONNECT") == 0)
     ret = 4;
+  else if (strcmp (token, "MOVE") == 0)
+    ret = 5;
 
   return ret;
 }
@@ -285,13 +295,12 @@ connect_command (char* data, unsigned int* number_of_servers,
     }
   if (ret != 0)
     {
-      inet_ntop (AF_INET6,
-		 (const void*) ((sockaddr_in6*)&peer_addr)->sin6_addr.s6_addr,
-		 servers[*number_of_servers - 1].IP, INET6_ADDRSTRLEN);
+      get_ip (servers[*number_of_servers - 1].IP,
+	      peer_addr);
 
       /* Est-ce que ce nom est déjà présent ? */
       /* Does that name is already present? */
-      for (int i = 0; i < *(number_of_servers) - 1; i++)
+      for (unsigned int i = 0; i < *(number_of_servers) - 1; i++)
 	{
 	  if (strcmp (servers[*(number_of_servers) - 1].name, servers[i].name) == 0)
 	    {
@@ -364,4 +373,69 @@ read_socket (char* buffer, size_t buf_size, int sockfd6,
 		    (struct sockaddr*) peer_addr, peer_addr_len);
 
   return nread;
+}
+
+int
+get_ip (char* IP, struct sockaddr_storage peer_addr)
+{
+  const char* ret;
+  ret = inet_ntop (AF_INET6,
+		   (const void*)((sockaddr_in6*)&peer_addr)->sin6_addr.s6_addr,
+		   IP, INET6_ADDRSTRLEN);
+
+  
+  if (ret == NULL)
+    return 0;
+  else
+    return 1;
+}
+
+int
+is_connected (unsigned int* number_of_servers,
+	      struct server_credentials* servers,
+	      char* IP)
+{
+  int ret = 0;
+  for (unsigned int i = 0; i < *number_of_servers; i++)
+    {
+      if (strcmp (IP, servers[i].IP) == 0)
+	ret = 1;
+    }
+
+  return ret;
+}
+
+void move_command (const char* data,
+		   unsigned int* number_of_servers,
+		   struct server_credentials* servers,
+		   struct sockaddr_storage peer_addr,
+		   int write_pipe)
+{
+  const int BUFFER_SIZE = 256;
+  char IP[INET6_ADDRSTRLEN], buffer[BUFFER_SIZE], *token, tmp_str[BUFFER_SIZE];
+
+  strncpy (tmp_str, data, BUFFER_SIZE);
+
+  get_ip (IP, peer_addr);
+  
+  if (!is_connected (number_of_servers, servers, IP))
+    return;
+
+  int server_no = 0;
+
+  for (unsigned int i = 0; i < *number_of_servers; i++)
+    {
+      if (strcmp (servers[i].IP, IP) == 0)
+	server_no = i;
+    }
+
+  token = strtok (tmp_str, " ");
+
+  snprintf (buffer, BUFFER_SIZE, "%s %s",
+	    token, servers[server_no].name);
+
+  token = strtok (NULL, " ");
+  snprintf (buffer + strlen (buffer), BUFFER_SIZE, " %s", token);
+
+  write (write_pipe, buffer, strlen (buffer) + 1);
 }

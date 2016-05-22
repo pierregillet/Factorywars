@@ -123,6 +123,7 @@ void handle_network_communication (unsigned short port, int read_pipe,
  * + 2 is returned if it is a ping.
  * + 3 is returned if it is a pong.
  * + 4 is returned if it is a connect command.
+ * + 5 is returned if it is a move command.
  */
 int interpret_data_for_networking_process (char* data);
 
@@ -130,9 +131,43 @@ int interpret_data_for_networking_process (char* data);
  * Store in the servers’ crendentials array the new server credentials.
  *
  * @param data is the string containing the connect command and its parameters.
+ * @param number_of_servers is the number of servers in servers.
  * @param servers is the servers’ credentials array.
+ * @param peer_addr is the peer address.
  * @return 0 if there is an error, 1 if success.
  */
 int connect_command (char* data, unsigned int* number_of_servers,
 		     struct server_credentials* servers,
 		     struct sockaddr_storage peer_addr);
+
+/**
+ * Get the IP from a sockaddr_storage structure.
+ *
+ * @param IP is an array of char, its minimal size is INET6_ADDRSTRLEN.
+ * @param peer_addr is the struct which contain the IP.
+ * @return 0 if there is an error, 1 if not.
+ */
+int get_ip (char* IP, struct sockaddr_storage peer_addr);
+
+/**
+ * Check if the player is connected.
+ * @param number_of_servers is the number of element in servers.
+ * @param servers is the array containing the servers’ credentials.
+ * @param IP used to send the message.
+ * @return 0 if not, 1 if yes.
+ */
+int is_connected (unsigned int* number_of_servers,
+		  struct server_credentials* servers,
+		  char* IP);
+
+/**
+ * Handle move commands.
+ * @param number_of_servers is the number of element in servers.
+ * @param servers is the array containing the servers’ credentials.
+ * @param peer_addr is the peer address.
+ */
+void move_command (const char* data,
+		   unsigned int* number_of_servers,
+		   struct server_credentials* servers,
+		   struct sockaddr_storage peer_addr,
+		   int write_pipe);
