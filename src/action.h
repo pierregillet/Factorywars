@@ -1,7 +1,7 @@
 /**
  * @file
  * @author Corentin Bocquillon <0x539@nybble.fr>
- * @author Pierre Gillet
+ * @author Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
  * @author Loup Fourment
  *
  * @section LICENSE
@@ -10,7 +10,7 @@
  *
  * Copyright (C) 2016 Loup Fourment
  *
- * Copyright (C) 2016 Pierre Gillet
+ * Copyright (C) 2016 Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
  *
  * factorywars is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +30,11 @@
  * action.h contains functions to handle user actions/input
  */
 
+#pragma once
+
 #include <SDL2/SDL.h>
 
 
-int handle_keydown (SDL_Keycode event);
+int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture* CurrentTexture);
+
+int handle_keyup (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture CurrentTexture);

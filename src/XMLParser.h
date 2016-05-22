@@ -1,6 +1,7 @@
 /**
  * @file
  * @author Corentin Bocquillon <0x539+factorywars@nybble.fr>
+ * @author Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
  *
  * @section LICENSE
  *
@@ -21,6 +22,8 @@
  *
  * XMLParser.h is the header of XMLParser.c.
  */
+
+#pragma once
 
 /**
  * Get the number of an element in a XML file.
