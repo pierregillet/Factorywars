@@ -40,11 +40,11 @@ find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst,
   line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
 							  file_path);
   if (line_number == -1)
-    {
-      return NULL;
-    }
+    return NULL;
   
   FILE *file = fopen (file_path, "r");
+  if (file == NULL)
+    return NULL;
 
   for (int i = 0; i <= line_number; i++)
     {
@@ -69,6 +69,8 @@ find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, 
   coordinates_to_string (chunk_coordinates, coordinates_str, COORDINATES_STR_SIZE);
 
   FILE *file = fopen (file_path, "r");
+  if (file == NULL)
+    return -1;
 
   while (fgets (line, LINE_SIZE, file) != NULL)
     {
@@ -126,6 +128,9 @@ insert_line_in_file (char* line, int line_size, int position, const char* file_p
   memset (buffer, 0, BUFFER_SIZE);
 
   FILE *file = fopen (file_path, "w");
+  if (file == NULL)
+    return 0;
+  
   char c;
   int line_number = 0;
 
@@ -167,6 +172,9 @@ write_file_to_pipe (const char* file_path, int pipe)
   const int LINE_SIZE = 512;
   
   FILE *file = fopen (file_path, "r");
+  if (file == NULL)
+    return;
+
   char line[LINE_SIZE];
   
   while (fgets (line, LINE_SIZE, file) != NULL)
