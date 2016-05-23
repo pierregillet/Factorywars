@@ -27,24 +27,28 @@
  *
  * @section DESCRIPTION
  *
- * main.cpp contain the code of the main function
+ * main.cpp contain the code of the main function.
  */
 
 #include "gui.h"
 #include "player.h"
+#include "network.h"
 
 int
 main (int argc, char *argv[])
 {
- Player* players;
-  players = new Player[1];
+  // Player* players;
+  int pipes[4];
+  // players = new Player[1];
   
-  players[1] =  Player ();
+  // players[1] =  Player ();
+  pipe (pipes);
+  pipe (pipes + 2);
+  
+  run_network_process (4284, pipes);
 
   if (run_gui () != 0)
     return 1;
-  
-  
   
   return 0;
 }

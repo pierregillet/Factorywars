@@ -48,3 +48,9 @@ struct map_coordinates
   struct coordinates chunk;
   struct coordinates square;
 };
+
+struct chunk_info
+{
+  struct coordinates chunk;
+  int biome_id, squares[16][16];
+};

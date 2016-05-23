@@ -30,12 +30,8 @@
  * display_map.cpp contains the functions to display the map.
  */
 
-#include "save.h"
-#include "structures.h"
 #include "display_map.h"
-#include <stdio.h>
-#include "config.h"
-#include "display_item.h"
+
 
 void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 {
@@ -83,7 +79,8 @@ display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** tab
 				     .y = i - screen_origin.y % chunk_width};
 	  blit (Renderer, temp, chunk_width, chunk_width,  display_id);
 	  
-	  display_items (Renderer, path.c_str(), table_items, coords, screen_origin);
+	  struct chunk_info _info = get_chunk_info (coords, path.c_str());
+	  display_items (Renderer, path.c_str(), table_items, coords, screen_origin, _info);
 	}
     }
 }  

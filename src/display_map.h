@@ -32,10 +32,14 @@
 
 #pragma once
 
+#include "save.h"
+#include "structures.h"
 #include <stdio.h>
 #include <string>
 #include "gui.h"
-
+#include <stdio.h>
+#include "config.h"
+#include "display_item.h"
 
 /** load_biomes fills the current table with textures
   */

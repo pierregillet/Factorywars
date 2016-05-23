@@ -37,7 +37,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+
 #include "structures.h"
+#include "display_item.h"
+#include "player.h"
+// #include "action.h"
+#include "display_map.h"
+#include "display_item.h"
+#include "config.h"
+#include "save.h"
 
 enum KeyPressTexture
   {
@@ -56,13 +64,14 @@ bool loadMedia (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture);
 /*
  * Initiates the SDL basics, like Window and Renderer.
  */
+ 
 bool init (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture, SDL_Texture** biomes, SDL_Texture** items, int* screen_height, int* screen_width);
 
 int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
 
 int handle_keyup (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
 
-int handle_clickdown (int button, coordinates click_coords, bool *clicks_state, struct coordinates* screen_origin);
+int handle_clickdown (int button, coordinates click_coords, bool *clicks_state, struct coordinates* screen_origin, struct map_coordinates* click_map_coords);
 
 int handle_clickup (int button, coordinates click_coords, bool *clicks_state, struct coordinates* screen_origin);
 
@@ -73,9 +82,10 @@ int handle_events (SDL_Texture** CurrentTexture,
 		   SDL_Texture** key_press_texture,
 		   int* screen_height,
 		   int* screen_width,
-		   struct coordinates* screen_origin);
+		   struct coordinates* screen_origin,
+		   struct coordinates* click_map_coords);
 
-int move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state);
+int move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords, struct coordinates screen_center);
 
 void refresh_renderer(SDL_Renderer** Renderer);
 

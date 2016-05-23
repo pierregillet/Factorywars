@@ -1,6 +1,7 @@
 #include "display_item.h"
 
-void load_items (SDL_Renderer** Renderer, SDL_Texture** table)
+void 
+load_items (SDL_Renderer** Renderer, SDL_Texture** table)
 {
   table[0] = loadTexture (Renderer, "media/textures/square1.png");
   table[1] = loadTexture (Renderer, "media/textures/square1.png");    
@@ -12,14 +13,14 @@ void load_items (SDL_Renderer** Renderer, SDL_Texture** table)
 }
 
 void
-display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_items, struct coordinates chunk_coords, struct coordinates screen_origin)
+display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_items, struct coordinates chunk_coords, struct coordinates screen_origin, struct chunk_info chunk)
 { 
-  for (int i(0) ; i <= 16 ; i += 1)
+  for (int i(0) ; i < 16 ; i += 1)
     {
-      for (int j(0) ; j <= 16 ; j += 1)
+      for (int j(0) ; j < 16 ; j += 1)
 	{
 	  struct coordinates square_coords = {.x = i , .y = j};
-	  int item_id = get_surface_item (chunk_coords, square_coords, path.c_str());
+	  int item_id = chunk.squares[i][j];
 	  if (item_id > 0)
 	    {
 	      struct coordinates bliting_coords;
