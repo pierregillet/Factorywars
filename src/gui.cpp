@@ -302,12 +302,14 @@ move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state
   screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
   screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
  
+  
   if (hero_coords-> x < screen_center.x)
+  {
     hero_coords->y += (keys_state[0])? (-5) : 0;
     hero_coords->y += (keys_state[1])? (+5) : 0;
     hero_coords->x += (keys_state[2])? (-5) : 0;
     hero_coords->x += (keys_state[3])? (+5) : 0;
-    
+  }
   return 1;
 }
 
