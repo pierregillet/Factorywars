@@ -289,7 +289,7 @@ handle_events (SDL_Texture** CurrentTexture,
 }
 
 int
-move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state)
+move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords)
 {
   screen_origin->y += (keys_state[0])? (-5) : 0;
   screen_origin->y += (keys_state[1])? 5 : 0;
@@ -297,8 +297,18 @@ move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state
   screen_origin->x += (keys_state[3])? 5 : 0;
   
   // At least for now, we didn’t authorize negative coordinates
-  screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
-  screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
+  //screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
+  //screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
+  if (screen_origin->x < 0)
+  {
+    screen_origin->x = 0;
+    hero_coords->x -= 5;
+  }
+  if (screen_origin->y < 0)
+  {
+    screen_origin->y = 0;
+    hero_coords->y -= 5;
+  }
   return 1;
 }
 
@@ -356,8 +366,8 @@ run_gui ()
     return 1;
 
   struct coordinates screen_center; 
-    screen_center.x = screen_width / 2;
-		screen_center.y = screen_height / 2;
+  screen_center.x = screen_width / 2;
+	screen_center.y = screen_height / 2;
   
   struct coordinates screen_origin;
   screen_origin.x = 0;
@@ -395,7 +405,8 @@ run_gui ()
   //display_items (&Renderer, "save", items, x, y);
   blit (&Renderer, screen_center, 25, 41, CurrentTexture);
   display_blits(&Renderer);
-
+  
+  
   while (handle_events (&CurrentTexture,
 			biomes,
 			keys_state,
@@ -405,12 +416,14 @@ run_gui ()
 			&screen_width,
 			screen_origin) != 0)
     {
-      move_coordinates_on_keydown (&screen_origin, keys_state);
+      move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords);
 
       for (int i = 0; i < 4; i++)
 	{
 	  if (keys_state[i])
 	    {
+	      printf("\n hero.x = %d", hero_coords.x);
+        printf("\n hero.y = %d", hero_coords.y);  
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
