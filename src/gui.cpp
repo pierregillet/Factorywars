@@ -354,14 +354,19 @@ run_gui ()
 
   if (!init (&Renderer, key_press_texture, biomes, items, &screen_height, &screen_width))
     return 1;
+
+  struct coordinates screen_center; 
+    screen_center.x = screen_width / 2;
+		screen_center.y = screen_height / 2;
   
   struct coordinates screen_origin;
   screen_origin.x = 0;
   screen_origin.y = 0;
-  /*
-  int x = 0;
-  int y = 0;
-  */
+  
+  struct coordinates hero_coords;
+  hero_coords.x = screen_center.x;
+  hero_coords.y = screen_center.y;
+  
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
   
@@ -383,9 +388,6 @@ run_gui ()
    * clicks_state[5] -> SDL_BUTTON_X2
    */
   bool clicks_state[5] = {0};
-
-  struct coordinates screen_center = {.x = screen_width / 2,
-				      .y = screen_height / 2};
 
   // We need to display the map at the beginning
   display_background (&Renderer, "save", biomes, items, screen_origin);
@@ -411,7 +413,7 @@ run_gui ()
 	    {
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
-	      blit (&Renderer, screen_center, 25, 41, CurrentTexture);
+	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
 	      display_blits(&Renderer);
 	      break;
 	    }
