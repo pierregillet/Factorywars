@@ -419,8 +419,8 @@ run_gui ()
 	{
 	  if (keys_state[i])
 	    {
-	      printf("\n hero.x = %d", hero_coords.x);
-        printf("\n hero.y = %d", hero_coords.y);  
+	//       printf("\n hero.x = %d", hero_coords.x);
+        // printf("\n hero.y = %d", hero_coords.y);  
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
@@ -450,8 +450,8 @@ get_map_coords (coordinates click_coords,
   click_map_coords.square.x = (int) ((x_float + (float) click_coords.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
   click_map_coords.square.y = (int) ((y_float + (float) click_coords.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
   
-  printf("\n chunk.x: %d",click_map_coords.chunk.x);
-  printf("\n square.x: %d",click_map_coords.square.x);
+  // printf("\n chunk.x: %d",click_map_coords.chunk.x);
+  // printf("\n square.x: %d",click_map_coords.square.x);
   return click_map_coords;
 }
 
