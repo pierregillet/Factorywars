@@ -63,7 +63,8 @@ get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
   
 
   int spaces = 0;
-  int item_id_beg, item_id_end;
+  int item_id_beg = 0;
+  int item_id_end = 0;
 
   /* Finding the position of the beginning of the item id */
   for (int i = square_coordinates_pos.rm_eo - 1; i > 0; i--)
@@ -402,8 +403,8 @@ find_square_coordinates_pos (struct coordinates chunk_coordinates,
 
   /* We need to ignore the chunk coordinates because it could be the same 
      as the square coordinates. We also ignore the biome id. */
-  int number_of_deleted_char, number_of_spaces;
-  number_of_spaces = 0;
+  int number_of_deleted_char = 0;
+  int number_of_spaces = 0;
     
   for (int i = 0; i < LINE_SIZE; i++)
     {
@@ -445,7 +446,7 @@ get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
   const int LINE_SIZE = 512;
 
   int number_of_spaces = 0;
-  int len_of_chunk_and_biome;
+  int len_of_chunk_and_biome = 0;
   char line[LINE_SIZE];
   find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
 
