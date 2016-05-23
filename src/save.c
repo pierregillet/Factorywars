@@ -630,11 +630,9 @@ get_chunk_info (struct coordinates chunk_coordinates,
   int x = 0;
   int y = 0;
 
-  char line[LINE_SIZE];
-
-  find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, "save");
-
-  if (line == NULL)
+  char line[LINE_SIZE], *ret;
+  ret = find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, "save");
+  if (ret == NULL)
     return chunk_info;
 
   token = strtok (line, " "); /* Chunck coordinates */
@@ -653,7 +651,10 @@ get_chunk_info (struct coordinates chunk_coordinates,
 	{
 	  x = (int) square.x;
 	  y = (int) square.y;
-	  chunk_info.squares[x][y] = item_id;
+	  if (x < 15 && y < 15)
+	    chunk_info.squares[x][y] = item_id;
+	  else
+	    fprintf (stderr, "Error in save file\n");
 	}
 
       token = strtok (NULL, " ");
