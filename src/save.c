@@ -583,6 +583,9 @@ create_chunk_line (struct coordinates chunk_coordinates,
   /* On écrit la ligne dans le fichier */
   /* We write the line in the file */
   FILE *file = fopen (save_file_path, "a");
+  if (file == NULL)
+    return 0;
+  
   fprintf (file, "%s", line);
   fclose (file);
 
