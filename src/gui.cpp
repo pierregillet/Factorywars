@@ -426,8 +426,6 @@ run_gui ()
 	{
 	  if (keys_state[i])
 	    {
-	//       printf("\n hero.x = %d", hero_coords.x);
-        // printf("\n hero.y = %d", hero_coords.y);  
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
