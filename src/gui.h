@@ -57,23 +57,44 @@ enum KeyPressTexture
     KEY_PRESS_SURFACE_TOTAL
   };  
 
-SDL_Texture* loadTexture (SDL_Renderer** Renderer, std::string path);
+SDL_Texture* loadTexture (SDL_Renderer** Renderer,
+			  std::string path);
 
-bool loadMedia (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture);
+bool loadMedia (SDL_Renderer** Renderer,
+		SDL_Texture** KeyPressTexture);
 
 /*
  * Initiates the SDL basics, like Window and Renderer.
  */
  
-bool init (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture, SDL_Texture** biomes, SDL_Texture** items, int* screen_height, int* screen_width);
+bool init (SDL_Window** Window,
+	   SDL_Renderer** Renderer,
+	   SDL_Texture** KeyPressTexture,
+	   SDL_Texture** biomes,
+	   SDL_Texture** items,
+	   int* screen_height,
+	   int* screen_width);
 
-int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
+int handle_keydown (SDL_Keycode event_keycode,
+		    bool *keys_state,
+		    SDL_Texture** CurrentTexture,
+		    SDL_Texture** key_press_texture);
 
-int handle_keyup (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);
+int handle_keyup (SDL_Keycode event_keycode,
+		  bool *keys_state,
+		  SDL_Texture** CurrentTexture,
+		  SDL_Texture** key_press_texture);
 
-int handle_clickdown (int button, coordinates click_coords, bool *clicks_state, struct coordinates* screen_origin, struct map_coordinates* click_map_coords);
+int handle_clickdown (int button,
+		      coordinates click_coords,
+		      bool *clicks_state,
+		      struct coordinates* screen_origin,
+		      struct map_coordinates* click_map_coords);
 
-int handle_clickup (int button, coordinates click_coords, bool *clicks_state, struct coordinates* screen_origin);
+int handle_clickup (int button,
+		    coordinates click_coords,
+		    bool *clicks_state,
+		    struct coordinates* screen_origin);
 
 int handle_events (SDL_Texture** CurrentTexture,
 		   SDL_Texture** biomes,
@@ -85,7 +106,10 @@ int handle_events (SDL_Texture** CurrentTexture,
 		   struct coordinates* screen_origin,
 		   struct coordinates* click_map_coords);
 
-int move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords, struct coordinates screen_center);
+int move_coordinates_on_keydown (struct coordinates* screen_origin,
+				 bool* keys_state,
+				 struct coordinates* hero_coords,
+				 struct coordinates screen_center);
 
 void refresh_renderer(SDL_Renderer** Renderer);
 
@@ -94,7 +118,11 @@ void refresh_renderer(SDL_Renderer** Renderer);
  * @return int true if there is no error
  * The Texture needs a Renderer to be blit.
  */
-int blit (SDL_Renderer** Renderer, struct coordinates screen_origin, int width, int height, SDL_Texture* texture);
+int blit (SDL_Renderer** Renderer,
+	  struct coordinates screen_origin,
+	  int width,
+	  int height,
+	  SDL_Texture* texture);
 
 void display_blits(SDL_Renderer** Renderer);
 
@@ -102,5 +130,8 @@ void close ();
 
 int run_gui ();
 
-struct map_coordinates get_map_coords (coordinates click_coords, int* screen_height, int* screen_width, struct coordinates screen_origin);
+struct map_coordinates get_map_coords (coordinates click_coords,
+				       int* screen_height,
+				       int* screen_width,
+				       struct coordinates screen_origin);
 

@@ -74,15 +74,14 @@ loadMedia (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture)
 }
 
 bool 
-init (SDL_Renderer** Renderer,
+init (SDL_Window** Window,
+      SDL_Renderer** Renderer,
       SDL_Texture** KeyPressTexture,
       SDL_Texture** biomes,
       SDL_Texture** items,
       int* screen_height,
       int* screen_width)
 {
-  SDL_Window *Window = NULL;
-
   bool success = true;
 	
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
@@ -93,14 +92,14 @@ init (SDL_Renderer** Renderer,
 	
   else // if the SDL launched correctly
     {
-      Window = SDL_CreateWindow ("Factorywars",
+      *Window = SDL_CreateWindow ("Factorywars",
 				 SDL_WINDOWPOS_UNDEFINED,
 				 SDL_WINDOWPOS_UNDEFINED,
 				 *screen_width,
 				 *screen_height,
 				 SDL_WINDOW_SHOWN);
 	  
-      if (Window == NULL) 
+      if (*Window == NULL) 
 	{
 	  printf ("Couldn’t create window: %s\n", SDL_GetError());
 	  SDL_Quit();
@@ -109,8 +108,8 @@ init (SDL_Renderer** Renderer,
 	  
       else // if window has been created without errors
 	{
-	  *Renderer = SDL_CreateRenderer (Window, -1,
-						      SDL_RENDERER_ACCELERATED);
+	  *Renderer = SDL_CreateRenderer (*Window, -1,
+					  SDL_RENDERER_ACCELERATED);
 	  SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 	}
     }
@@ -205,7 +204,7 @@ int
 handle_clickup (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, struct coordinates* screen_origin)
 {
   bool clickup = 0;
-  get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
+  // get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
 
   switch (button)
     {
@@ -322,7 +321,7 @@ refresh_renderer (SDL_Renderer** Renderer)
 int
 blit (SDL_Renderer** Renderer, struct coordinates screen_origin, int width, int height, SDL_Texture* texture)
 {
-  SDL_Rect Rect = {.x = screen_origin.x, .y = screen_origin.y, .w = width, .h = height};
+  SDL_Rect Rect = {.x = (int) screen_origin.x, .y = (int) screen_origin.y, .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
   
   SDL_RenderSetViewport(*Renderer, &Rect);
@@ -342,11 +341,11 @@ close()
 {
   /*
   //Deallocate surface
-  SDL_FreeSurface( gHelloWorld );
-  gHelloWorld = NULL;
+  SDL_FreeSurface();
+  surface = NULL;
   //Destroy window
-  SDL_DestroyWindow( gWindow );
-  gWindow = NULL;
+  SDL_DestroyWindow( Window );
+  Window = NULL;
   //Quit SDL subsystems
   */
   SDL_Quit();
@@ -357,26 +356,25 @@ run_gui ()
 {
   int screen_height = atoi (get_config_value ("height"));
   int screen_width = atoi (get_config_value ("width"));
+  SDL_Window *Window = NULL;
   SDL_Renderer* Renderer = NULL;
 
   SDL_Texture *biomes[5];
   SDL_Texture *items[5];
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
 
-  if (!init (&Renderer, key_press_texture, biomes, items, &screen_height, &screen_width))
+  if (!init (&Window, &Renderer, key_press_texture, biomes, items, &screen_height, &screen_width))
     return 1;
 
   struct coordinates screen_center; 
   screen_center.x = screen_width / 2;
 	screen_center.y = screen_height / 2;
   
-  struct coordinates screen_origin;
-  screen_origin.x = 0;
-  screen_origin.y = 0;
+	struct coordinates screen_origin = {.x = 0,
+					    .y = 0};
   
-  struct coordinates hero_coords;
-  hero_coords.x = screen_center.x;
-  hero_coords.y = screen_center.y;
+  struct coordinates hero_coords = {.x = screen_center.x,
+				    .y = screen_center.y};
   
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
@@ -438,7 +436,7 @@ run_gui ()
 	{
 	  if (clicks_state[i])
 	    {
-	      // set_surface_item(click_map_coords.chunk, click_map_coords.square, 1, "save");
+	      set_surface_item(click_map_coords.chunk, click_map_coords.square, 1, "save");
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
@@ -447,8 +445,31 @@ run_gui ()
 	}
       SDL_Delay (100/6);
     }
-  close();
-  return 1;
+
+  // Quitting
+  SDL_DestroyTexture (*biomes);
+  for (int i = 0; i < 5; i++)
+    {
+      biomes[i] = NULL;
+    }
+
+  SDL_DestroyTexture (*items);
+  for (int i = 0; i < 5; i++)
+    {
+      items[i] = NULL;
+    }
+  
+  SDL_DestroyTexture (CurrentTexture);
+  CurrentTexture = NULL;
+
+  SDL_DestroyRenderer (Renderer);
+
+  SDL_DestroyWindow (Window);
+  Window = NULL;
+
+  SDL_Quit();
+
+  return 0;
 }  
 
 struct map_coordinates
@@ -467,8 +488,11 @@ get_map_coords (struct coordinates click_coords,
   click_map_coords.square.x = (int) ((x_float + (float) click_coords.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
   click_map_coords.square.y = (int) ((y_float + (float) click_coords.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
 
-  // printf("\n chunk.x: %d",click_map_coords.chunk.x);
-  // printf("\n square.x: %d",click_map_coords.square.x);
+  // printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);
+  // printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);
+
+  // printf("\n square.x : %ld \n",click_map_coords.square.x);
+  // printf("\n square.y : %ld \n",click_map_coords.square.y);
 
   return click_map_coords;
 }

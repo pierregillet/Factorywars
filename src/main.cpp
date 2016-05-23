@@ -31,18 +31,26 @@
  */
 
 #include "gui.h"
+#include "player.h"
 #include "network.h"
 
 int
 main (int argc, char *argv[])
 {
+  Player* players;
   int pipes[4];
+  players = new Player[1];
+  
+  players[0] =  Player ();
   pipe (pipes);
   pipe (pipes + 2);
   
   run_network_process (4284, pipes);
 
-  run_gui ();
+  if (run_gui () != 0)
+    return 1;
 
+  delete[] players;
+  
   return 0;
 }
