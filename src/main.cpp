@@ -37,11 +37,11 @@
 int
 main (int argc, char *argv[])
 {
-  // Player* players;
+  Player* players;
   int pipes[4];
-  // players = new Player[1];
+  players = new Player[1];
   
-  // players[1] =  Player ();
+  players[0] =  Player ();
   pipe (pipes);
   pipe (pipes + 2);
   
@@ -49,6 +49,8 @@ main (int argc, char *argv[])
 
   if (run_gui () != 0)
     return 1;
+
+  delete[] players;
   
   return 0;
 }
