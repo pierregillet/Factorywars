@@ -31,11 +31,20 @@
  */
 
 #include "gui.h"
+#include "player.h"
 
 int
 main (int argc, char *argv[])
 {
-  run_gui ();
+ Player* players;
+  players = new Player[1];
+  
+  players[1] =  Player ();
 
+  if (run_gui () != 0)
+    return 1;
+  
+  
+  
   return 0;
 }

@@ -424,7 +424,7 @@ run_gui ()
       SDL_Delay (100/6);
     }
   close();
-  return 1;
+  return 0;
 }  
 
 struct map_coordinates
