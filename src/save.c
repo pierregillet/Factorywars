@@ -628,6 +628,9 @@ get_chunk_info (struct coordinates chunk_coordinates,
       memset (chunk_info.squares[i], 0, 16);
     }
 
+  int x = 0;
+  int y = 0;
+
   char line[LINE_SIZE];
 
   find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, "save");
@@ -639,18 +642,27 @@ get_chunk_info (struct coordinates chunk_coordinates,
   token = strtok (NULL, " "); /* biome id */
   chunk_info.biome_id = atoi (token);
 
+  token = strtok (NULL, " "); /* item id */
+
   while (token != NULL)
     {
-      strtok (NULL, " "); /* item id */
-
       square = get_coordinates_from_string (token);
 
-      if (square.x == -2147483647 && square.y == 21477483647) /* Error */
+      if (square.x == -2147483647 && square.y == 2147483647) /* Error */
 	item_id = atoi (token);
       else
 	{
-	  chunk_info.squares[square.x][square.y] = item_id;
+	  x = (int) square.x;
+	  y = (int) square.y;
+	  printf ("1\n");
+	  printf ("%d;%d\n", x, y);
+	  printf ("id : %d\n", item_id);
+	  chunk_info.squares[x][y] = item_id;
+	  printf ("chunk : %d\n", chunk_info.squares[x][y]);
+	  printf ("2\n");
 	}
+
+      token = strtok (NULL, " "); /* item id */
     }
 
   return chunk_info;
