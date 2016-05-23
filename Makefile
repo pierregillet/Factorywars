@@ -1,4 +1,5 @@
-OBJS = src/main.cpp src/gui.cpp src/save.c src/utils.c src/items.cpp src/XMLParser.c src/player.cpp src/config.c src/display_map.cpp src/display_item.cpp
+OBJS = src/main.cpp src/gui.cpp src/save.c src/utils.c src/items.cpp src/XMLParser.c src/player.cpp src/config.c src/network.c src/display_map.cpp src/display_item.cpp
+
 CC = g++
 COMPILER_FLAGS = -std=c++11 -Wall `xml2-config --cflags`
 LINKER_FLAGS = -lSDL2 -lSDL2_image `xml2-config --libs`

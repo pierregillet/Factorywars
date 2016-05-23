@@ -63,6 +63,7 @@ bool loadMedia (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture);
 /*
  * Initiates the SDL basics, like Window and Renderer.
  */
+ 
 bool init (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture, SDL_Texture** biomes, SDL_Texture** items, int* screen_height, int* screen_width);
 
 int handle_keydown (SDL_Keycode event_keycode, bool *keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture);

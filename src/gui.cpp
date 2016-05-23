@@ -428,20 +428,18 @@ get_map_coords (coordinates click_coords,
 		int* screen_width,
 		struct coordinates screen_origin)
 {
-  struct coordinates offset;
   struct map_coordinates click_map_coords;
 
   float x_float = screen_origin.x;
   float y_float = screen_origin.y;
 
-  offset.x = click_coords.x - (*screen_width / 2);
-  offset.y = click_coords.y - (*screen_height / 2);
-
-  click_map_coords.chunk.x = (int) (x_float + (float) offset.x) / 24.0 / 16.0;
-  click_map_coords.chunk.y = (int) (y_float + (float) offset.y) / 24.0 / 16.0;
-  click_map_coords.square.x = (int) ((x_float + (float) offset.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
-  click_map_coords.square.y = (int) ((y_float + (float) offset.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
+  click_map_coords.chunk.x = (int) (x_float + (float) click_coords.x) / 24.0 / 16.0;
+  click_map_coords.chunk.y = (int) (y_float + (float) click_coords.y) / 24.0 / 16.0;
+  click_map_coords.square.x = (int) ((x_float + (float) click_coords.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
+  click_map_coords.square.y = (int) ((y_float + (float) click_coords.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
   
+  printf("\n chunk.x: %d",click_map_coords.chunk.x);
+  printf("\n square.x: %d",click_map_coords.square.x);
   return click_map_coords;
 }
 
