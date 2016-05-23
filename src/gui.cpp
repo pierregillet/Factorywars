@@ -173,10 +173,10 @@ handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** Current
 }
 
 int
-handle_clickdown (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, struct coordinates* screen_origin)
+handle_clickdown (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, struct coordinates* screen_origin, struct map_coordinates* click_map_coords)
 {
   bool clickdown = 1;
-  get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
+  *click_map_coords = get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
 
   switch (button)
     {
@@ -238,7 +238,8 @@ handle_events (SDL_Texture** CurrentTexture,
 	       SDL_Texture** key_press_texture,
 	       int* screen_height,
 	       int* screen_width,
-	       struct coordinates screen_origin)
+	       struct coordinates screen_origin,
+	       struct map_coordinates* click_map_coords)
 {
   SDL_Event event;
   coordinates click_coords;
@@ -269,7 +270,8 @@ handle_events (SDL_Texture** CurrentTexture,
 			    clicks_state,
 			    screen_height,
 			    screen_width,
-			    &screen_origin);
+			    &screen_origin,
+			    click_map_coords);
 	  break;
 
 	case SDL_MOUSEBUTTONUP:
@@ -398,6 +400,8 @@ run_gui ()
    */
   bool clicks_state[5] = {0};
 
+  struct map_coordinates click_map_coords;
+
   // We need to display the map at the beginning
   display_background (&Renderer, "save", biomes, items, screen_origin);
 
@@ -413,7 +417,8 @@ run_gui ()
 			key_press_texture,
 			&screen_height,
 			&screen_width,
-			screen_origin) != 0)
+			screen_origin,
+			&click_map_coords) != 0)
     {
       move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords, screen_center);
 
@@ -430,6 +435,17 @@ run_gui ()
 	      break;
 	    }
 	}
+
+      for (int i = 0; i < 5; i++)
+	{
+	  if (clicks_state[i])
+	    {
+	      refresh_renderer (&Renderer);
+	      display_background (&Renderer, "save", biomes, items, screen_origin);
+	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
+	      display_blits(&Renderer);
+	    }
+	}
       SDL_Delay (100/6);
     }
   close();
@@ -437,7 +453,7 @@ run_gui ()
 }  
 
 struct map_coordinates
-get_map_coords (coordinates click_coords,
+get_map_coords (struct coordinates click_coords,
 		int* screen_height,
 		int* screen_width,
 		struct coordinates screen_origin)
@@ -451,9 +467,10 @@ get_map_coords (coordinates click_coords,
   click_map_coords.chunk.y = (int) (y_float + (float) click_coords.y) / 24.0 / 16.0;
   click_map_coords.square.x = (int) ((x_float + (float) click_coords.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
   click_map_coords.square.y = (int) ((y_float + (float) click_coords.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
-  
+
   // printf("\n chunk.x: %d",click_map_coords.chunk.x);
   // printf("\n square.x: %d",click_map_coords.square.x);
+
   return click_map_coords;
 }
 
