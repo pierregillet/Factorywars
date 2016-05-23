@@ -75,6 +75,12 @@ Player
    */
   void playerWalks (bool horizontal, bool vertical);
 
+  /**
+   * Get the player’s name.
+   * @return The player’s name.
+   */
+  std::string getPlayerName () const;
+
  private:
   int m_health;
   std::string m_name;

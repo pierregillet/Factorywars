@@ -60,6 +60,12 @@ Player::getPlayerHealth () const
   return this->m_health;
 }
 
+inline std::string
+Player::getPlayerName () const
+{
+  return this->m_name;
+}
+
 inline int
 Player::playerIsAttacked (std::string enemy_name,
 			  int damage)
