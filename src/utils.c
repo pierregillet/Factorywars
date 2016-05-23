@@ -32,101 +32,112 @@
 
 #include "utils.h"
 
-char*
-find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t dst_size, const char* file_path)
-{
-  const unsigned int LINE_SIZE = dst_size;
-  const unsigned int REGEX_STR_SIZE = 14;
+/* char* */
+/* find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t dst_size, const char* file_path) */
+/* { */
+/*   const unsigned int LINE_SIZE = dst_size; */
+/*   const unsigned int REGEX_STR_SIZE = 14; */
     
-  char line[LINE_SIZE], regex_str[REGEX_STR_SIZE], coordinates_str[REGEX_STR_SIZE];
+/*   char line[LINE_SIZE], regex_str[REGEX_STR_SIZE], coordinates_str[REGEX_STR_SIZE]; */
 
-  // Filling regex_str
-  memset (regex_str, 0, REGEX_STR_SIZE);
-  strncat (regex_str, "^", REGEX_STR_SIZE);
-  coordinates_to_string (chunk_coordinates, coordinates_str, REGEX_STR_SIZE);
-  strncat (regex_str, coordinates_str, REGEX_STR_SIZE);
+/*   // Filling regex_str */
+/*   regex_str[0] = 0, */
+/*   strncat (regex_str, "^", REGEX_STR_SIZE); */
+/*   coordinates_to_string (chunk_coordinates, coordinates_str, REGEX_STR_SIZE); */
+/*   strncat (regex_str, coordinates_str, REGEX_STR_SIZE); */
 
-  FILE *file = fopen (file_path, "r");
-  regex_t regex;
-  int reti;
-  int matched = 0;
+/*   FILE *file = fopen (file_path, "r"); */
+/*   regex_t regex; */
+/*   int reti; */
+/*   int matched = 0; */
 
-  reti = regcomp (&regex, regex_str, REG_EXTENDED|REG_NOSUB);
-  if (reti)
-    {
-      fprintf (stderr, "Could not compile regex\n");
-      return NULL;
-    }
+/*   reti = regcomp (&regex, regex_str, REG_EXTENDED|REG_NOSUB); */
+/*   if (reti) */
+/*     { */
+/*       fprintf (stderr, "Could not compile regex\n"); */
+/*       return NULL; */
+/*     } */
   
-  while (fgets (line, LINE_SIZE, file) != NULL)
-    {
-      reti = regexec (&regex, line, 0, NULL, 0);
-      if (!reti)
-  	{
-	  matched = 1;
-  	  break;
-  	}
-      else
-	regerror (reti, &regex, line, LINE_SIZE);
-    }
-  regfree (&regex);
-  fclose (file);
+/*   while (fgets (line, LINE_SIZE, file) != NULL) */
+/*     { */
+/*       reti = regexec (&regex, line, 0, NULL, 0); */
+/*       if (!reti) */
+/*   	{ */
+/* 	  matched = 1; */
+/*   	  break; */
+/*   	} */
+/*       else */
+/* 	regerror (reti, &regex, line, LINE_SIZE); */
+/*     } */
+/*   regfree (&regex); */
+/*   fclose (file); */
 
-  // We breaked only if we reached EOF or if the patern matched
-  if (!matched)
-    return NULL;
-  else
+/*   // We breaked only if we reached EOF or if the patern matched */
+/*   if (!matched) */
+/*     return NULL; */
+/*   else */
+/*     { */
+/*       strncpy (dst, line, dst_size); */
+/*       return dst; */
+/*     } */
+/* } */
+
+char*
+find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst,
+			 size_t dst_size, const char* file_path)
+{
+  int line_number;
+  line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
+							  file_path);
+  if (line_number == -1)
     {
-      strncpy (dst, line, dst_size);
+      dst = NULL;
       return dst;
     }
+  
+  FILE *file = fopen (file_path, "r");
+
+  for (int i = 0; i <= line_number; i++)
+    {
+      fgets (dst, dst_size, file);
+    }
+
+  fclose (file);
+  return dst;
 }
 
 int
 find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, const char* file_path)
 {
   const unsigned int LINE_SIZE = 512;
-  const unsigned int REGEX_STR_SIZE = 14;
+  const unsigned int COORDINATES_STR_SIZE = 14;
 
   int line_number = -1;
-  char line[LINE_SIZE], regex_str[REGEX_STR_SIZE], coordinates_str[REGEX_STR_SIZE];
+  int matched = 0;
+  char line[LINE_SIZE], coordinates_str[COORDINATES_STR_SIZE];
+  char tmp_line[LINE_SIZE], *token;
 
-  // Filling regex_str
-  memset (regex_str, 0, REGEX_STR_SIZE);
-  strncat (regex_str, "^", REGEX_STR_SIZE);
-  coordinates_to_string (chunk_coordinates, coordinates_str, REGEX_STR_SIZE);
-  strncat (regex_str, coordinates_str, REGEX_STR_SIZE);
+  coordinates_to_string (chunk_coordinates, coordinates_str, COORDINATES_STR_SIZE);
 
   FILE *file = fopen (file_path, "r");
-  regex_t regex;
-  int reti;
-  int matched = 0;
 
-  reti = regcomp (&regex, regex_str, REG_EXTENDED|REG_NOSUB);
-  if (reti)
-    {
-      fprintf (stderr, "Could not compile regex\n");
-      return -1;
-    }
-  
   while (fgets (line, LINE_SIZE, file) != NULL)
     {
+      strncpy (tmp_line, line, LINE_SIZE);
+      token = strtok (tmp_line, " ");
       line_number++;
-      reti = regexec (&regex, line, 0, NULL, 0);
-      if (!reti)
+      if (strncmp (token, coordinates_str, COORDINATES_STR_SIZE) == 0)
   	{
 	  matched = 1;
   	  break;
   	}
-      else
-	regerror (reti, &regex, line, LINE_SIZE);
     }
-  regfree (&regex);
   fclose (file);
 
   // We breaked only if we reached EOF or if the patern matched
   if (!matched)
-    return -1;
+    line_number = -1;
+
   return line_number;
 }
 

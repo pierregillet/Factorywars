@@ -168,6 +168,8 @@ handle_network_communication (unsigned short port, int read_pipe,
 	  quit = 1;
 	  break;
 	}
+
+      exit (EXIT_SUCCESS);
       
       /* Read the socket */
       nread = read_socket (buffer, BUFFER_SIZE, sockfd6, &peer_addr,
