@@ -79,7 +79,8 @@ display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** tab
 				     .y = i - screen_origin.y % chunk_width};
 	  blit (Renderer, temp, chunk_width, chunk_width,  display_id);
 	  
-	  display_items (Renderer, path.c_str(), table_items, coords, screen_origin);
+	  struct chunk_info _info = get_chunk_info (coords, path.c_str());
+	  display_items (Renderer, path.c_str(), table_items, coords, screen_origin, _info);
 	}
     }
 }  

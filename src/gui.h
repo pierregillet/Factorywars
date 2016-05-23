@@ -85,7 +85,7 @@ int handle_events (SDL_Texture** CurrentTexture,
 		   struct coordinates* screen_origin,
 		   struct coordinates* click_map_coords);
 
-int move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords);
+int move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords, struct coordinates screen_center);
 
 void refresh_renderer(SDL_Renderer** Renderer);
 

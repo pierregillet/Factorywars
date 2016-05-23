@@ -291,7 +291,7 @@ handle_events (SDL_Texture** CurrentTexture,
 }
 
 int
-move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords)
+move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords, struct coordinates screen_center)
 {
   screen_origin->y += (keys_state[0])? (-5) : 0;
   screen_origin->y += (keys_state[1])? 5 : 0;
@@ -299,18 +299,15 @@ move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state
   screen_origin->x += (keys_state[3])? 5 : 0;
   
   // At least for now, we didn’t authorize negative coordinates
-  //screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
-  //screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
-  if (screen_origin->x < 0)
-  {
-    screen_origin->x = 0;
-    hero_coords->x -= 5;
-  }
-  if (screen_origin->y < 0)
-  {
-    screen_origin->y = 0;
-    hero_coords->y -= 5;
-  }
+  screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
+  screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
+ 
+  if (hero_coords-> x < screen_center.x)
+    hero_coords->y += (keys_state[0])? (-5) : 0;
+    hero_coords->y += (keys_state[1])? (+5) : 0;
+    hero_coords->x += (keys_state[2])? (-5) : 0;
+    hero_coords->x += (keys_state[3])? (+5) : 0;
+    
   return 1;
 }
 
@@ -421,14 +418,14 @@ run_gui ()
 			screen_origin,
 			&click_map_coords) != 0)
     {
-      move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords);
+      move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords, screen_center);
 
       for (int i = 0; i < 4; i++)
 	{
 	  if (keys_state[i])
 	    {
-	      printf("\n hero.x = %d", hero_coords.x);
-        printf("\n hero.y = %d", hero_coords.y);  
+	//       printf("\n hero.x = %d", hero_coords.x);
+        // printf("\n hero.y = %d", hero_coords.y);  
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
@@ -468,6 +465,10 @@ get_map_coords (struct coordinates click_coords,
   click_map_coords.chunk.y = (int) (y_float + (float) click_coords.y) / 24.0 / 16.0;
   click_map_coords.square.x = (int) ((x_float + (float) click_coords.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
   click_map_coords.square.y = (int) ((y_float + (float) click_coords.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
+
+  // printf("\n chunk.x: %d",click_map_coords.chunk.x);
+  // printf("\n square.x: %d",click_map_coords.square.x);
+
   return click_map_coords;
 }
 
