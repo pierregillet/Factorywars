@@ -253,3 +253,50 @@ read_pipe_until_null (char* buffer, size_t buf_size, int pipe)
 
   return n;
 }
+
+struct coordinates
+get_coordinates_from_string (const char* coordinates_str)
+{
+  unsigned int coordinates_str_len = strlen (coordinates_str);
+  char coord1_str[coordinates_str_len];
+  char coord2_str[coordinates_str_len];
+  int semicolon = 0;
+  int coord1_str_filled = 0;
+  int coord2_str_filled = 0;
+  struct coordinates ret;
+
+  for (unsigned int i = 0; i < coordinates_str_len; i++)
+    {
+      if (coordinates_str[i] == ';')
+	{
+	  semicolon = 1;
+	  coord1_str[coord1_str_filled] = '\0';
+	}
+      else
+	{
+	  if (!semicolon)
+	    {
+	      coord1_str[coord1_str_filled] = coordinates_str[i];
+	      ++coord1_str_filled;
+	    }
+	  else
+	    {
+	      coord2_str[coord2_str_filled] = coordinates_str[i];
+	      ++coord2_str_filled;
+	    }
+	}
+    }
+
+  if (!semicolon)
+    {
+    ret = {.x = -2147483647,
+	   .y = 2147483647};
+    return ret;
+    }
+  
+  coord2_str[coord2_str_filled] = '\0';
+  ret.x = atol (coord1_str);
+  ret.y = atol (coord2_str);
+  return ret;
+}
+

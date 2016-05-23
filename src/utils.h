@@ -103,3 +103,6 @@ void write_to_pipe (int pipe, const char* message);
  * @return how many bytes has been read.
  */
 int read_pipe_until_null (char* buffer, size_t buf_size, int pipe);
+
+struct coordinates
+get_coordinates_from_string (const char* coordinates_str);
