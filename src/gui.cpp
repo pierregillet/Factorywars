@@ -31,11 +31,6 @@
  */
 
 #include "gui.h"
-#include "player.h"
-// #include "action.h"
-#include "display_map.h"
-#include "display_item.cpp"
-#include "config.h"
 
 SDL_Texture*
 loadTexture(SDL_Renderer** Renderer, std::string path)

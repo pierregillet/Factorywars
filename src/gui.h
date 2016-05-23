@@ -37,7 +37,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+
 #include "structures.h"
+#include "display_item.h"
+#include "player.h"
+// #include "action.h"
+#include "display_map.h"
+#include "display_item.h"
+#include "config.h"
 
 enum KeyPressTexture
   {
