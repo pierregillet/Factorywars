@@ -624,9 +624,8 @@ get_chunk_info (struct coordinates chunk_coordinates,
 
   int item_id = -1;
   for (int i = 0; i < 16; i++)
-    {
-      memset (chunk_info.squares[i], 0, 16);
-    }
+      for (int j = 0; j < 16; j++)
+	chunk_info.squares[i][j] = -1;
 
   int x = 0;
   int y = 0;
@@ -654,15 +653,10 @@ get_chunk_info (struct coordinates chunk_coordinates,
 	{
 	  x = (int) square.x;
 	  y = (int) square.y;
-	  printf ("1\n");
-	  printf ("%d;%d\n", x, y);
-	  printf ("id : %d\n", item_id);
 	  chunk_info.squares[x][y] = item_id;
-	  printf ("chunk : %d\n", chunk_info.squares[x][y]);
-	  printf ("2\n");
 	}
 
-      token = strtok (NULL, " "); /* item id */
+      token = strtok (NULL, " ");
     }
 
   return chunk_info;
