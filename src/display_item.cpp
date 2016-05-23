@@ -1,6 +1,7 @@
 #include "display_item.h"
 
-void load_items (SDL_Renderer** Renderer, SDL_Texture** table)
+void 
+load_items (SDL_Renderer** Renderer, SDL_Texture** table)
 {
   table[0] = loadTexture (Renderer, "media/textures/square1.png");
   table[1] = loadTexture (Renderer, "media/textures/square1.png");    

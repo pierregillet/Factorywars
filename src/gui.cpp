@@ -31,11 +31,6 @@
  */
 
 #include "gui.h"
-#include "player.h"
-// #include "action.h"
-#include "display_map.h"
-#include "display_item.cpp"
-#include "config.h"
 
 SDL_Texture*
 loadTexture(SDL_Renderer** Renderer, std::string path)
@@ -294,7 +289,7 @@ handle_events (SDL_Texture** CurrentTexture,
 }
 
 int
-move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state)
+move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords)
 {
   screen_origin->y += (keys_state[0])? (-5) : 0;
   screen_origin->y += (keys_state[1])? 5 : 0;
@@ -302,8 +297,18 @@ move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state
   screen_origin->x += (keys_state[3])? 5 : 0;
   
   // At least for now, we didn’t authorize negative coordinates
-  screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
-  screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
+  //screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
+  //screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
+  if (screen_origin->x < 0)
+  {
+    screen_origin->x = 0;
+    hero_coords->x -= 5;
+  }
+  if (screen_origin->y < 0)
+  {
+    screen_origin->y = 0;
+    hero_coords->y -= 5;
+  }
   return 1;
 }
 
@@ -359,14 +364,19 @@ run_gui ()
 
   if (!init (&Renderer, key_press_texture, biomes, items, &screen_height, &screen_width))
     return 1;
+
+  struct coordinates screen_center; 
+  screen_center.x = screen_width / 2;
+	screen_center.y = screen_height / 2;
   
   struct coordinates screen_origin;
   screen_origin.x = 0;
   screen_origin.y = 0;
-  /*
-  int x = 0;
-  int y = 0;
-  */
+  
+  struct coordinates hero_coords;
+  hero_coords.x = screen_center.x;
+  hero_coords.y = screen_center.y;
+  
   SDL_Texture *CurrentTexture = NULL;
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
   
@@ -389,16 +399,14 @@ run_gui ()
    */
   bool clicks_state[5] = {0};
 
-  struct coordinates screen_center = {.x = screen_width / 2,
-				      .y = screen_height / 2};
-
   // We need to display the map at the beginning
   display_background (&Renderer, "save", biomes, items, screen_origin);
 
   //display_items (&Renderer, "save", items, x, y);
   blit (&Renderer, screen_center, 25, 41, CurrentTexture);
   display_blits(&Renderer);
-
+  
+  
   while (handle_events (&CurrentTexture,
 			biomes,
 			keys_state,
@@ -408,15 +416,17 @@ run_gui ()
 			&screen_width,
 			screen_origin) != 0)
     {
-      move_coordinates_on_keydown (&screen_origin, keys_state);
+      move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords);
 
       for (int i = 0; i < 4; i++)
 	{
 	  if (keys_state[i])
 	    {
+	      printf("\n hero.x = %d", hero_coords.x);
+        printf("\n hero.y = %d", hero_coords.y);  
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
-	      blit (&Renderer, screen_center, 25, 41, CurrentTexture);
+	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
 	      display_blits(&Renderer);
 	      break;
 	    }
@@ -433,20 +443,18 @@ get_map_coords (coordinates click_coords,
 		int* screen_width,
 		struct coordinates screen_origin)
 {
-  struct coordinates offset;
   struct map_coordinates click_map_coords;
 
   float x_float = screen_origin.x;
   float y_float = screen_origin.y;
 
-  offset.x = click_coords.x - (*screen_width / 2);
-  offset.y = click_coords.y - (*screen_height / 2);
-
-  click_map_coords.chunk.x = (int) (x_float + (float) offset.x) / 24.0 / 16.0;
-  click_map_coords.chunk.y = (int) (y_float + (float) offset.y) / 24.0 / 16.0;
-  click_map_coords.square.x = (int) ((x_float + (float) offset.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
-  click_map_coords.square.y = (int) ((y_float + (float) offset.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
+  click_map_coords.chunk.x = (int) (x_float + (float) click_coords.x) / 24.0 / 16.0;
+  click_map_coords.chunk.y = (int) (y_float + (float) click_coords.y) / 24.0 / 16.0;
+  click_map_coords.square.x = (int) ((x_float + (float) click_coords.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
+  click_map_coords.square.y = (int) ((y_float + (float) click_coords.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
   
+  printf("\n chunk.x: %d",click_map_coords.chunk.x);
+  printf("\n square.x: %d",click_map_coords.square.x);
   return click_map_coords;
 }
 

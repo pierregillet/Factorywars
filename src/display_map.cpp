@@ -30,12 +30,8 @@
  * display_map.cpp contains the functions to display the map.
  */
 
-#include "save.h"
-#include "structures.h"
 #include "display_map.h"
-#include <stdio.h>
-#include "config.h"
-#include "display_item.h"
+
 
 void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 {
