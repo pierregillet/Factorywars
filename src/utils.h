@@ -40,7 +40,6 @@
 #include <sys/types.h>
 #include <regex.h>
 #include <errno.h>
-
 #include "structures.h"
 
 /**
@@ -94,3 +93,13 @@ void write_file_to_pipe (const char* file_path, int pipe);
  * @param message is the array of char which will be written to the pipe.
  */
 void write_to_pipe (int pipe, const char* message);
+
+/**
+ * Read a pipe until a null byte and store info in the buffer.
+ *
+ * @param buffer is the variable where data are stored.
+ * @param buf_size is the size of the buffer.
+ * @param pipe is the pipe we will read.
+ * @return how many bytes has been read.
+ */
+int read_pipe_until_null (char* buffer, size_t buf_size, int pipe);
