@@ -365,8 +365,6 @@ get_surface_item (struct coordinates chunk_coordinates,
   regmatch = get_item_id_pos_by_square_coordinates (chunk_coordinates,
 						    square_coordinates,
 						    save_file_path);
-  if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
-    return -1;
 
   int len_of_item_id_str = regmatch.rm_eo - regmatch.rm_so + 1;
   strncpy (item_id_str, line + regmatch.rm_so, len_of_item_id_str);
@@ -609,4 +607,51 @@ get_chunk_coordinates_from_player_movement (struct coordinates player_offset)
     player_offset.y / chunk_width;
 
   return center_chunk_coordinates;
+}
+
+struct chunk_info
+get_chunk_info (struct coordinates chunk_coordinates,
+		const char* save_file_path)
+{
+  const int LINE_SIZE = 512;
+
+  char* token;
+  struct chunk_info chunk_info;
+  chunk_info.chunk = chunk_coordinates;
+  chunk_info.biome_id = -1;
+
+  struct coordinates square;
+
+  int item_id = -1;
+  for (int i = 0; i < 16; i++)
+    {
+      memset (chunk_info.squares[i], 0, 16);
+    }
+
+  char line[LINE_SIZE];
+
+  find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, "save");
+
+  if (line == NULL)
+    return chunk_info;
+
+  token = strtok (line, " "); /* Chunck coordinates */
+  token = strtok (NULL, " "); /* biome id */
+  chunk_info.biome_id = atoi (token);
+
+  while (token != NULL)
+    {
+      strtok (NULL, " "); /* item id */
+
+      square = get_coordinates_from_string (token);
+
+      if (square.x == -2147483647 && square.y == 21477483647) /* Error */
+	item_id = atoi (token);
+      else
+	{
+	  chunk_info.squares[square.x][square.y] = item_id;
+	}
+    }
+
+  return chunk_info;
 }
