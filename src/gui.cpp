@@ -440,6 +440,7 @@ run_gui ()
 	{
 	  if (clicks_state[i])
 	    {
+	      // set_surface_item(click_map_coords.chunk, click_map_coords.square, 1, "save");
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
