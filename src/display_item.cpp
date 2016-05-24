@@ -13,7 +13,7 @@ load_items (SDL_Renderer** Renderer, SDL_Texture** table)
 }
 
 void
-display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_items, struct coordinates chunk_coords, struct coordinates screen_origin, struct chunk_info chunk)
+display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_items, struct coordinates chunk_coords, struct coordinates screen_origin, struct chunk_info chunk, int l, int m)
 { 
   for (int i(0) ; i < 16 ; i += 1)
     {
@@ -21,12 +21,11 @@ display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_it
 	{
 	  struct coordinates square_coords = {.x = i , .y = j};
 	  int item_id = chunk.squares[i][j];
-	  if (item_id > 0)
+	  if (item_id > 0 && item_id < 4)
 	    {
 	      struct coordinates bliting_coords;
-	      bliting_coords.x = (chunk_coords.x * 384 + square_coords.x*24) - screen_origin.x % 384;
-	      bliting_coords.y = (chunk_coords.y * 384 + square_coords.y*24) - screen_origin.y % 384;
-	      
+	      bliting_coords.x = (m - screen_origin.x % 384) + 24*square_coords.x;
+	      bliting_coords.y = (l - screen_origin.y % 384) + 24*square_coords.y;
 	      
 	      SDL_Texture* item_texture = table_items[item_id];
 	      blit(Renderer, bliting_coords, 24, 24, item_texture);
