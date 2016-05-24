@@ -80,7 +80,7 @@ display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** tab
 	  blit (Renderer, temp, chunk_width, chunk_width,  display_id);
 	  
 	  struct chunk_info _info = get_chunk_info (coords, path.c_str());
-	  display_items (Renderer, path.c_str(), table_items, coords, screen_origin, _info, i, j);
+	  display_items (Renderer, path.c_str(), table_items, screen_origin, _info, i, j);
 	}
     }
 }  
