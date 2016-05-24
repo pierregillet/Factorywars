@@ -109,7 +109,7 @@ init (SDL_Window** Window,
       else // if window has been created without errors
 	{
 	  *Renderer = SDL_CreateRenderer (*Window, -1,
-					  SDL_RENDERER_ACCELERATED);
+					  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	  SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 	}
     }
@@ -449,7 +449,7 @@ run_gui ()
 	      display_blits(&Renderer);
 	    }
 	}
-      SDL_Delay (100/6);
+      SDL_Delay (1/200);
     }
 
   // Quitting
