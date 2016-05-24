@@ -51,7 +51,7 @@ find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst,
       fgets (dst, dst_size, file);
     }
 
-  dst[strlen (dst)] = '\0';
+  dst[strlen (dst) - 1] = '\0';
 
   fclose (file);
   return dst;

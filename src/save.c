@@ -135,6 +135,12 @@ set_surface_item (struct coordinates chunk_coordinates,
   line[0] = '\0';
   tmp_line[0] = '\0';
 
+  /* On vérifie si le carré contient déjà un objet d’identifiant item_id */
+  /* We verify if the square already contains a item_id of value item_id */
+  if (get_surface_item (chunk_coordinates, square_coordinates, save_file_path)
+      == item_id)
+    return 0;
+
   /* If it’s true, the chunk line does not exist */
   /* Si c’est vrai, la ligne décrivant le chunk n’existe pas */
   if (find_chunk_line_in_file (chunk_coordinates, line,
@@ -157,14 +163,15 @@ set_surface_item (struct coordinates chunk_coordinates,
 
   strncpy (tmp_line, line + len_of_deleted_part_of_line, LINE_SIZE);
 
-  int reti;
+  int reti = 0;
   regmatch_t regmatch;
 
 
   regmatch = find_square_coordinates_pos (chunk_coordinates,
 					  square_coordinates,
 					  save_file_path);
-  if (regmatch.rm_so == -1)
+
+  if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
     reti = 1;
 
   regex_t regex;
@@ -198,9 +205,6 @@ set_surface_item (struct coordinates chunk_coordinates,
 
 	  snprintf (tmp_line, LINE_SIZE, " %d %s", item_id,
 		    square_coordinates_str);
-
-	  /* We delete the “\n” at the end of the line */
-	  line[strlen (line) - 1] = 0;
 
 	  /* We add the result at the end of the line variable */
 	  strncat (line, tmp_line, LINE_SIZE);
@@ -242,7 +246,7 @@ set_surface_item (struct coordinates chunk_coordinates,
 
 	  // We write the line to the save file
 	  insert_line_in_file (line, strlen (line), line_number,
-			       save_file_path, 1);
+	  		       save_file_path, 1);
 	}
     }
   else
@@ -259,7 +263,7 @@ set_surface_item (struct coordinates chunk_coordinates,
       int match_beg = regmatch.rm_so + len_of_deleted_part_of_line;
       int match_end = regmatch.rm_eo + len_of_deleted_part_of_line;
       int spaces_number = 0;
-      int beg_of_item_id;
+      int beg_of_item_id = 0;
 
       /* We search backward */
       for (int i = match_beg; i > 0; i--)
@@ -315,15 +319,13 @@ set_surface_item (struct coordinates chunk_coordinates,
       regmatch = get_item_id_pos_using_item_id (chunk_coordinates, item_id,
 						save_file_path);
 
-      /* We need to delete the \n at the end of the line */
-      line [strlen (line) - 1] = 0;
-
       if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
 	{
 	  /* The item id does not exist */
 	  /* We add the item_id a space and the square_coordinates */
 	  /* at the end of line */
 	  snprintf (tmp_line, LINE_SIZE, "%s %d %s\n", line, item_id, square_coordinates_str);
+
 	  insert_line_in_file (tmp_line, strlen (tmp_line), line_number, save_file_path, 1);
 	}
       else
@@ -439,7 +441,7 @@ find_square_coordinates_pos (struct coordinates chunk_coordinates,
 
   square_coordinates_pos.rm_so = regmatch[0].rm_so + number_of_deleted_char;
   square_coordinates_pos.rm_eo = regmatch[0].rm_eo + number_of_deleted_char;
-  
+
   return square_coordinates_pos;
 }
 
