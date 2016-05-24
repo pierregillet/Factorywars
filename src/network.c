@@ -155,7 +155,7 @@ handle_network_communication (unsigned short port, int read_pipe,
 
       buffer[0] = 0;
       read_pipe_until_null (buffer, BUFFER_SIZE, read_pipe);
-      command_type = interpret_data_for_networking_process (buffer);
+      command_type = get_command_type (buffer);
       
       switch (command_type)
 	{
@@ -177,7 +177,7 @@ handle_network_communication (unsigned short port, int read_pipe,
       if (nread > 0)
 	{
 	  strncpy (tmp_string, buffer, BUFFER_SIZE);
-	  command_type = interpret_data_for_networking_process (tmp_string);
+	  command_type = get_command_type (tmp_string);
 	  printf ("Buffer : %s, type de commande : %d\n", buffer, command_type);
 	}
       else
@@ -204,7 +204,8 @@ handle_network_communication (unsigned short port, int read_pipe,
 	    realloc (servers, (number_of_players + 1)
 		     * sizeof (struct server_credentials));
 
-	  if (!connect_command (tmp_string, &number_of_players, servers, peer_addr))
+	  if (!connect_command (tmp_string, &number_of_players, servers,
+				peer_addr, write_pipe))
 	    servers = (struct server_credentials*)
 	      realloc (servers,
 		       number_of_players * sizeof (struct server_credentials));
@@ -234,45 +235,20 @@ handle_network_communication (unsigned short port, int read_pipe,
 }
 
 int
-interpret_data_for_networking_process (char* data)
-{
-  int ret = 0;
-  char *token = NULL;
-
-  if (strlen (data) < 1)
-    ret = -1;
-  
-  /* Il faut extraire la commande. */
-  /* We need to extract the command. */
-  if (ret != -1)
-    token = strtok (data, " ");
-  if (token == NULL)
-    ret = -1;
-  else if (strcmp (token, "QUIT") == 0)
-    ret = 1;
-  else if (strcmp (token, "PING") == 0)
-    ret = 2;
-  else if (strcmp (token, "PONG") == 0)
-    ret = 3;
-  else if (strcmp (token, "CONNECT") == 0)
-    ret = 4;
-  else if (strcmp (token, "MOVE") == 0)
-    ret = 5;
-
-  return ret;
-}
-
-int
-connect_command (char* data, unsigned int* number_of_servers,
+connect_command (const char* data, unsigned int* number_of_servers,
 		 struct server_credentials* servers,
-		 struct sockaddr_storage peer_addr)
+		 struct sockaddr_storage peer_addr,
+		 int write_pipe)
 {
   char *token;
   int ret = 1;
 
+  char buffer[strlen (data) + 1];
+  strncpy (buffer, data, strlen (data) + 1);
+
   (*number_of_servers)++;
 
-  token = strtok (data, " ");
+  token = strtok (buffer, " ");
   token = strtok (NULL, " ");
   if (token != NULL)
     {
@@ -310,6 +286,16 @@ connect_command (char* data, unsigned int* number_of_servers,
 	      ret = 0;
 	    }
 	}
+    }
+
+  if (ret == 1)
+    {
+      /* On doit enlever le port */
+      /* We need to delete the port */
+      snprintf (buffer, strlen (data) + 1, "CONNECT %s",
+		servers[*(number_of_servers) - 1].name);
+
+      write (write_pipe, data, strlen (data) + 1);
     }
 
   return ret;

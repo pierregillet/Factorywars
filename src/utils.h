@@ -106,3 +106,21 @@ int read_pipe_until_null (char* buffer, size_t buf_size, int pipe);
 
 struct coordinates
 get_coordinates_from_string (const char* coordinates_str);
+
+/**
+ * Interpret given data and return a code depending on what actions needs
+ * to be performed.
+ *
+ * @param data is the data to interpret.
+ * @param data_size is the size of the data array.
+ * @return 
+ * + -1 on error and a value greater or equal than zero on success.
+ * + 0 is returned if we just need to forward the message to the socket
+ * or to the pipe.
+ * + 1 is returned if we need to stop the process.
+ * + 2 is returned if it is a ping.
+ * + 3 is returned if it is a pong.
+ * + 4 is returned if it is a connect command.
+ * + 5 is returned if it is a move command.
+ */
+int get_command_type (const char* data);
