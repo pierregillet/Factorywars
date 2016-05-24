@@ -337,17 +337,22 @@ display_blits(SDL_Renderer** Renderer)
 }
 
 void
-close()
+quit_sdl (SDL_Window** Window,
+	  SDL_Renderer** Renderer,
+	  SDL_Texture** CurrentTexture,
+	  SDL_Texture** biomes,
+	  SDL_Texture** items)
 {
-  /*
-  //Deallocate surface
-  SDL_FreeSurface();
-  surface = NULL;
-  //Destroy window
-  SDL_DestroyWindow( Window );
-  Window = NULL;
-  //Quit SDL subsystems
-  */
+  for (int i = 0; i < 5; i++)
+    {
+      SDL_DestroyTexture (biomes[i]);
+      SDL_DestroyTexture (items[i]);
+    }
+  
+  SDL_DestroyTexture (*CurrentTexture);
+  SDL_DestroyRenderer (*Renderer);
+  SDL_DestroyWindow (*Window);
+
   SDL_Quit();
 }
 
@@ -446,7 +451,6 @@ run_gui ()
 				    click_map_coords.square,
 				    "save") == -1)
 		{
-		  printf ("coucou \n");
 		  set_surface_item(click_map_coords.chunk,
 				   click_map_coords.square,
 				   1,
@@ -465,23 +469,14 @@ run_gui ()
 		  display_blits(&Renderer);
 
 		}
-	      
+	      clicks_state[i] = 0;
 	    }
 	}
       SDL_Delay (1/200);
     }
-  // Quitting
-  for (int i = 0; i < 5; i++)
-    {
-      SDL_DestroyTexture (biomes[i]);
-      SDL_DestroyTexture (items[i]);
-    }
   
-  SDL_DestroyTexture (CurrentTexture);
-  SDL_DestroyRenderer (Renderer);
-  SDL_DestroyWindow (Window);
-
-  SDL_Quit();
+  quit_sdl (&Window, &Renderer, &CurrentTexture, biomes, items);
+  
   return 0;
 }  
 
