@@ -27,8 +27,7 @@
 #include "network.h"
 
 void
-send (const struct server_credentials server, const char* data,
-      size_t data_size)
+send (const struct server_credentials server, const char* data)
 {
   int sockfd6, s;
   char port_str[6];
@@ -71,11 +70,7 @@ send (const struct server_credentials server, const char* data,
 
   freeaddrinfo (result);
 
-  if ((unsigned) send (sockfd6, data, data_size, 0) != data_size)
-    {
-      fprintf (stderr, "Error while writing on the socket\n");
-      return;
-    }
+  send (sockfd6, data, strlen (data) + 1, 0);
 }
 
 int
@@ -118,7 +113,7 @@ broadcast (const struct server_credentials *servers,
 	   unsigned int number_of_servers, const char* data, size_t data_size)
 {
   for (unsigned int i = 0; i < number_of_servers; i++)
-    send (servers[i], data, data_size);
+    send (servers[i], data);
 }
 
 void
@@ -169,7 +164,7 @@ handle_network_communication (unsigned short port, int read_pipe,
 	  break;
 	}
 
-      exit (EXIT_SUCCESS);
+      sleep (0.002);
       
       /* Read the socket */
       nread = read_socket (buffer, BUFFER_SIZE, sockfd6, &peer_addr,
@@ -213,6 +208,10 @@ handle_network_communication (unsigned short port, int read_pipe,
 
 	case 5:
 	  move_command (buffer, &number_of_players, servers, peer_addr, write_pipe);
+	  break;
+
+	case 6:
+	  
 	  break;
 
 	default:
@@ -426,4 +425,11 @@ void move_command (const char* data,
   snprintf (buffer + strlen (buffer), BUFFER_SIZE, " %s", token);
 
   write (write_pipe, buffer, strlen (buffer) + 1);
+}
+
+void
+shutdown_network_process (int write_pipe)
+{
+  char msg[] = "QUIT";
+  write (write_pipe, msg, strlen (msg) + 1);
 }

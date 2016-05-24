@@ -661,7 +661,7 @@ get_chunk_info (struct coordinates chunk_coordinates,
 	{
 	  x = (int) square.x;
 	  y = (int) square.y;
-	  if (x < 15 && y < 15)
+	  if (x <= 15 && y <= 15)
 	    chunk_info.squares[x][y] = item_id;
 	  else
 	    fprintf (stderr, "Error in save file\n");

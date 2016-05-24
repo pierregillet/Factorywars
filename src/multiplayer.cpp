@@ -47,5 +47,6 @@ handle_data_from_network_pipe (int read_pipe, std::vector<Player>& players,
 	}
       break;
     }
+  
   return 0;
 }

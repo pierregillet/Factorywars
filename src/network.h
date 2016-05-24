@@ -52,11 +52,9 @@ struct server_credentials
  * @param ip is the ip where the message will be sent.
  * @param port is the port where the server is listening.
  * @param data is the string which will be sent.
- * @param data_size is the number of bytes to send.
  * @return 1 if success, -1 if there is an error.
  */
-void send (const struct server_credentials server, const char* data,
-	   size_t data_size);
+void send (const struct server_credentials server, const char* data);
 
 /**
  * Send data to everyone.
@@ -118,7 +116,7 @@ void handle_network_communication (unsigned short port, int read_pipe,
  * @param peer_addr is the peer address.
  * @return 0 if there is an error, 1 if success.
  */
-int connect_command (char* data, unsigned int* number_of_servers,
+int connect_command (const char* data, unsigned int* number_of_servers,
 		     struct server_credentials* servers,
 		     struct sockaddr_storage peer_addr,
 		     int write_pipe);
@@ -154,3 +152,17 @@ void move_command (const char* data,
 		   struct server_credentials* servers,
 		   struct sockaddr_storage peer_addr,
 		   int write_pipe);
+
+/**
+ * Shutdown the network process.
+ *
+ * @param write_pipe is the write end of the pipe to communicate with the network process.
+ */
+void shutdown_network_process (int write_pipe);
+
+/**
+ * Handle new_player commands.
+ *
+ * 
+ */
+void new_player_command (void);
