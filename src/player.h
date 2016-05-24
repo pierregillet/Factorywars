@@ -56,7 +56,7 @@ Player
    * Get the player's health.
    * @return The player's health.
    */
-  int getPlayerHealth () const;
+  int getHealth () const;
 
   /**
    * Decrease the player health when attacked.
@@ -74,6 +74,18 @@ Player
    * @param vertical is True if the player goes up, False if he goes down
    */
   void playerWalks (bool horizontal, bool vertical);
+
+  /**
+   * Get the player’s name.
+   * @return The player’s name.
+   */
+  std::string getName () const;
+
+  /**
+   * Set the player’s coordinates.
+   * @return The player’s name.
+   */
+  void setCoordinates (struct coordinates new_coords);
 
  private:
   int m_health;

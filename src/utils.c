@@ -268,3 +268,34 @@ get_coordinates_from_string (const char* coordinates_str)
   return ret;
 }
 
+int
+get_command_type (const char* data)
+{
+  int ret = 0;
+  char *token = NULL;
+  char buffer[strlen (data) + 1];
+
+  strncpy (buffer, data, strlen (data) + 1);
+
+  if (strlen (data) < 1)
+    ret = -1;
+  
+  /* Il faut extraire la commande. */
+  /* We need to extract the command. */
+  if (ret != -1)
+    token = strtok (buffer, " ");
+  if (token == NULL)
+    ret = -1;
+  else if (strcmp (token, "QUIT") == 0)
+    ret = 1;
+  else if (strcmp (token, "PING") == 0)
+    ret = 2;
+  else if (strcmp (token, "PONG") == 0)
+    ret = 3;
+  else if (strcmp (token, "CONNECT") == 0)
+    ret = 4;
+  else if (strcmp (token, "MOVE") == 0)
+    ret = 5;
+
+  return ret;
+}
