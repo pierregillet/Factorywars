@@ -55,15 +55,22 @@ Player::Player(int health,
 }
 
 inline int
-Player::getPlayerHealth () const
+Player::getHealth () const
 {
   return this->m_health;
 }
 
-inline std::string
-Player::getPlayerName () const
+std::string
+Player::getName () const
 {
   return this->m_name;
+}
+
+void
+Player::setCoordinates (struct coordinates new_coords)
+{
+  this->m_coordinates.x = new_coords.x;
+  this->m_coordinates.y = new_coords.y;
 }
 
 inline int
