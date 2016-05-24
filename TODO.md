@@ -15,3 +15,4 @@ content of the README.md file.
 + Create a close function.
 + Add the shutdown_network_process function in the close function.
 + Test the broadcast function.
++ Follow [XDG Base Directory Specification](https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html)
