@@ -434,55 +434,54 @@ run_gui ()
 
       for (int i = 0; i < 5; i++)
 	{
-	  if (clicks_state[i])
+	  if (clicks_state[i] && i == 0)
 	    {
-
-	      
-	      // printf("%d \n",
-	      // 	     get_surface_item (click_map_coords.chunk,
-	      // 			       click_map_coords.square,
-	      // 			       "save"));
-
 	      // printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);  
 	      // printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);  
 	                                                               
 	      // printf("\n square.x : %ld \n",click_map_coords.square.x);
 	      // printf("\n square.y : %ld \n",click_map_coords.square.y);
 
-	      set_surface_item(click_map_coords.chunk, click_map_coords.square, 1, "save");
+	      if (get_surface_item (click_map_coords.chunk,
+				    click_map_coords.square,
+				    "save") == -1)
+		{
+		  printf ("coucou \n");
+		  set_surface_item(click_map_coords.chunk,
+				   click_map_coords.square,
+				   1,
+				   "save");
+		  refresh_renderer (&Renderer);
+		  display_background (&Renderer,
+				      "save",
+				      biomes,
+				      items,
+				      screen_origin);
+		  blit (&Renderer,
+			hero_coords,
+			25,
+			41,
+			CurrentTexture);
+		  display_blits(&Renderer);
+
+		}
 	      
-	      refresh_renderer (&Renderer);
-	      display_background (&Renderer, "save", biomes, items, screen_origin);
-	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
-	      display_blits(&Renderer);
 	    }
 	}
       SDL_Delay (1/200);
     }
-
   // Quitting
-  SDL_DestroyTexture (*biomes);
   for (int i = 0; i < 5; i++)
     {
-      biomes[i] = NULL;
-    }
-
-  SDL_DestroyTexture (*items);
-  for (int i = 0; i < 5; i++)
-    {
-      items[i] = NULL;
+      SDL_DestroyTexture (biomes[i]);
+      SDL_DestroyTexture (items[i]);
     }
   
   SDL_DestroyTexture (CurrentTexture);
-  CurrentTexture = NULL;
-
   SDL_DestroyRenderer (Renderer);
-
   SDL_DestroyWindow (Window);
-  Window = NULL;
 
   SDL_Quit();
-
   return 0;
 }  
 
