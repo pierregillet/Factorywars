@@ -51,8 +51,6 @@ main (int argc, char *argv[])
 
   if (run_gui () != 0)
     return 1;
-
-  delete[] &players;
   
   return 0;
 }
