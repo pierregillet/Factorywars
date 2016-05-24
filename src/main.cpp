@@ -50,7 +50,11 @@ main (int argc, char *argv[])
   run_network_process (4284, pipes);
 
   if (run_gui () != 0)
-    return 1;
-  
+    {
+      shutdown_network_process (pipes[0]);
+      return 1;
+    }
+
+  shutdown_network_process (pipes[1]);
   return 0;
 }

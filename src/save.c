@@ -141,8 +141,8 @@ set_surface_item (struct coordinates chunk_coordinates,
       == item_id)
     return 0;
 
-  /* If it’s true, the chunk line does not exist */
   /* Si c’est vrai, la ligne décrivant le chunk n’existe pas */
+  /* If it’s true, the chunk line does not exist */
   if (find_chunk_line_in_file (chunk_coordinates, line,
 			       LINE_SIZE, save_file_path) == NULL)
     {
@@ -227,23 +227,23 @@ set_surface_item (struct coordinates chunk_coordinates,
 	  left_part_of_line[0] = '\0';
 
 	  strncpy (right_part_of_line,
-		   line+regmatch.rm_eo + len_of_deleted_part_of_line,
+		   line + regmatch.rm_eo + len_of_deleted_part_of_line,
 		   LINE_SIZE);
 
-	  int len_of_item_id = regmatch.rm_eo - 1 - (regmatch.rm_so + 1);
-	  int left_part_of_line_length = regmatch.rm_so;
-	  left_part_of_line_length += len_of_deleted_part_of_line;
+	  int len_of_item_id = regmatch.rm_eo - 1 - regmatch.rm_so;
+	  int left_part_of_line_length = regmatch.rm_so + len_of_deleted_part_of_line;
 	  left_part_of_line_length += len_of_item_id + 1;
 
 	  strncpy (left_part_of_line, line, left_part_of_line_length);
-	  
-	  line[0] = '\0';
-	  strncpy (line, left_part_of_line, LINE_SIZE);
-	  
-	  snprintf (tmp_line, LINE_SIZE, " %s ", square_coordinates_str);
+	  left_part_of_line[left_part_of_line_length] = 0;
+
+	  strncpy (line, left_part_of_line, left_part_of_line_length + 1);
+
+	  snprintf (tmp_line, LINE_SIZE, "%s ", square_coordinates_str);
 	  strncat (line, tmp_line, LINE_SIZE);
 	  strncat (line, right_part_of_line, LINE_SIZE);
 
+	  strncat (line, "\n", LINE_SIZE);
 	  // We write the line to the save file
 	  insert_line_in_file (line, strlen (line), line_number,
 	  		       save_file_path, 1);
@@ -341,7 +341,7 @@ set_surface_item (struct coordinates chunk_coordinates,
 	  /* We add a newline character at the end of the line */
 	  tmp_line[strlen (tmp_line)] = '\n';
 
-	  insert_line_in_file (tmp_line, strlen(tmp_line), line_number, save_file_path, 1);
+ 	  insert_line_in_file (tmp_line, strlen(tmp_line), line_number, save_file_path, 1);
 	}
     }
   
