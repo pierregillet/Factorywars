@@ -367,7 +367,11 @@ get_surface_item (struct coordinates chunk_coordinates,
 						    square_coordinates,
 						    save_file_path);
 
+  if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
+    return -1;
+
   int len_of_item_id_str = regmatch.rm_eo - regmatch.rm_so + 1;
+
   strncpy (item_id_str, line + regmatch.rm_so, len_of_item_id_str);
   if (len_of_item_id_str + 1 <= ITEM_ID_LEN)
     item_id_str[len_of_item_id_str + 1] = 0;
