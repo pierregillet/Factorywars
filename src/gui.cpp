@@ -488,7 +488,7 @@ run_gui ()
 	      display_blits(&Renderer);
 	    }
 	    
-	  clicks_state[i] = 0;
+	  clicks_state[0] = 0;
 	}
     
 
