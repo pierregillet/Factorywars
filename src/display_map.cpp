@@ -65,7 +65,7 @@ display_background (SDL_Renderer** Renderer,
 
   for(int i(0) ; i < screen_height + screen_origin.y % chunk_width; i += chunk_width)
     {
-      for(int j(0); j < screen_width + screen_origin.x % chunk_width; j += chunk_width)
+      for(int j(0); j < screen_width + screen_origin.x % chunk_width ; j += chunk_width)
 	{
 	  struct coordinates hero_coords = {.x = (int) screen_origin.x + j,
 					    .y = (int) screen_origin.y + i};
@@ -80,7 +80,7 @@ display_background (SDL_Renderer** Renderer,
 	  SDL_Texture* display_id = table_biomes[id];
 	  
 	  struct coordinates temp = {.x = j - screen_origin.x % chunk_width,
-				     .y = i - screen_origin.y % chunk_width};
+	  			     .y = i - screen_origin.y % chunk_width};
 	  blit (Renderer, temp, chunk_width, chunk_width,  display_id);
 	  
 	  struct chunk_info _info = get_chunk_info (coords, path.c_str());
