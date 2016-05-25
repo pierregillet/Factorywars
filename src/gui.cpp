@@ -302,13 +302,14 @@ move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state
   screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
  
   
-  if (hero_coords-> x < screen_center.x)
+  if (hero_coords->x < screen_center.x)
   {
     hero_coords->y += (keys_state[0])? (-5) : 0;
     hero_coords->y += (keys_state[1])? (+5) : 0;
     hero_coords->x += (keys_state[2])? (-5) : 0;
     hero_coords->x += (keys_state[3])? (+5) : 0;
   }
+  
   return 1;
 }
 
@@ -357,7 +358,7 @@ quit_sdl (SDL_Window** Window,
 }
 
 int 
-run_gui ()
+run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
 {
   int screen_height = atoi (get_config_value ("height"));
   int screen_width = atoi (get_config_value ("width"));
@@ -373,10 +374,10 @@ run_gui ()
 
   struct coordinates screen_center; 
   screen_center.x = screen_width / 2;
-	screen_center.y = screen_height / 2;
+  screen_center.y = screen_height / 2;
   
-	struct coordinates screen_origin = {.x = 0,
-					    .y = 0};
+  struct coordinates screen_origin = {.x = 0,
+				      .y = 0};
   
   struct coordinates hero_coords = {.x = screen_center.x,
 				    .y = screen_center.y};
@@ -411,8 +412,7 @@ run_gui ()
   //display_items (&Renderer, "save", items, x, y);
   blit (&Renderer, screen_center, 25, 41, CurrentTexture);
   display_blits(&Renderer);
-  
-  
+
   while (handle_events (&CurrentTexture,
 			biomes,
 			keys_state,
@@ -429,6 +429,7 @@ run_gui ()
 	{
 	  if (keys_state[i])
 	    {
+	      send_move_command (write_pipe, screen_origin, screen_height, screen_width);
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);

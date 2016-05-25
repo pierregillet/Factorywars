@@ -165,4 +165,5 @@ void shutdown_network_process (int write_pipe);
  *
  * 
  */
-void new_player_command (void);
+void new_player_command (struct server_credentials* servers,
+			 unsigned int* number_of_servers);
