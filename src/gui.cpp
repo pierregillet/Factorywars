@@ -224,8 +224,9 @@ handle_clickup (int button,
 		int* screen_width,
 		struct coordinates* screen_origin)
 {
+  // Not necessary right now because the clicks_state array elements are put to 0 once events are handles
+  /*
   bool clickup = 0;
-  // get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
 
   switch (button)
     {
@@ -247,7 +248,15 @@ handle_clickup (int button,
     default:
       break;
     }
+  */
   return 1;
+}
+
+int
+handle_mousewheel ()
+{
+  
+
 }
 
 int
@@ -304,6 +313,13 @@ handle_events (SDL_Texture** CurrentTexture,
 			  screen_width,
 			  &screen_origin);
 	  break;
+
+	// case SDL_MOUSEWHEEL:
+	//   handle_mousewheel (event.);
+	//   break;
+	  
+	default:
+	  break;
 	}
     }
   
@@ -313,8 +329,6 @@ handle_events (SDL_Texture** CurrentTexture,
 int
 move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords, struct coordinates screen_center)
 {
-  printf("\n hero.x : %d",hero_coords->x);
-  printf("\n screen.x : %d",screen_origin->x);
   if (hero_coords -> x >= 680 && hero_coords -> y >= 400  )
   {
         screen_origin->y += (keys_state[0])? (-5) : 0;
@@ -329,7 +343,6 @@ move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state
         hero_coords->x += (keys_state[2])? (-5) : 0;
         hero_coords->x += (keys_state[3])? 5 : 0;        
   }
-  
   
   hero_coords->x = (hero_coords->x < 0 )? 0 : hero_coords->x;
   hero_coords->y = (hero_coords->y < 0 )? 0 : hero_coords->y;
@@ -389,7 +402,7 @@ quit_sdl (SDL_Window** Window,
 }
 
 int 
-run_gui ()
+run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
 {
   int screen_height = atoi (get_config_value ("height"));
   int screen_width = atoi (get_config_value ("width"));
@@ -405,10 +418,11 @@ run_gui ()
 
   struct coordinates screen_center; 
   screen_center.x = screen_width / 2;
-	screen_center.y = screen_height / 2;
-  
-	struct coordinates screen_origin = {.x = 0,
-					    .y = 0};
+  screen_center.y = screen_height / 2;
+ 
+  struct coordinates screen_origin = {.x = 0,
+				      .y = 0};
+
   struct coordinates hero_coords = {.x = screen_center.x,
 				    .y = screen_center.y};
   
@@ -442,8 +456,7 @@ run_gui ()
   //display_items (&Renderer, "save", items, x, y);
   blit (&Renderer, screen_center, 25, 41, CurrentTexture);
   display_blits(&Renderer);
-  
-  
+
   while (handle_events (&CurrentTexture,
 			biomes,
 			keys_state,
@@ -454,11 +467,15 @@ run_gui ()
 			screen_origin,
 			&click_map_coords) != 0)
     {
+      // Keyboard handling
       for (int i = 0; i < 4; i++)
 	{
 	  if (keys_state[i])
 	    {
               move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords, screen_center);
+
+	      send_move_command (write_pipe, screen_origin, screen_height, screen_width);
+
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
@@ -466,15 +483,11 @@ run_gui ()
 	      break;
 	    }
 	}
+      // End of keyboard handling
 
+      // Left click handling
       if (clicks_state[0])
 	{
-	   printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);
-	   printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);
-	                                                               
-	   printf("\n square.x : %ld \n",click_map_coords.square.x);
-	   printf("\n square.y : %ld \n",click_map_coords.square.y);
-
 	  if (get_surface_item (click_map_coords.chunk,
 				click_map_coords.square,
 				"save") == -1)
@@ -499,8 +512,36 @@ run_gui ()
 	    
 	  clicks_state[0] = 0;
 	}
-    
-
+      // End of left click handling
+      
+      // Right click handling
+      if (clicks_state[2])
+	{
+	  if (get_surface_item (click_map_coords.chunk,
+				click_map_coords.square,
+				"save") != -1)
+	    {
+	      set_surface_item(click_map_coords.chunk,
+			       click_map_coords.square,
+			       -1,
+			       "save");
+	      refresh_renderer (&Renderer);
+	      display_background (&Renderer,
+				  "save",
+				  biomes,
+				  items,
+				  screen_origin);
+	      blit (&Renderer,
+		    hero_coords,
+		    25,
+		    41,
+		    CurrentTexture);
+	      display_blits(&Renderer);
+	    }
+	  clicks_state[2] = 0;
+	}
+      // End of right click handling
+      
       SDL_Delay (1/200);
     }
   quit_sdl (&Window, &Renderer, &CurrentTexture, biomes, items);

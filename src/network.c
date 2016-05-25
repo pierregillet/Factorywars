@@ -43,7 +43,7 @@ send (const struct server_credentials server, const char* data)
   hints.ai_flags = 0;
   hints.ai_protocol = 0; //Any protocol
 
-    s = getaddrinfo (server.IP, port_str, &hints, &result);
+  s = getaddrinfo (server.IP, port_str, &hints, &result);
   if (s != 0)
     {
       fprintf (stderr, "Getaddrinfo: %s\n", gai_strerror (s));
@@ -142,6 +142,8 @@ handle_network_communication (unsigned short port, int read_pipe,
   /* We create the array that will contains the IPs */
   unsigned int number_of_players = 0;
   struct server_credentials *servers = NULL;
+
+  int count = 0;
   
   while (!quit)
     {
@@ -157,6 +159,17 @@ handle_network_communication (unsigned short port, int read_pipe,
 	case 0:
 	  /* Send what is from the pipe to the socket */
 	  broadcast (servers, number_of_players, buffer, strlen (buffer));
+	  break;
+
+	case 5:
+	  /* Send what is from the pipe to the socket */
+	  if (count == 5)
+	    {
+	      broadcast (servers, number_of_players, buffer, strlen (buffer));
+	      count = 0;
+	    }
+	  else
+	    count++;
 	  break;
 
 	case 1:

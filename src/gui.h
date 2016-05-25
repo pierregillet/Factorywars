@@ -37,7 +37,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-
 #include "structures.h"
 #include "display_item.h"
 #include "player.h"
@@ -45,7 +44,9 @@
 #include "display_map.h"
 #include "display_item.h"
 #include "config.h"
+#include <vector>
 #include "save.h"
+#include "multiplayer.h"
 
 enum KeyPressTexture
   {
@@ -132,7 +133,7 @@ void quit_sdl (SDL_Window** Window,
 	       SDL_Texture** biomes,
 	       SDL_Texture** items);
 
-int run_gui ();
+int run_gui (int read_pipe, int write_pipe, std::vector<Player>& players);
 
 struct map_coordinates get_map_coords (coordinates click_coords,
 				       int* screen_height,

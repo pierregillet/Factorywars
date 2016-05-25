@@ -128,7 +128,7 @@ set_surface_item (struct coordinates chunk_coordinates,
   const unsigned int LINE_SIZE = 512;
   const unsigned int REGEX_STR_SIZE = 512;
   const unsigned int COORDINATES_STR_SIZE = 20;
-  
+
   char line[LINE_SIZE], tmp_line[LINE_SIZE],
     square_coordinates_str[COORDINATES_STR_SIZE];
 
@@ -244,6 +244,7 @@ set_surface_item (struct coordinates chunk_coordinates,
 	  strncat (line, right_part_of_line, LINE_SIZE);
 
 	  strncat (line, "\n", LINE_SIZE);
+
 	  // We write the line to the save file
 	  insert_line_in_file (line, strlen (line), line_number,
 	  		       save_file_path, 1);
