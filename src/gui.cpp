@@ -292,23 +292,30 @@ handle_events (SDL_Texture** CurrentTexture,
 int
 move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords, struct coordinates screen_center)
 {
-  screen_origin->y += (keys_state[0])? (-5) : 0;
-  screen_origin->y += (keys_state[1])? 5 : 0;
-  screen_origin->x += (keys_state[2])? (-5) : 0;
-  screen_origin->x += (keys_state[3])? 5 : 0;
-  
-  // At least for now, we didn’t authorize negative coordinates
-  screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
-  screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
- 
-  
-  if (hero_coords-> x < screen_center.x)
+  printf("\n hero.x : %d",hero_coords->x);
+  printf("\n screen.x : %d",screen_origin->x);
+  if (hero_coords -> x >= 680 && hero_coords -> y >= 400  )
   {
-    hero_coords->y += (keys_state[0])? (-5) : 0;
-    hero_coords->y += (keys_state[1])? (+5) : 0;
-    hero_coords->x += (keys_state[2])? (-5) : 0;
-    hero_coords->x += (keys_state[3])? (+5) : 0;
+        screen_origin->y += (keys_state[0])? (-5) : 0;
+        screen_origin->y += (keys_state[1])? 5 : 0;
+        screen_origin->x += (keys_state[2])? (-5) : 0;
+        screen_origin->x += (keys_state[3])? 5 : 0;
+  }  
+  if (screen_origin -> y <= 0 || screen_origin->x <= 0)
+  {
+        hero_coords->y += (keys_state[0])? (-5) : 0;
+        hero_coords->y += (keys_state[1])? 5 : 0;
+        hero_coords->x += (keys_state[2])? (-5) : 0;
+        hero_coords->x += (keys_state[3])? 5 : 0;        
   }
+  
+  
+  hero_coords->x = (hero_coords->x < 0 )? 0 : hero_coords->x;
+  hero_coords->y = (hero_coords->y < 0 )? 0 : hero_coords->y;
+ 
+  hero_coords -> x = (hero_coords -> x > 680)? 680 : hero_coords -> x;
+  hero_coords -> y = (hero_coords -> y > 400)? 400 : hero_coords -> y;
+ 
   return 1;
 }
 
@@ -372,7 +379,6 @@ run_gui ()
   
 	struct coordinates screen_origin = {.x = 0,
 					    .y = 0};
-  
   struct coordinates hero_coords = {.x = screen_center.x,
 				    .y = screen_center.y};
   
@@ -382,19 +388,19 @@ run_gui ()
   /* 
    * keys_state only 4 elements
    * because we only use 4 keys as of now
-   * keys_state[1] -> SDLK_UP
-   * keys_state[2] -> SDLK_DOWN
-   * keys_state[3] -> SDLK_LEFT
-   * keys_state[4] -> SDLK_RIGHT
+   * keys_state[0] -> SDLK_UP
+   * keys_state[1] -> SDLK_DOWN
+   * keys_state[2] -> SDLK_LEFT
+   * keys_state[3] -> SDLK_RIGHT
    */
   bool keys_state[4] = {0};
 
   /* 
-   * clicks_state[1] -> SDL_BUTTON_LEFT
-   * clicks_state[2] -> SDL_BUTTON_MIDDLE
-   * clicks_state[3] -> SDL_BUTTON_RIGHT
-   * clicks_state[4] -> SDL_BUTTON_X1
-   * clicks_state[5] -> SDL_BUTTON_X2
+   * clicks_state[0] -> SDL_BUTTON_LEFT
+   * clicks_state[1] -> SDL_BUTTON_MIDDLE
+   * clicks_state[2] -> SDL_BUTTON_RIGHT
+   * clicks_state[3] -> SDL_BUTTON_X1
+   * clicks_state[4] -> SDL_BUTTON_X2
    */
   bool clicks_state[5] = {0};
 
@@ -418,12 +424,11 @@ run_gui ()
 			screen_origin,
 			&click_map_coords) != 0)
     {
-      move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords, screen_center);
-
       for (int i = 0; i < 4; i++)
 	{
 	  if (keys_state[i])
 	    {
+              move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords, screen_center);
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
