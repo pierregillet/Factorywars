@@ -35,6 +35,7 @@ Player::Player(void)
   m_name = "Foobar";
   m_coordinates.x = 0;
   m_coordinates.y = 0;
+  m_selected_tool = 0;
   m_velocity = 10;
   for (int i = 0; i < 100; i++) // Filling the inventory with zeroes
     for (int j = 0; j < 2; j++)
@@ -50,6 +51,7 @@ Player::Player(int health,
   m_name = name;
   m_coordinates.x = 0;
   m_coordinates.y = 0;
+  m_selected_tool = 0;
   m_velocity = velocity;
   m_id = 1;
 }
@@ -96,3 +98,13 @@ Player::playerWalks (bool horizontal,
   else
     m_coordinates.y --;
 }
+
+void
+Player::selectTool (int scroll)
+{
+  if (scroll >= 1)
+    m_selected_tool += (m_selected_tool < 9)? 1 : -9;
+  else
+    m_selected_tool -= (m_selected_tool > 0)? 1 : -9;
+}
+
