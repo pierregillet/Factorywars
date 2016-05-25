@@ -41,7 +41,7 @@ main (int argc, char *argv[])
   // Player* players;
   int pipes[4];
   // players = new Player[1];
-  std::vector<Player> players (1, Player());
+  std::vector<Player> players (1, Player ());
   
   // players[0] =  Player ();
   pipe (pipes);

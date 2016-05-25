@@ -253,10 +253,12 @@ handle_clickup (int button,
 }
 
 int
-handle_mousewheel ()
+handle_mousewheel (int wheel_x,
+		   int* screen_height,
+		   int* screen_width,
+		   struct coordinates* screen_origin)
 {
-  
-
+  return 1;
 }
 
 int
@@ -284,11 +286,17 @@ handle_events (SDL_Texture** CurrentTexture,
 	  break;
 	      
 	case SDL_KEYDOWN:
-	  handle_keydown (event.key.keysym.sym, keys_state, CurrentTexture, key_press_texture);
+	  handle_keydown (event.key.keysym.sym,
+			  keys_state,
+			  CurrentTexture,
+			  key_press_texture);
 	  break;
 
 	case SDL_KEYUP:
-	  handle_keyup (event.key.keysym.sym, keys_state, CurrentTexture, key_press_texture);
+	  handle_keyup (event.key.keysym.sym,
+			keys_state,
+			CurrentTexture,
+			key_press_texture);
 	  break;
 
 	case SDL_MOUSEBUTTONDOWN:
@@ -314,9 +322,12 @@ handle_events (SDL_Texture** CurrentTexture,
 			  &screen_origin);
 	  break;
 
-	// case SDL_MOUSEWHEEL:
-	//   handle_mousewheel (event.);
-	//   break;
+	case SDL_MOUSEWHEEL:
+	  handle_mousewheel (event.wheel.y,
+			     screen_height,
+			     screen_width,
+			     &screen_origin);
+	  break;
 	  
 	default:
 	  break;
@@ -327,7 +338,10 @@ handle_events (SDL_Texture** CurrentTexture,
 }
 
 int
-move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords, struct coordinates screen_center)
+move_coordinates_on_keydown (struct coordinates* screen_origin,
+			     bool* keys_state,
+			     struct coordinates* hero_coords,
+			     struct coordinates screen_center)
 {
   if (hero_coords -> x >= 680 && hero_coords -> y >= 400  )
   {
