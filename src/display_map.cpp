@@ -47,7 +47,11 @@ void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 
 
 void
-display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_biomes, SDL_Texture** table_items, struct coordinates screen_origin)
+display_background (SDL_Renderer** Renderer,
+		    std::string path,
+		    SDL_Texture** table_biomes,
+		    SDL_Texture** table_items,
+		    struct coordinates screen_origin)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
   const int SQUARE_WIDTH = 24;

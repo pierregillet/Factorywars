@@ -20,7 +20,7 @@ display_items (SDL_Renderer** Renderer,
 	       struct chunk_info chunk,
 	       int l,
 	       int m)
-{ 
+{
   for (int i(0) ; i < 16 ; i += 1)
     {
       for (int j(0) ; j < 16 ; j += 1)

@@ -340,7 +340,11 @@ refresh_renderer (SDL_Renderer** Renderer)
 }
 
 int
-blit (SDL_Renderer** Renderer, struct coordinates screen_origin, int width, int height, SDL_Texture* texture)
+blit (SDL_Renderer** Renderer,
+      struct coordinates screen_origin,
+      int width,
+      int height,
+      SDL_Texture* texture)
 {
   SDL_Rect Rect = {.x = (int) screen_origin.x, .y = (int) screen_origin.y, .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
