@@ -313,14 +313,22 @@ set_surface_item (struct coordinates chunk_coordinates,
 	}
       else
 	{
-	  strncpy (line + match_beg, line + match_end + 1, LINE_SIZE);
+	  strncpy (tmp_line, line, match_beg - len_of_deleted_part_of_line);
+	  tmp_line[match_beg - len_of_deleted_part_of_line] = '\0';
+	  strncat (tmp_line, line + match_end + 1 - len_of_deleted_part_of_line, LINE_SIZE);
+	  strncpy (line, tmp_line, strlen (tmp_line) + 1);
 	}
 
       /* Now we need to search if the item_id exist */
       regmatch = get_item_id_pos_using_item_id (chunk_coordinates, item_id,
 						save_file_path);
 
-      if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
+      if (item_id == -1)
+	{
+	  strncat (line, "\n", LINE_SIZE);
+	  insert_line_in_file (line, strlen (line), line_number, save_file_path, 1);
+	}
+      else if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
 	{
 	  /* The item id does not exist */
 	  /* We add the item_id a space and the square_coordinates */
