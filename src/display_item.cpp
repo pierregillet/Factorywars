@@ -30,8 +30,8 @@ display_items (SDL_Renderer** Renderer,
 	  if (item_id > 0 && item_id < 4)
 	    {
 	      struct coordinates bliting_coords;
-	      bliting_coords.x = (m - screen_origin.x % 384) + 24*square_coords.y;
-	      bliting_coords.y = (l - screen_origin.y % 384) + 24*square_coords.x;
+	      bliting_coords.x = (m - screen_origin.x % 384) + 24*square_coords.x;
+	      bliting_coords.y = (l - screen_origin.y % 384) + 24*square_coords.y;
 	      
 	      SDL_Texture* item_texture = table_items[item_id];
 	      blit(Renderer, bliting_coords, 24, 24, item_texture);
