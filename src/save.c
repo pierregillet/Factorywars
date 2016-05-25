@@ -166,7 +166,6 @@ set_surface_item (struct coordinates chunk_coordinates,
   int reti = 0;
   regmatch_t regmatch;
 
-
   regmatch = find_square_coordinates_pos (chunk_coordinates,
 					  square_coordinates,
 					  save_file_path);
@@ -261,8 +260,8 @@ set_surface_item (struct coordinates chunk_coordinates,
       /*   If it does not exist, we add at the end of the line the item id, a space and the square coordinates */
       /*   If it is already present in the line, we add the square coordinates and a space just after the item_id and a space */
       int delete_coordinates_and_item_id = 1;
-      int match_beg = regmatch.rm_so + len_of_deleted_part_of_line;
-      int match_end = regmatch.rm_eo + len_of_deleted_part_of_line;
+      int match_beg = regmatch.rm_so;
+      int match_end = regmatch.rm_eo;
       int spaces_number = 0;
       int beg_of_item_id = 0;
 
@@ -293,8 +292,11 @@ set_surface_item (struct coordinates chunk_coordinates,
 	{
 	  for (unsigned int i = match_end; i < LINE_SIZE; i++)
 	    {
-	      if (spaces_number == 2)
-		  break;
+	      if (spaces_number == 2 || !delete_coordinates_and_item_id)
+		break;
+
+	      if (line[i] == '\0')
+		break;
 
 	      switch (line[i])
 		{
@@ -304,19 +306,25 @@ set_surface_item (struct coordinates chunk_coordinates,
 		case ';':
 		  delete_coordinates_and_item_id = 0;
 		  break;
+		case '\0':
+		  break;
 		}
 	    }
 	}
       if (delete_coordinates_and_item_id)
 	{
-	  strncpy (line + beg_of_item_id, line + match_end + 1, LINE_SIZE);
+	  strncpy (line + beg_of_item_id - 1, line + match_end, LINE_SIZE);
+	  if (line[strlen (line) - 1] == ' ')
+	    line[strlen (line) - 1] = '\0';
 	}
       else
 	{
-	  strncpy (tmp_line, line, match_beg - len_of_deleted_part_of_line);
-	  tmp_line[match_beg - len_of_deleted_part_of_line] = '\0';
-	  strncat (tmp_line, line + match_end + 1 - len_of_deleted_part_of_line, LINE_SIZE);
+	  strncpy (tmp_line, line, match_beg);
+	  tmp_line[match_beg] = '\0';
+	  strncat (tmp_line, line + match_end + 1, LINE_SIZE);
 	  strncpy (line, tmp_line, strlen (tmp_line) + 1);
+	  if (line[strlen (line) - 1] == ' ')
+	    line[strlen (line) - 1] = '\0';
 	}
 
       /* Now we need to search if the item_id exist */
@@ -334,7 +342,6 @@ set_surface_item (struct coordinates chunk_coordinates,
 	  /* We add the item_id a space and the square_coordinates */
 	  /* at the end of line */
 	  snprintf (tmp_line, LINE_SIZE, "%s %d %s\n", line, item_id, square_coordinates_str);
-
 	  insert_line_in_file (tmp_line, strlen (tmp_line), line_number, save_file_path, 1);
 	}
       else
