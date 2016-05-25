@@ -83,9 +83,15 @@ Player
 
   /**
    * Set the player’s coordinates.
-   * @return The player’s name.
+   * @param The new coordinates of the player.
    */
   void setCoordinates (struct coordinates new_coords);
+
+  /**
+   * Change the selected tool.
+   * @param The direction we scroll : -1 for previous tool, 1 for next tool.
+   */
+  void selectTool (int scroll);
 
  private:
   int m_health;
@@ -93,5 +99,7 @@ Player
   coordinates m_coordinates;
   int m_velocity;
   int m_inventory[100][2];
+  int m_toolbar[10][2];
   unsigned short m_id;
+  unsigned short m_selected_tool;
 };
