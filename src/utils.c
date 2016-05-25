@@ -51,6 +51,8 @@ find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst,
       fgets (dst, dst_size, file);
     }
 
+  dst[strlen (dst) - 1] = '\0';
+
   fclose (file);
   return dst;
 }
@@ -296,6 +298,8 @@ get_command_type (const char* data)
     ret = 4;
   else if (strcmp (token, "MOVE") == 0)
     ret = 5;
+  else if (strcmp (token, "NEW_PLAYER") == 0)
+    ret = 6;
 
   return ret;
 }

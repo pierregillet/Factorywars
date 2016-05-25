@@ -126,7 +126,11 @@ int blit (SDL_Renderer** Renderer,
 
 void display_blits(SDL_Renderer** Renderer);
 
-void close ();
+void quit_sdl (SDL_Window** Window,
+	       SDL_Renderer** Renderer,
+	       SDL_Texture** CurrentTexture,
+	       SDL_Texture** biomes,
+	       SDL_Texture** items);
 
 int run_gui ();
 

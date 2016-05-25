@@ -122,5 +122,6 @@ get_coordinates_from_string (const char* coordinates_str);
  * + 3 is returned if it is a pong.
  * + 4 is returned if it is a connect command.
  * + 5 is returned if it is a move command.
+ * + 6 is returned if it is a new_player command.
  */
 int get_command_type (const char* data);

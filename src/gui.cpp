@@ -358,17 +358,22 @@ display_blits(SDL_Renderer** Renderer)
 }
 
 void
-close()
+quit_sdl (SDL_Window** Window,
+	  SDL_Renderer** Renderer,
+	  SDL_Texture** CurrentTexture,
+	  SDL_Texture** biomes,
+	  SDL_Texture** items)
 {
-  /*
-  //Deallocate surface
-  SDL_FreeSurface();
-  surface = NULL;
-  //Destroy window
-  SDL_DestroyWindow( Window );
-  Window = NULL;
-  //Quit SDL subsystems
-  */
+  for (int i = 0; i < 5; i++)
+    {
+      SDL_DestroyTexture (biomes[i]);
+      SDL_DestroyTexture (items[i]);
+    }
+  
+  SDL_DestroyTexture (*CurrentTexture);
+  SDL_DestroyRenderer (*Renderer);
+  SDL_DestroyWindow (*Window);
+
   SDL_Quit();
 }
 
@@ -481,23 +486,16 @@ run_gui ()
 		    41,
 		    CurrentTexture);
 	      display_blits(&Renderer);
-	    }	      
+	    }
+	    
+	  clicks_state[i] = 0;
 	}
+    
 
       SDL_Delay (1/200);
     }
-  // Quitting
-  for (int i = 0; i < 5; i++)
-    {
-      SDL_DestroyTexture (biomes[i]);
-      SDL_DestroyTexture (items[i]);
-    }
+  quit_sdl (&Window, &Renderer, &CurrentTexture, biomes, items);
   
-  SDL_DestroyTexture (CurrentTexture);
-  SDL_DestroyRenderer (Renderer);
-  SDL_DestroyWindow (Window);
-
-  SDL_Quit();
   return 0;
 }  
 
