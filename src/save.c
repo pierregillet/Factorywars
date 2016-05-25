@@ -611,10 +611,10 @@ get_chunk_coordinates_from_player_movement (struct coordinates player_offset)
   struct coordinates center_chunk_coordinates;
 
   center_chunk_coordinates.y =
-    player_offset.x / chunk_width;
+    player_offset.y / chunk_width;
 
   center_chunk_coordinates.x =
-    player_offset.y / chunk_width;
+    player_offset.x / chunk_width;
 
   return center_chunk_coordinates;
 }
