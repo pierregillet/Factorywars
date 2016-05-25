@@ -166,10 +166,10 @@ handle_network_communication (unsigned short port, int read_pipe,
 	  if (count == 5)
 	    {
 	      broadcast (servers, number_of_players, buffer, strlen (buffer));
-	      count++;
+	      count = 0;
 	    }
 	  else
-	    count = 0;
+	    count++;
 	  break;
 
 	case 1:

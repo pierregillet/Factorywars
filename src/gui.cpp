@@ -108,8 +108,10 @@ init (SDL_Window** Window,
 	  
       else // if window has been created without errors
 	{
-	  *Renderer = SDL_CreateRenderer (*Window, -1,
-					  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	  *Renderer = SDL_CreateRenderer (*Window,
+					  -1,
+					  SDL_RENDERER_ACCELERATED
+					  | SDL_RENDERER_PRESENTVSYNC);
 	  SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 	}
     }
@@ -122,7 +124,10 @@ init (SDL_Window** Window,
 }
 
 int
-handle_keydown (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture)
+handle_keydown (SDL_Keycode event_keycode,
+		bool* keys_state,
+		SDL_Texture** CurrentTexture,
+		SDL_Texture** key_press_texture)
 {
   bool keydown = 1;
   switch (event_keycode)
@@ -148,7 +153,10 @@ handle_keydown (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** Curre
 }
 
 int
-handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture)
+handle_keyup (SDL_Keycode event_keycode,
+	      bool* keys_state,
+	      SDL_Texture** CurrentTexture,
+	      SDL_Texture** key_press_texture)
 {
   bool keyup = 0;
   switch (event_keycode)
@@ -172,11 +180,19 @@ handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** Current
 }
 
 int
-handle_clickdown (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, struct coordinates* screen_origin, struct map_coordinates* click_map_coords)
+handle_clickdown (int button,
+		  coordinates click_coords,
+		  bool* clicks_state,
+		  int* screen_height,
+		  int* screen_width,
+		  struct coordinates* screen_origin,
+		  struct map_coordinates* click_map_coords)
 {
   bool clickdown = 1;
-  *click_map_coords = get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
-
+  *click_map_coords = get_map_coords (click_coords,
+				      screen_height,
+				      screen_width,
+				      *screen_origin);
   switch (button)
     {
     case SDL_BUTTON_LEFT:
@@ -201,7 +217,12 @@ handle_clickdown (int button, coordinates click_coords, bool* clicks_state, int*
 }
 
 int
-handle_clickup (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, struct coordinates* screen_origin)
+handle_clickup (int button,
+		coordinates click_coords,
+		bool* clicks_state,
+		int* screen_height,
+		int* screen_width,
+		struct coordinates* screen_origin)
 {
   bool clickup = 0;
   // get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
@@ -292,24 +313,29 @@ handle_events (SDL_Texture** CurrentTexture,
 int
 move_coordinates_on_keydown (struct coordinates* screen_origin, bool* keys_state, struct coordinates* hero_coords, struct coordinates screen_center)
 {
-  screen_origin->y += (keys_state[0])? (-5) : 0;
-  screen_origin->y += (keys_state[1])? 5 : 0;
-  screen_origin->x += (keys_state[2])? (-5) : 0;
-  screen_origin->x += (keys_state[3])? 5 : 0;
-  
-  // At least for now, we didn’t authorize negative coordinates
-  screen_origin->x = (screen_origin->x < 0)? 0 : screen_origin->x;
-  screen_origin->y = (screen_origin->y < 0)? 0 : screen_origin->y;
- 
-  
-  if (hero_coords->x < screen_center.x)
+  printf("\n hero.x : %d",hero_coords->x);
+  printf("\n screen.x : %d",screen_origin->x);
+  if (hero_coords -> x >= 680 && hero_coords -> y >= 400  )
   {
-    hero_coords->y += (keys_state[0])? (-5) : 0;
-    hero_coords->y += (keys_state[1])? (+5) : 0;
-    hero_coords->x += (keys_state[2])? (-5) : 0;
-    hero_coords->x += (keys_state[3])? (+5) : 0;
+        screen_origin->y += (keys_state[0])? (-5) : 0;
+        screen_origin->y += (keys_state[1])? 5 : 0;
+        screen_origin->x += (keys_state[2])? (-5) : 0;
+        screen_origin->x += (keys_state[3])? 5 : 0;
+  }  
+  if (screen_origin -> y <= 0 || screen_origin->x <= 0)
+  {
+        hero_coords->y += (keys_state[0])? (-5) : 0;
+        hero_coords->y += (keys_state[1])? 5 : 0;
+        hero_coords->x += (keys_state[2])? (-5) : 0;
+        hero_coords->x += (keys_state[3])? 5 : 0;        
   }
   
+  hero_coords->x = (hero_coords->x < 0 )? 0 : hero_coords->x;
+  hero_coords->y = (hero_coords->y < 0 )? 0 : hero_coords->y;
+ 
+  hero_coords -> x = (hero_coords -> x > 680)? 680 : hero_coords -> x;
+  hero_coords -> y = (hero_coords -> y > 400)? 400 : hero_coords -> y;
+ 
   return 1;
 }
 
@@ -320,7 +346,11 @@ refresh_renderer (SDL_Renderer** Renderer)
 }
 
 int
-blit (SDL_Renderer** Renderer, struct coordinates screen_origin, int width, int height, SDL_Texture* texture)
+blit (SDL_Renderer** Renderer,
+      struct coordinates screen_origin,
+      int width,
+      int height,
+      SDL_Texture* texture)
 {
   SDL_Rect Rect = {.x = (int) screen_origin.x, .y = (int) screen_origin.y, .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
@@ -375,10 +405,10 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
   struct coordinates screen_center; 
   screen_center.x = screen_width / 2;
   screen_center.y = screen_height / 2;
-  
+ 
   struct coordinates screen_origin = {.x = 0,
 				      .y = 0};
-  
+
   struct coordinates hero_coords = {.x = screen_center.x,
 				    .y = screen_center.y};
   
@@ -388,19 +418,19 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
   /* 
    * keys_state only 4 elements
    * because we only use 4 keys as of now
-   * keys_state[1] -> SDLK_UP
-   * keys_state[2] -> SDLK_DOWN
-   * keys_state[3] -> SDLK_LEFT
-   * keys_state[4] -> SDLK_RIGHT
+   * keys_state[0] -> SDLK_UP
+   * keys_state[1] -> SDLK_DOWN
+   * keys_state[2] -> SDLK_LEFT
+   * keys_state[3] -> SDLK_RIGHT
    */
   bool keys_state[4] = {0};
 
   /* 
-   * clicks_state[1] -> SDL_BUTTON_LEFT
-   * clicks_state[2] -> SDL_BUTTON_MIDDLE
-   * clicks_state[3] -> SDL_BUTTON_RIGHT
-   * clicks_state[4] -> SDL_BUTTON_X1
-   * clicks_state[5] -> SDL_BUTTON_X2
+   * clicks_state[0] -> SDL_BUTTON_LEFT
+   * clicks_state[1] -> SDL_BUTTON_MIDDLE
+   * clicks_state[2] -> SDL_BUTTON_RIGHT
+   * clicks_state[3] -> SDL_BUTTON_X1
+   * clicks_state[4] -> SDL_BUTTON_X2
    */
   bool clicks_state[5] = {0};
 
@@ -423,13 +453,14 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
 			screen_origin,
 			&click_map_coords) != 0)
     {
-      move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords, screen_center);
-
       for (int i = 0; i < 4; i++)
 	{
 	  if (keys_state[i])
 	    {
+              move_coordinates_on_keydown (&screen_origin, keys_state, &hero_coords, screen_center);
+
 	      send_move_command (write_pipe, screen_origin, screen_height, screen_width);
+
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
@@ -438,44 +469,42 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
 	    }
 	}
 
-      for (int i = 0; i < 5; i++)
+      if (clicks_state[0])
 	{
-	  if (clicks_state[i] && i == 0)
-	    {
-	      // printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);  
-	      // printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);  
+	  // printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);
+	  // printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);
 	                                                               
-	      // printf("\n square.x : %ld \n",click_map_coords.square.x);
-	      // printf("\n square.y : %ld \n",click_map_coords.square.y);
+	  // printf("\n square.x : %ld \n",click_map_coords.square.x);
+	  // printf("\n square.y : %ld \n",click_map_coords.square.y);
 
-	      if (get_surface_item (click_map_coords.chunk,
-				    click_map_coords.square,
-				    "save") == -1)
-		{
-		  set_surface_item(click_map_coords.chunk,
-				   click_map_coords.square,
-				   1,
-				   "save");
-		  refresh_renderer (&Renderer);
-		  display_background (&Renderer,
-				      "save",
-				      biomes,
-				      items,
-				      screen_origin);
-		  blit (&Renderer,
-			hero_coords,
-			25,
-			41,
-			CurrentTexture);
-		  display_blits(&Renderer);
-
-		}
-	      clicks_state[i] = 0;
+	  if (get_surface_item (click_map_coords.chunk,
+				click_map_coords.square,
+				"save") == -1)
+	    {
+	      set_surface_item(click_map_coords.chunk,
+			       click_map_coords.square,
+			       1,
+			       "save");
+	      refresh_renderer (&Renderer);
+	      display_background (&Renderer,
+				  "save",
+				  biomes,
+				  items,
+				  screen_origin);
+	      blit (&Renderer,
+		    hero_coords,
+		    25,
+		    41,
+		    CurrentTexture);
+	      display_blits(&Renderer);
 	    }
+	    
+	  clicks_state[0] = 0;
 	}
+    
+
       SDL_Delay (1/200);
     }
-  
   quit_sdl (&Window, &Renderer, &CurrentTexture, biomes, items);
   
   return 0;
