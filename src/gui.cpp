@@ -469,11 +469,11 @@ run_gui ()
 
       if (clicks_state[0])
 	{
-	  // printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);
-	  // printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);
+	   printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);
+	   printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);
 	                                                               
-	  // printf("\n square.x : %ld \n",click_map_coords.square.x);
-	  // printf("\n square.y : %ld \n",click_map_coords.square.y);
+	   printf("\n square.x : %ld \n",click_map_coords.square.x);
+	   printf("\n square.y : %ld \n",click_map_coords.square.y);
 
 	  if (get_surface_item (click_map_coords.chunk,
 				click_map_coords.square,
