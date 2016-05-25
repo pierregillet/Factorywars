@@ -52,11 +52,9 @@ struct server_credentials
  * @param ip is the ip where the message will be sent.
  * @param port is the port where the server is listening.
  * @param data is the string which will be sent.
- * @param data_size is the number of bytes to send.
  * @return 1 if success, -1 if there is an error.
  */
-void send (const struct server_credentials server, const char* data,
-	   size_t data_size);
+void send (const struct server_credentials server, const char* data);
 
 /**
  * Send data to everyone.
@@ -110,24 +108,6 @@ void handle_network_communication (unsigned short port, int read_pipe,
 				   int write_pipe);
 
 /**
- * Interpret given data and return a code depending on what actions needs
- * to be performed.
- *
- * @param data is the data to interpret.
- * @param data_size is the size of the data array.
- * @return 
- * + -1 on error and a value greater or equal than zero on success.
- * + 0 is returned if we just need to forward the message to the socket
- * or to the pipe.
- * + 1 is returned if we need to stop the process.
- * + 2 is returned if it is a ping.
- * + 3 is returned if it is a pong.
- * + 4 is returned if it is a connect command.
- * + 5 is returned if it is a move command.
- */
-int interpret_data_for_networking_process (char* data);
-
-/**
  * Store in the servers’ crendentials array the new server credentials.
  *
  * @param data is the string containing the connect command and its parameters.
@@ -136,9 +116,10 @@ int interpret_data_for_networking_process (char* data);
  * @param peer_addr is the peer address.
  * @return 0 if there is an error, 1 if success.
  */
-int connect_command (char* data, unsigned int* number_of_servers,
+int connect_command (const char* data, unsigned int* number_of_servers,
 		     struct server_credentials* servers,
-		     struct sockaddr_storage peer_addr);
+		     struct sockaddr_storage peer_addr,
+		     int write_pipe);
 
 /**
  * Get the IP from a sockaddr_storage structure.
@@ -171,3 +152,17 @@ void move_command (const char* data,
 		   struct server_credentials* servers,
 		   struct sockaddr_storage peer_addr,
 		   int write_pipe);
+
+/**
+ * Shutdown the network process.
+ *
+ * @param write_pipe is the write end of the pipe to communicate with the network process.
+ */
+void shutdown_network_process (int write_pipe);
+
+/**
+ * Handle new_player commands.
+ *
+ * 
+ */
+void new_player_command (void);

@@ -30,6 +30,7 @@
  * main.cpp contain the code of the main function.
  */
 
+#include <vector>
 #include "gui.h"
 #include "player.h"
 #include "network.h"
@@ -37,20 +38,23 @@
 int
 main (int argc, char *argv[])
 {
-  Player* players;
+  // Player* players;
   int pipes[4];
-  players = new Player[1];
+  // players = new Player[1];
+  std::vector<Player> players (1, Player());
   
-  players[0] =  Player ();
+  // players[0] =  Player ();
   pipe (pipes);
   pipe (pipes + 2);
   
   run_network_process (4284, pipes);
 
   if (run_gui () != 0)
-    return 1;
+    {
+      shutdown_network_process (pipes[0]);
+      return 1;
+    }
 
-  delete[] players;
-  
+  shutdown_network_process (pipes[1]);
   return 0;
 }

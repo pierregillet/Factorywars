@@ -13,8 +13,14 @@ load_items (SDL_Renderer** Renderer, SDL_Texture** table)
 }
 
 void
-display_items (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_items, struct coordinates chunk_coords, struct coordinates screen_origin, struct chunk_info chunk, int l, int m)
-{ 
+display_items (SDL_Renderer** Renderer,
+	       std::string path,
+	       SDL_Texture** table_items,
+	       struct coordinates screen_origin,
+	       struct chunk_info chunk,
+	       int l,
+	       int m)
+{
   for (int i(0) ; i < 16 ; i += 1)
     {
       for (int j(0) ; j < 16 ; j += 1)

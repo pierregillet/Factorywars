@@ -47,7 +47,11 @@ void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
 
 
 void
-display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** table_biomes, SDL_Texture** table_items, struct coordinates screen_origin)
+display_background (SDL_Renderer** Renderer,
+		    std::string path,
+		    SDL_Texture** table_biomes,
+		    SDL_Texture** table_items,
+		    struct coordinates screen_origin)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
   const int SQUARE_WIDTH = 24;
@@ -80,7 +84,7 @@ display_background (SDL_Renderer** Renderer, std::string path, SDL_Texture** tab
 	  blit (Renderer, temp, chunk_width, chunk_width,  display_id);
 	  
 	  struct chunk_info _info = get_chunk_info (coords, path.c_str());
-	  display_items (Renderer, path.c_str(), table_items, coords, screen_origin, _info, i, j);
+	  display_items (Renderer, path.c_str(), table_items, screen_origin, _info, i, j);
 	}
     }
 }  
