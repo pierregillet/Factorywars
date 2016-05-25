@@ -108,8 +108,10 @@ init (SDL_Window** Window,
 	  
       else // if window has been created without errors
 	{
-	  *Renderer = SDL_CreateRenderer (*Window, -1,
-					  SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+	  *Renderer = SDL_CreateRenderer (*Window,
+					  -1,
+					  SDL_RENDERER_ACCELERATED
+					  | SDL_RENDERER_PRESENTVSYNC);
 	  SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 	}
     }
@@ -122,7 +124,10 @@ init (SDL_Window** Window,
 }
 
 int
-handle_keydown (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture)
+handle_keydown (SDL_Keycode event_keycode,
+		bool* keys_state,
+		SDL_Texture** CurrentTexture,
+		SDL_Texture** key_press_texture)
 {
   bool keydown = 1;
   switch (event_keycode)
@@ -148,7 +153,10 @@ handle_keydown (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** Curre
 }
 
 int
-handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** CurrentTexture, SDL_Texture** key_press_texture)
+handle_keyup (SDL_Keycode event_keycode,
+	      bool* keys_state,
+	      SDL_Texture** CurrentTexture,
+	      SDL_Texture** key_press_texture)
 {
   bool keyup = 0;
   switch (event_keycode)
@@ -172,11 +180,19 @@ handle_keyup (SDL_Keycode event_keycode, bool* keys_state, SDL_Texture** Current
 }
 
 int
-handle_clickdown (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, struct coordinates* screen_origin, struct map_coordinates* click_map_coords)
+handle_clickdown (int button,
+		  coordinates click_coords,
+		  bool* clicks_state,
+		  int* screen_height,
+		  int* screen_width,
+		  struct coordinates* screen_origin,
+		  struct map_coordinates* click_map_coords)
 {
   bool clickdown = 1;
-  *click_map_coords = get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
-
+  *click_map_coords = get_map_coords (click_coords,
+				      screen_height,
+				      screen_width,
+				      *screen_origin);
   switch (button)
     {
     case SDL_BUTTON_LEFT:
@@ -201,7 +217,12 @@ handle_clickdown (int button, coordinates click_coords, bool* clicks_state, int*
 }
 
 int
-handle_clickup (int button, coordinates click_coords, bool* clicks_state, int* screen_height, int* screen_width, struct coordinates* screen_origin)
+handle_clickup (int button,
+		coordinates click_coords,
+		bool* clicks_state,
+		int* screen_height,
+		int* screen_width,
+		struct coordinates* screen_origin)
 {
   bool clickup = 0;
   // get_map_coords (click_coords, screen_height, screen_width, *screen_origin);
@@ -432,42 +453,37 @@ run_gui ()
 	    }
 	}
 
-      for (int i = 0; i < 5; i++)
+      if (clicks_state[0])
 	{
-	  if (clicks_state[i] && i == 0)
-	    {
-	      // printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);  
-	      // printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);  
+	  // printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);
+	  // printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);
 	                                                               
-	      // printf("\n square.x : %ld \n",click_map_coords.square.x);
-	      // printf("\n square.y : %ld \n",click_map_coords.square.y);
+	  // printf("\n square.x : %ld \n",click_map_coords.square.x);
+	  // printf("\n square.y : %ld \n",click_map_coords.square.y);
 
-	      if (get_surface_item (click_map_coords.chunk,
-				    click_map_coords.square,
-				    "save") == -1)
-		{
-		  printf ("coucou \n");
-		  set_surface_item(click_map_coords.chunk,
-				   click_map_coords.square,
-				   1,
-				   "save");
-		  refresh_renderer (&Renderer);
-		  display_background (&Renderer,
-				      "save",
-				      biomes,
-				      items,
-				      screen_origin);
-		  blit (&Renderer,
-			hero_coords,
-			25,
-			41,
-			CurrentTexture);
-		  display_blits(&Renderer);
-
-		}
-	      
-	    }
+	  if (get_surface_item (click_map_coords.chunk,
+				click_map_coords.square,
+				"save") == -1)
+	    {
+	      set_surface_item(click_map_coords.chunk,
+			       click_map_coords.square,
+			       1,
+			       "save");
+	      refresh_renderer (&Renderer);
+	      display_background (&Renderer,
+				  "save",
+				  biomes,
+				  items,
+				  screen_origin);
+	      blit (&Renderer,
+		    hero_coords,
+		    25,
+		    41,
+		    CurrentTexture);
+	      display_blits(&Renderer);
+	    }	      
 	}
+
       SDL_Delay (1/200);
     }
   // Quitting
