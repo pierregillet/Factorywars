@@ -29,20 +29,23 @@ handle_data_from_network_pipe (int read_pipe, std::vector<Player>& players,
 
       new_player = Player (100, std::string (token), coords, 10);
       players.push_back (new_player);
+
       break;
 
     case 5:
       token = strtok (buffer, " ");
       token = strtok (NULL, " ");
 
-      for (Player player : players)
+      for (unsigned int i = 0; i < players.size (); i++)
 	{
-	  if (player.getName () == std::string (token))
+	  if (players[i].getName () == std::string (token))
 	    {
 	      strtok (NULL, " ");
 	      struct coordinates coords;
+
 	      coords = get_coordinates_from_string (token);
-	      player.setCoordinates (coords);
+
+	      players[i].setCoordinates (coords);
 	    }
 	}
       break;

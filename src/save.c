@@ -182,6 +182,7 @@ set_surface_item (struct coordinates chunk_coordinates,
 
   if (reti)
     {
+      /* printf ("Square coordinates matched\n"); */
       /* Square_coordinates Not Matched ! */
       /* we search the provided item_id */
       /* Should use get_item_id_by_square_coordinates */
@@ -198,6 +199,7 @@ set_surface_item (struct coordinates chunk_coordinates,
 
       if (reti)
 	{
+	  /* printf ("Item id not found\n"); */
 	  /* item_id not found */
 	  /* so we add it at the end of line with square_coordinates */
 	  tmp_line[0] = '\0';
@@ -212,11 +214,13 @@ set_surface_item (struct coordinates chunk_coordinates,
 	  strncat (line, "\n", LINE_SIZE);
 
 	  /* And we add it in the file */
+	  /* printf ("1 Ligne : %s\n", line); */
 	  insert_line_in_file (line, strlen (line), line_number,
 	  		       save_file_path, 1);
 	}
       else
 	{
+	  /* printf ("Item id found\n"); */
 	  /* item id found */
 	  /* we add the square coordinates and a space just after the item_id */
 	  /* and a space */
@@ -245,12 +249,14 @@ set_surface_item (struct coordinates chunk_coordinates,
 	  strncat (line, "\n", LINE_SIZE);
 
 	  // We write the line to the save file
+	  /* printf ("2 Ligne : %s\n", line); */
 	  insert_line_in_file (line, strlen (line), line_number,
 	  		       save_file_path, 1);
 	}
     }
   else
     {
+      /* printf ("Square coordinates matched\n"); */
       /* If they exist, we search for a semicolon before and after the coordinates */
       /* if a semicolon is found before or after the coordinates without 2 spaces with no semicolon between them */
       /* we just delete the coordinates */
@@ -323,6 +329,7 @@ set_surface_item (struct coordinates chunk_coordinates,
 	  tmp_line[match_beg] = '\0';
 	  strncat (tmp_line, line + match_end + 1, LINE_SIZE);
 	  strncpy (line, tmp_line, strlen (tmp_line) + 1);
+
 	  if (line[strlen (line) - 1] == ' ')
 	    line[strlen (line) - 1] = '\0';
 	}
@@ -333,19 +340,24 @@ set_surface_item (struct coordinates chunk_coordinates,
 
       if (item_id == -1)
 	{
+	  /* printf ("Delete\n"); */
 	  strncat (line, "\n", LINE_SIZE);
+	  /* printf ("3 Ligne : %s\n", line); */
 	  insert_line_in_file (line, strlen (line), line_number, save_file_path, 1);
 	}
       else if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
 	{
+	  /* printf ("The item id does not exists\n"); */
 	  /* The item id does not exist */
 	  /* We add the item_id a space and the square_coordinates */
 	  /* at the end of line */
 	  snprintf (tmp_line, LINE_SIZE, "%s %d %s\n", line, item_id, square_coordinates_str);
+	  /* printf ("4 Ligne : %s\n", line); */
 	  insert_line_in_file (tmp_line, strlen (tmp_line), line_number, save_file_path, 1);
 	}
       else
 	{
+	  /* printf ("The item id exists\n"); */
 	  /* The item id exists */
 	  /* We just add a space and the coordinates right after it */
 	  tmp_line[0] = 0;
@@ -356,7 +368,7 @@ set_surface_item (struct coordinates chunk_coordinates,
 
 	  /* We add a newline character at the end of the line */
 	  tmp_line[strlen (tmp_line)] = '\n';
-
+	  /* printf ("5 Ligne : %s\n", line); */
  	  insert_line_in_file (tmp_line, strlen(tmp_line), line_number, save_file_path, 1);
 	}
     }

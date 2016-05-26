@@ -38,13 +38,14 @@
 
 static const struct option longopts[] = {
   {"help", no_argument, NULL, 'h'},
-  {"version", no_argument, NULL, 'v'},
+  {"server", required_argument, NULL, 's'},
+  {"server-port", required_argument, NULL, 'p'},
   {NULL, 0, NULL, 0}
 };
 
 static void print_help (void);
 
-char *program_name = NULL;
+const char *program_name = NULL;
 
 int
 main (int argc, char *argv[])
@@ -54,7 +55,7 @@ main (int argc, char *argv[])
 
   program_name = argv [0];
 
-  while ((optc = getopt_long (argc, argv, "hv", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "hs:p:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
@@ -62,16 +63,23 @@ main (int argc, char *argv[])
 	  print_help ();
 	  exit (EXIT_SUCCESS);
 	  break;
+	case 's':
+	  
+	  break;
+	case 'p':
+	  
+	  break;
 	default:
 	  lose = 1;
 	  break;
 	}
     }
 
-  if (lose)
+  if (lose || optind < argc)
     {
       fprintf (stderr, "Invalid arguments\n");
       print_help ();
+      exit (EXIT_FAILURE);
     }
 
   int pipes[4];
@@ -99,6 +107,10 @@ print_help (void)
   printf ("The best game in the world!\n");
   printf ("\n");
 
-  printf ("-h, --help display this help and exit\n");
+  printf ("-h, --help display this help and exit.\n");
+  printf ("\n");
+
+  printf ("-s, --server <IP> specify the ip of the server you want to join.\n");
+  printf ("-p, --server-port <port> specify the port of the server you want to join (default: 4284).\n");
   printf ("\n");
 }

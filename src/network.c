@@ -186,7 +186,6 @@ handle_network_communication (unsigned short port, int read_pipe,
 	{
 	  strncpy (tmp_string, buffer, BUFFER_SIZE);
 	  command_type = get_command_type (tmp_string);
-	  printf ("Buffer : %s, type de commande : %d\n", buffer, command_type);
 	}
       else
 	continue;
@@ -232,12 +231,12 @@ handle_network_communication (unsigned short port, int read_pipe,
 	}
       if (number_of_players > 0)
 	{
-	  printf ("Nombre de joueurs : %d\n", number_of_players);
-	  for (unsigned int j = 0; j < number_of_players; j++)
-	    {
-	      printf ("j : %d\n", j);
-	      printf ("IP : %s, port : %d, nom : %s\n", servers[j].IP, servers[j].port, servers[j].name);
-	    }
+	  /* printf ("Nombre de joueurs : %d\n", number_of_players); */
+	  /* for (unsigned int j = 0; j < number_of_players; j++) */
+	  /*   { */
+	  /*     printf ("j : %d\n", j); */
+	  /*     printf ("IP : %s, port : %d, nom : %s\n", servers[j].IP, servers[j].port, servers[j].name); */
+	  /*   } */
 	}
     }
 
@@ -255,7 +254,9 @@ connect_command (const char* data, unsigned int* number_of_servers,
   char *token;
   int ret = 1;
 
-  char buffer[strlen (data) + 1];
+  const int BUFFER_SIZE = strlen (data) + 128;
+  
+  char buffer[BUFFER_SIZE];
   strncpy (buffer, data, strlen (data) + 1);
 
   (*number_of_servers)++;
@@ -302,12 +303,23 @@ connect_command (const char* data, unsigned int* number_of_servers,
 
   if (ret == 1)
     {
+      /* On lui transfert un message de connexion */
+      /* We send him a connect */
+      snprintf (buffer, BUFFER_SIZE, "CONNECT %s %s",
+		get_config_value ("port"), get_config_value ("name"));
+      send (servers[*(number_of_servers) - 1], buffer);
+
+      /* On transfert à tout le monde une commande nouveau joueur */
+      /* We send to everyone a new player command */
+      snprintf (buffer, BUFFER_SIZE, "NEWPLAYER %s %d", servers[*(number_of_servers) - 1].IP, servers[*(number_of_servers) - 1].port);
+      broadcast (servers, *(number_of_servers) - 1, buffer, strlen (buffer));
+
       /* On doit enlever le port */
       /* We need to delete the port */
-      snprintf (buffer, strlen (data) + 1, "CONNECT %s",
+      snprintf (buffer, strlen (data), "CONNECT %s",
 		servers[*(number_of_servers) - 1].name);
 
-      write (write_pipe, data, strlen (data) + 1);
+      write (write_pipe, buffer, strlen (buffer) + 1);
     }
 
   return ret;
@@ -393,7 +405,7 @@ get_ip (char* IP, struct sockaddr_storage peer_addr)
 int
 is_connected (unsigned int* number_of_servers,
 	      struct server_credentials* servers,
-	      char* IP)
+	      const char* IP)
 {
   int ret = 0;
   for (unsigned int i = 0; i < *number_of_servers; i++)
@@ -412,6 +424,7 @@ void move_command (const char* data,
 		   int write_pipe)
 {
   const int BUFFER_SIZE = 256;
+  
   char IP[INET6_ADDRSTRLEN], buffer[BUFFER_SIZE], *token, tmp_str[BUFFER_SIZE];
 
   strncpy (tmp_str, data, BUFFER_SIZE);
@@ -445,4 +458,32 @@ shutdown_network_process (int write_pipe)
 {
   char msg[] = "QUIT";
   write (write_pipe, msg, strlen (msg) + 1);
+}
+
+void
+new_player_command (const char* data,
+		    struct server_credentials* servers,
+		    unsigned int* number_of_servers)
+{
+  /* NEWPLAYER */
+  const int BUFFER_SIZE = strlen (data);
+
+  char buffer[BUFFER_SIZE], IP[BUFFER_SIZE], port[BUFFER_SIZE], *token;
+
+  strncpy (buffer, data, BUFFER_SIZE);
+  
+  token = strtok (buffer, " ");
+  token = strtok (NULL, " ");
+
+  strncpy (IP, token, BUFFER_SIZE);
+
+  token = strtok (NULL, " ");
+  strncpy (port, token, BUFFER_SIZE);
+
+  struct server_credentials client;
+  strncpy (client.IP, IP, strlen (data));
+  client.port = (unsigned short) atoi (port);
+
+  snprintf (buffer, BUFFER_SIZE, "CONNECT %s %s", IP, port);
+  send (client, buffer);
 }

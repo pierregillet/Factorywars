@@ -607,6 +607,9 @@ run_gui (int read_pipe,
 	  clicks_state[2] = 0;
 	}
       // End of right click handling
+
+      // Network pipe handling
+      handle_data_from_network_pipe (read_pipe, players, "save");
       
       SDL_Delay (1/200);
     }

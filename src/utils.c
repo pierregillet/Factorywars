@@ -298,7 +298,7 @@ get_command_type (const char* data)
     ret = 4;
   else if (strcmp (token, "MOVE") == 0)
     ret = 5;
-  else if (strcmp (token, "NEW_PLAYER") == 0)
+  else if (strcmp (token, "NEWPLAYER") == 0)
     ret = 6;
 
   return ret;
