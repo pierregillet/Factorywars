@@ -50,7 +50,7 @@ Player
    * @param m_coordinates are the coordinates of the player.
    * @param velocity is the velocity of the player.
    */
-  Player (int health, std::string name, struct coordinates m_coordinates, int velocity);
+  Player (int health, std::string name, struct coordinates coordinates, int velocity);
 
   /**
    * Get the player's health.
@@ -86,6 +86,11 @@ Player
    * @param The new coordinates of the player.
    */
   void setCoordinates (struct coordinates new_coords);
+
+  /**
+   * Get the player’s coordinates.
+   */
+  struct coordinates getCoordinates () const;
 
   /**
    * Change the selected tool.

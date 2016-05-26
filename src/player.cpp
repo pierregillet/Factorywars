@@ -44,13 +44,13 @@ Player::Player(void)
 
 Player::Player(int health,
 	       std::string name,
-	       coordinates m_coordinates,
+	       coordinates coordinates,
 	       int velocity)
 {
   m_health = health;
   m_name = name;
-  m_coordinates.x = 0;
-  m_coordinates.y = 0;
+  m_coordinates.x = coordinates.x;
+  m_coordinates.y = coordinates.y;
   m_selected_tool = 0;
   m_velocity = velocity;
   m_id = 1;
@@ -73,6 +73,12 @@ Player::setCoordinates (struct coordinates new_coords)
 {
   this->m_coordinates.x = new_coords.x;
   this->m_coordinates.y = new_coords.y;
+}
+
+struct coordinates
+Player::getCoordinates () const
+{
+  return this->m_coordinates;
 }
 
 inline int
