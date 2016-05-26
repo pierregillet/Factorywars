@@ -100,11 +100,17 @@ Player::playerWalks (bool horizontal,
 }
 
 void
-Player::selectTool (int scroll)
+Player::changeSelectedTool (int scroll)
 {
   if (scroll >= 1)
     m_selected_tool += (m_selected_tool < 9)? 1 : -9;
   else
     m_selected_tool -= (m_selected_tool > 0)? 1 : -9;
+}
+
+unsigned short
+Player::getSelectedTool ()
+{
+  return m_selected_tool;
 }
 

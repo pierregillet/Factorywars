@@ -45,7 +45,9 @@ loadTexture(SDL_Renderer** Renderer, std::string path)
 }
 
 bool 
-loadMedia (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture)
+loadMedia (SDL_Renderer** Renderer,
+	   SDL_Texture** KeyPressTexture,
+	   SDL_Texture** toolbar)
 {
   bool success = true;
   
@@ -70,6 +72,10 @@ loadMedia (SDL_Renderer** Renderer, SDL_Texture** KeyPressTexture)
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
 
+  *toolbar = loadTexture (Renderer, "media/hud/toolbar.png");
+  if (*toolbar == NULL)
+    success = false;
+  
   return success;
 }
 
@@ -79,6 +85,7 @@ init (SDL_Window** Window,
       SDL_Texture** KeyPressTexture,
       SDL_Texture** biomes,
       SDL_Texture** items,
+      SDL_Texture** toolbar,
       int* screen_height,
       int* screen_width)
 {
@@ -115,7 +122,7 @@ init (SDL_Window** Window,
 				  | SDL_RENDERER_PRESENTVSYNC);
   SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 
-  if (!loadMedia (Renderer, KeyPressTexture))
+  if (!loadMedia (Renderer, KeyPressTexture, toolbar))
     success = false;
   
   load_biomes (Renderer, biomes);
@@ -256,8 +263,10 @@ int
 handle_mousewheel (int wheel_x,
 		   int* screen_height,
 		   int* screen_width,
-		   struct coordinates* screen_origin)
+		   struct coordinates* screen_origin,
+		   std::vector<Player>& players)
 {
+  players[0].changeSelectedTool (wheel_x);
   return 1;
 }
 
@@ -270,7 +279,8 @@ handle_events (SDL_Texture** CurrentTexture,
 	       int* screen_height,
 	       int* screen_width,
 	       struct coordinates screen_origin,
-	       struct map_coordinates* click_map_coords)
+	       struct map_coordinates* click_map_coords,
+	       std::vector<Player>& players)
 {
   SDL_Event event;
   coordinates click_coords;
@@ -326,7 +336,8 @@ handle_events (SDL_Texture** CurrentTexture,
 	  handle_mousewheel (event.wheel.y,
 			     screen_height,
 			     screen_width,
-			     &screen_origin);
+			     &screen_origin,
+			     players);
 	  break;
 	  
 	default:
@@ -375,12 +386,14 @@ refresh_renderer (SDL_Renderer** Renderer)
 
 int
 blit (SDL_Renderer** Renderer,
-      struct coordinates screen_origin,
+      struct coordinates blit_origin,
       int width,
       int height,
       SDL_Texture* texture)
 {
-  SDL_Rect Rect = {.x = (int) screen_origin.x, .y = (int) screen_origin.y, .w = width, .h = height};
+  SDL_Rect Rect = {.x = (int) blit_origin.x,
+		   .y = (int) blit_origin.y,
+		   .w = width, .h = height};
   // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
   
   SDL_RenderSetViewport(*Renderer, &Rect);
@@ -416,7 +429,9 @@ quit_sdl (SDL_Window** Window,
 }
 
 int 
-run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
+run_gui (int read_pipe,
+	 int write_pipe,
+	 std::vector<Player>& players)
 {
   int screen_height = atoi (get_config_value ("height"));
   int screen_width = atoi (get_config_value ("width"));
@@ -426,8 +441,16 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
   SDL_Texture *biomes[5];
   SDL_Texture *items[5];
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
+  SDL_Texture* toolbar = NULL;
 
-  if (!init (&Window, &Renderer, key_press_texture, biomes, items, &screen_height, &screen_width))
+  if (!init (&Window,
+	     &Renderer,
+	     key_press_texture,
+	     biomes,
+	     items,
+	     &toolbar,
+	     &screen_height,
+	     &screen_width))
     return 1;
 
   struct coordinates screen_center; 
@@ -467,8 +490,20 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
   // We need to display the map at the beginning
   display_background (&Renderer, "save", biomes, items, screen_origin);
 
-  //display_items (&Renderer, "save", items, x, y);
+  // Display character
   blit (&Renderer, screen_center, 25, 41, CurrentTexture);
+  
+  // Display HUD
+  struct coordinates toolbar_origin = {.x = screen_width / 4 ,
+				       .y = (int) (screen_height - (screen_width / 2 * 0.11))}; 
+  struct coordinates toolbar_size = {.x = screen_width / 2,
+				     .y = (int) (screen_width / 2 * 0.11)};
+  blit (&Renderer,
+	toolbar_origin,
+	toolbar_size.x,
+	toolbar_size.y,
+	toolbar);
+
   display_blits(&Renderer);
 
   while (handle_events (&CurrentTexture,
@@ -479,7 +514,8 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
 			&screen_height,
 			&screen_width,
 			screen_origin,
-			&click_map_coords) != 0)
+			&click_map_coords,
+			players) != 0)
     {
       // Keyboard handling
       for (int i = 0; i < 4; i++)
@@ -493,6 +529,11 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
+	      blit (&Renderer,
+		    toolbar_origin,
+		    toolbar_size.x,
+		    toolbar_size.y,
+		    toolbar);
 	      display_blits(&Renderer);
 	      break;
 	    }
@@ -516,11 +557,17 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
 				  biomes,
 				  items,
 				  screen_origin);
+	      
 	      blit (&Renderer,
 		    hero_coords,
 		    25,
 		    41,
 		    CurrentTexture);
+	      blit (&Renderer,
+		    toolbar_origin,
+		    toolbar_size.x,
+		    toolbar_size.y,
+		    toolbar);
 	      display_blits(&Renderer);
 	    }
 	    
@@ -550,6 +597,11 @@ run_gui (int read_pipe, int write_pipe, std::vector<Player>& players)
 		    25,
 		    41,
 		    CurrentTexture);
+	      blit (&Renderer,
+		    toolbar_origin,
+		    toolbar_size.x,
+		    toolbar_size.y,
+		    toolbar);
 	      display_blits(&Renderer);
 	    }
 	  clicks_state[2] = 0;

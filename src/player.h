@@ -91,7 +91,14 @@ Player
    * Change the selected tool.
    * @param The direction we scroll : -1 for previous tool, 1 for next tool.
    */
-  void selectTool (int scroll);
+  void changeSelectedTool (int scroll);
+
+  /**
+   * Returns the selected tool.
+   * @param The direction we scroll : -1 for previous tool, 1 for next tool.
+   */
+  unsigned short getSelectedTool ();
+
 
  private:
   int m_health;

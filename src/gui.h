@@ -62,7 +62,8 @@ SDL_Texture* loadTexture (SDL_Renderer** Renderer,
 			  std::string path);
 
 bool loadMedia (SDL_Renderer** Renderer,
-		SDL_Texture** KeyPressTexture);
+		SDL_Texture** KeyPressTexture,
+		SDL_Texture** toolbar);
 
 /*
  * Initiates the SDL basics, like Window and Renderer.
@@ -73,6 +74,7 @@ bool init (SDL_Window** Window,
 	   SDL_Texture** KeyPressTexture,
 	   SDL_Texture** biomes,
 	   SDL_Texture** items,
+	   SDL_Texture** toolbar,
 	   int* screen_height,
 	   int* screen_width);
 
@@ -105,7 +107,8 @@ int handle_events (SDL_Texture** CurrentTexture,
 		   int* screen_height,
 		   int* screen_width,
 		   struct coordinates* screen_origin,
-		   struct coordinates* click_map_coords);
+		   struct coordinates* click_map_coords,
+		   std::vector<Player>& players);
 
 int move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 bool* keys_state,
@@ -120,7 +123,7 @@ void refresh_renderer(SDL_Renderer** Renderer);
  * The Texture needs a Renderer to be blit.
  */
 int blit (SDL_Renderer** Renderer,
-	  struct coordinates screen_origin,
+	  struct coordinates blit_origin,
 	  int width,
 	  int height,
 	  SDL_Texture* texture);
