@@ -88,36 +88,36 @@ init (SDL_Window** Window,
     {
       printf ("Error: %s\n", SDL_GetError ());
       success = false;
+      return success;
     }
 	
-  else // if the SDL launched correctly
+  // if the SDL launched correctly
+  *Window = SDL_CreateWindow ("Factorywars",
+			      SDL_WINDOWPOS_UNDEFINED,
+			      SDL_WINDOWPOS_UNDEFINED,
+			      *screen_width,
+			      *screen_height,
+			      SDL_WINDOW_SHOWN
+			      /*| SDL_WINDOW_RESIZABLE*/);
+	  
+  if (*Window == NULL) 
     {
-      *Window = SDL_CreateWindow ("Factorywars",
-				 SDL_WINDOWPOS_UNDEFINED,
-				 SDL_WINDOWPOS_UNDEFINED,
-				 *screen_width,
-				 *screen_height,
-				 SDL_WINDOW_SHOWN);
-	  
-      if (*Window == NULL) 
-	{
-	  printf ("Couldn’t create window: %s\n", SDL_GetError());
-	  SDL_Quit();
-	  success = false;
-	}
-	  
-      else // if window has been created without errors
-	{
-	  *Renderer = SDL_CreateRenderer (*Window,
-					  -1,
-					  SDL_RENDERER_ACCELERATED
-					  | SDL_RENDERER_PRESENTVSYNC);
-	  SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
-	}
+      printf ("Couldn’t create window: %s\n", SDL_GetError());
+      SDL_Quit();
+      success = false;
+      return success;
     }
+	  
+  // if window has been created without errors
+  *Renderer = SDL_CreateRenderer (*Window,
+				  -1,
+				  SDL_RENDERER_ACCELERATED
+				  | SDL_RENDERER_PRESENTVSYNC);
+  SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 
   if (!loadMedia (Renderer, KeyPressTexture))
     success = false;
+  
   load_biomes (Renderer, biomes);
   load_items (Renderer, items);
   return success;

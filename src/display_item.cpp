@@ -25,7 +25,7 @@ display_items (SDL_Renderer** Renderer,
     {
       for (int j(0) ; j < 16 ; j += 1)
 	{
-	  struct coordinates square_coords = {.x = i, .y =j};
+	  // struct coordinates square_coords = {.x = i, .y =j};
 	  int item_id = chunk.squares[i][j];
 	  if (item_id > 0 && item_id < 4)
 	    {
