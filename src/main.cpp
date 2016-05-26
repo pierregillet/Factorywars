@@ -100,6 +100,5 @@ print_help (void)
   printf ("\n");
 
   printf ("-h, --help display this help and exit\n");
-  printf ("-v, --version display version information and exit\n");
   printf ("\n");
 }
