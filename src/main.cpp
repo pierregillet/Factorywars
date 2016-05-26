@@ -34,16 +34,49 @@
 #include "gui.h"
 #include "player.h"
 #include "network.h"
+#include <getopt.h>
+
+static const struct option longopts[] = {
+  {"help", no_argument, NULL, 'h'},
+  {"version", no_argument, NULL, 'v'},
+  {NULL, 0, NULL, 0}
+};
+
+static void print_help (void);
+
+char *program_name = NULL;
 
 int
 main (int argc, char *argv[])
 {
-  // Player* players;
+  int optc;
+  int lose = 0;
+
+  program_name = argv [0];
+
+  while ((optc = getopt_long (argc, argv, "hv", longopts, NULL)) != -1)
+    {
+      switch (optc)
+	{
+	case 'h':
+	  print_help ();
+	  exit (EXIT_SUCCESS);
+	  break;
+	default:
+	  lose = 1;
+	  break;
+	}
+    }
+
+  if (lose)
+    {
+      fprintf (stderr, "Invalid arguments\n");
+      print_help ();
+    }
+
   int pipes[4];
-  // players = new Player[1];
   std::vector<Player> players (1, Player ());
   
-  // players[0] =  Player ();
   pipe (pipes);
   pipe (pipes + 2);
   
@@ -57,4 +90,16 @@ main (int argc, char *argv[])
 
   shutdown_network_process (pipes[1]);
   return 0;
+}
+
+static void
+print_help (void)
+{
+  printf ("Usage: %s [OPTION]…\n", program_name);
+  printf ("The best game in the world!\n");
+  printf ("\n");
+
+  printf ("-h, --help display this help and exit\n");
+  printf ("-v, --version display version information and exit\n");
+  printf ("\n");
 }
