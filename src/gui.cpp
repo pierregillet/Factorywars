@@ -523,11 +523,11 @@ run_gui (int read_pipe,
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
 	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
-	      blit (&Renderer,
-		    toolbar_origin,
-		    toolbar_size.x,
-		    toolbar_size.y,
-		    toolbar);
+	      blit (&Renderer, toolbar_origin, toolbar_size.x,
+		    toolbar_size.y, toolbar);
+
+	      display_players (players, screen_origin, &Renderer, CurrentTexture,
+			       screen_height, screen_width);
 
 	      display_blits(&Renderer);
 	      break;
@@ -563,6 +563,10 @@ run_gui (int read_pipe,
 		    toolbar_size.x,
 		    toolbar_size.y,
 		    toolbar);
+
+	      display_players (players, screen_origin, &Renderer, CurrentTexture,
+			       screen_height, screen_width);
+
 	      display_blits(&Renderer);
 	    }
 	    
@@ -597,6 +601,10 @@ run_gui (int read_pipe,
 		    toolbar_size.x,
 		    toolbar_size.y,
 		    toolbar);
+
+	      display_players (players, screen_origin, &Renderer, CurrentTexture,
+			       screen_height, screen_width);
+	      
 	      display_blits (&Renderer);
 	    }
 	  clicks_state[2] = 0;
@@ -605,39 +613,25 @@ run_gui (int read_pipe,
 
       // Network pipe handling
       if (handle_data_from_network_pipe (read_pipe, players, "save") > 0)
-	{
-	  // Display players
-	  for (Player player : players)
-	    {
-	      refresh_renderer (&Renderer);
-	      display_background (&Renderer, "save", biomes, items, screen_origin);
-	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
-	      blit (&Renderer,
-		    toolbar_origin,
-		    toolbar_size.x,
-		    toolbar_size.y,
-		    toolbar);
+      	{
+	  refresh_renderer (&Renderer);
+	  display_background (&Renderer, "save", biomes, items, screen_origin);
+	  blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
+	  blit (&Renderer,
+		toolbar_origin,
+		toolbar_size.x,
+		toolbar_size.y,
+		toolbar);
 	      
-	      struct coordinates player_coordinates = player.getCoordinates ();
-	      if (player_coordinates.x >= screen_origin.x
-		  && player_coordinates.x <= screen_origin.x + screen_width)
-		{
-		  if (player_coordinates.y >= screen_origin.y
-		      && player_coordinates.y <= screen_origin.y + screen_height)
-		    {
-		      player_coordinates.x -= screen_origin.x;
-		      player_coordinates.y -= screen_origin.y;
-
-		      blit (&Renderer, player_coordinates, 25, 41, CurrentTexture);
-		    }
-		}
-	    }
+	  display_players (players, screen_origin, &Renderer, CurrentTexture,
+			   screen_height, screen_width);
 	      
-	  display_blits (&Renderer);
-	}
+      	  display_blits (&Renderer);
+      	}
 
       SDL_Delay (1/200);
     }
+
   quit_sdl (&Window, &Renderer, &CurrentTexture, biomes, items);
   
   return 0;
@@ -668,3 +662,26 @@ get_map_coords (struct coordinates click_coords,
   return click_map_coords;
 }
 
+void
+display_players (std::vector<Player>& players, struct coordinates screen_origin,
+		 SDL_Renderer** renderer, SDL_Texture* player_texture,
+		 int screen_height, int screen_width)
+{
+  // Display players
+  for (Player player : players)
+    {
+      struct coordinates player_coordinates = player.getCoordinates ();
+      if (player_coordinates.x >= screen_origin.x
+	  && player_coordinates.x <= screen_origin.x + screen_width)
+	{
+	  if (player_coordinates.y >= screen_origin.y
+	      && player_coordinates.y <= screen_origin.y + screen_height)
+	    {
+	      player_coordinates.x -= screen_origin.x;
+	      player_coordinates.y -= screen_origin.y;
+
+	      blit (renderer, player_coordinates, 25, 41, player_texture);
+	    }
+	}
+    }
+}

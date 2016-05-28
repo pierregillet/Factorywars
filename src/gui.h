@@ -143,3 +143,6 @@ struct map_coordinates get_map_coords (coordinates click_coords,
 				       int* screen_width,
 				       struct coordinates screen_origin);
 
+void display_players (std::vector<Player>& players, struct coordinates screen_origin,
+		     SDL_Renderer** renderer, SDL_Texture* player_texture,
+		     int screen_height, int screen_width);
