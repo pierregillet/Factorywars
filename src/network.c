@@ -159,6 +159,8 @@ handle_network_communication (unsigned short port, int read_pipe,
   unsigned int number_of_players = 0;
   struct server_credentials *servers = NULL;
 
+  int count = 0;
+  
   while (!quit)
     {
       /* On lit les informations du tuyau où l’on reçoit les données à envoyer */
@@ -177,7 +179,13 @@ handle_network_communication (unsigned short port, int read_pipe,
 
 	case 5:
 	  /* Send what is from the pipe to the socket */
-	  broadcast (servers, number_of_players, buffer, strlen (buffer));
+	  if (count == 2)
+	    {
+	      broadcast (servers, number_of_players, buffer, strlen (buffer));
+	      count = 0;
+	    }
+	  else
+	    count++;
 	  break;
 
 	case 1:
