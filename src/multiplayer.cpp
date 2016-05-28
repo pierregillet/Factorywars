@@ -33,14 +33,17 @@ handle_data_from_network_pipe (int read_pipe, std::vector<Player>& players,
       break;
 
     case 5:
+      printf ("Move command received from pipe\n");
       token = strtok (buffer, " ");
       token = strtok (NULL, " ");
+      printf ("name : %s\n", token);
 
       for (unsigned int i = 0; i < players.size (); i++)
 	{
 	  if (players[i].getName () == std::string (token))
 	    {
-	      strtok (NULL, " ");
+	      token = strtok (NULL, " ");
+	      printf ("coords : %s\n", token);
 	      struct coordinates coords;
 
 	      coords = get_coordinates_from_string (token);

@@ -74,7 +74,8 @@ send (const struct server_credentials server, const char* data)
 }
 
 int
-run_network_process (unsigned short port, int* pipes)
+run_network_process (unsigned short port, int* pipes, char* server_IP,
+		     unsigned short server_port)
 {
   if (pipe (pipes) && pipe (pipes + 2))
     {
@@ -90,7 +91,7 @@ run_network_process (unsigned short port, int* pipes)
       /* Child */
       close (pipes[1]);
       close (pipes[2]);
-      handle_network_communication (port, pipes[0], pipes[3]);
+      handle_network_communication (port, pipes[0], pipes[3], server_IP, server_port);
       exit (EXIT_SUCCESS);
     }
   else if (pid < (pid_t) 0)
@@ -118,7 +119,8 @@ broadcast (const struct server_credentials *servers,
 
 void
 handle_network_communication (unsigned short port, int read_pipe,
-			      int write_pipe)
+			      int write_pipe, char* server_IP,
+			      unsigned short server_port)
 {
   /* Les constantes */
   /* Constants */
@@ -137,6 +139,20 @@ handle_network_communication (unsigned short port, int read_pipe,
   /* On récupère l’interface de connexion */
   /* We get the socket */
   sockfd6 = get_socket (port);
+
+  /* On envoie un message de connexion si une IP a été spécifié */
+  /* We send a connect message if an IP was specified */
+  if (server_IP != NULL)
+    {
+      struct server_credentials server;
+      strncpy (server.IP, server_IP, INET6_ADDRSTRLEN);
+      server.port = (server_port != 0)? server_port : 4284;
+
+      char data[512];
+      snprintf (data, 512, "CONNECT %d %s", port, get_config_value ("name"));
+
+      send (server, data);
+    }
 
   /* On crée le tableau qui contiendra les IP */
   /* We create the array that will contains the IPs */

@@ -443,14 +443,8 @@ run_gui (int read_pipe,
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
   SDL_Texture* toolbar = NULL;
 
-  if (!init (&Window,
-	     &Renderer,
-	     key_press_texture,
-	     biomes,
-	     items,
-	     &toolbar,
-	     &screen_height,
-	     &screen_width))
+  if (!init (&Window, &Renderer, key_press_texture, biomes, items,
+	     &toolbar, &screen_height, &screen_width))
     return 1;
 
   struct coordinates screen_center; 
@@ -467,7 +461,7 @@ run_gui (int read_pipe,
   CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
   
   /* 
-   * keys_state only 4 elements
+   * keys_state contains only 4 elements
    * because we only use 4 keys as of now
    * keys_state[0] -> SDLK_UP
    * keys_state[1] -> SDLK_DOWN
@@ -534,6 +528,25 @@ run_gui (int read_pipe,
 		    toolbar_size.x,
 		    toolbar_size.y,
 		    toolbar);
+
+	      // Display players
+	      for (Player player : players)
+		{
+		  struct coordinates player_coordinates = player.getCoordinates ();
+		  if (player_coordinates.x >= screen_origin.x
+		      && player_coordinates.x <= screen_origin.x + screen_width)
+		    {
+		      if (player_coordinates.y >= screen_origin.y
+			  && player_coordinates.y <= screen_origin.y + screen_height)
+			{
+			  player_coordinates.x -= screen_origin.x;
+			  player_coordinates.y -= screen_origin.y;
+
+			  blit (&Renderer, player_coordinates, 25, 41, CurrentTexture);
+			}
+		    }
+		}
+	      
 	      display_blits(&Renderer);
 	      break;
 	    }
@@ -610,7 +623,7 @@ run_gui (int read_pipe,
 
       // Network pipe handling
       handle_data_from_network_pipe (read_pipe, players, "save");
-      
+
       SDL_Delay (1/200);
     }
   quit_sdl (&Window, &Renderer, &CurrentTexture, biomes, items);

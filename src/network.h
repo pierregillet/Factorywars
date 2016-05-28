@@ -74,7 +74,8 @@ void broadcast (const struct server_credentials *servers,
  * @param pipes is an integer array of four elements.
  * @return 1 if there is no error.
  */
-int run_network_process (unsigned short port, int* pipes);
+int run_network_process (unsigned short port, int* pipes, char* server_IP,
+			 unsigned short server_port);
 
 /**
  * Open a socket for a UDP server.
@@ -105,7 +106,8 @@ int read_socket (char* buffer, size_t buf_size, int sockfd6,
  * @param write_pipe is the pipe where we send the information from the network.
  */
 void handle_network_communication (unsigned short port, int read_pipe,
-				   int write_pipe);
+				   int write_pipe, char* server_IP,
+				   unsigned short server_port);
 
 /**
  * Store in the servers’ crendentials array the new server credentials.

@@ -52,6 +52,8 @@ main (int argc, char *argv[])
 {
   int optc;
   int lose = 0;
+  char *IP = NULL;
+  unsigned short port = 0;
 
   program_name = argv [0];
 
@@ -64,10 +66,10 @@ main (int argc, char *argv[])
 	  exit (EXIT_SUCCESS);
 	  break;
 	case 's':
-	  
+	  IP = optarg;
 	  break;
 	case 'p':
-	  
+	  port = atoi (optarg);
 	  break;
 	default:
 	  lose = 1;
@@ -88,7 +90,7 @@ main (int argc, char *argv[])
   pipe (pipes);
   pipe (pipes + 2);
   
-  run_network_process (4284, pipes);
+  run_network_process (atoi (get_config_value ("port")), pipes, IP, port);
 
   if (run_gui (pipes[2], pipes[1], players) != 0)
     {
