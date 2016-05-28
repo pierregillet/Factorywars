@@ -529,24 +529,6 @@ run_gui (int read_pipe,
 		    toolbar_size.y,
 		    toolbar);
 
-	      // Display players
-	      for (Player player : players)
-		{
-		  struct coordinates player_coordinates = player.getCoordinates ();
-		  if (player_coordinates.x >= screen_origin.x
-		      && player_coordinates.x <= screen_origin.x + screen_width)
-		    {
-		      if (player_coordinates.y >= screen_origin.y
-			  && player_coordinates.y <= screen_origin.y + screen_height)
-			{
-			  player_coordinates.x -= screen_origin.x;
-			  player_coordinates.y -= screen_origin.y;
-
-			  blit (&Renderer, player_coordinates, 25, 41, CurrentTexture);
-			}
-		    }
-		}
-	      
 	      display_blits(&Renderer);
 	      break;
 	    }
@@ -615,14 +597,44 @@ run_gui (int read_pipe,
 		    toolbar_size.x,
 		    toolbar_size.y,
 		    toolbar);
-	      display_blits(&Renderer);
+	      display_blits (&Renderer);
 	    }
 	  clicks_state[2] = 0;
 	}
       // End of right click handling
 
       // Network pipe handling
-      handle_data_from_network_pipe (read_pipe, players, "save");
+      if (handle_data_from_network_pipe (read_pipe, players, "save") > 0)
+	{
+	  // Display players
+	  for (Player player : players)
+	    {
+	      refresh_renderer (&Renderer);
+	      display_background (&Renderer, "save", biomes, items, screen_origin);
+	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
+	      blit (&Renderer,
+		    toolbar_origin,
+		    toolbar_size.x,
+		    toolbar_size.y,
+		    toolbar);
+	      
+	      struct coordinates player_coordinates = player.getCoordinates ();
+	      if (player_coordinates.x >= screen_origin.x
+		  && player_coordinates.x <= screen_origin.x + screen_width)
+		{
+		  if (player_coordinates.y >= screen_origin.y
+		      && player_coordinates.y <= screen_origin.y + screen_height)
+		    {
+		      player_coordinates.x -= screen_origin.x;
+		      player_coordinates.y -= screen_origin.y;
+
+		      blit (&Renderer, player_coordinates, 25, 41, CurrentTexture);
+		    }
+		}
+	    }
+	      
+	  display_blits (&Renderer);
+	}
 
       SDL_Delay (1/200);
     }

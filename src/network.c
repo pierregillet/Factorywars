@@ -159,8 +159,6 @@ handle_network_communication (unsigned short port, int read_pipe,
   unsigned int number_of_players = 0;
   struct server_credentials *servers = NULL;
 
-  int count = 0;
-  
   while (!quit)
     {
       /* On lit les informations du tuyau où l’on reçoit les données à envoyer */
@@ -179,13 +177,7 @@ handle_network_communication (unsigned short port, int read_pipe,
 
 	case 5:
 	  /* Send what is from the pipe to the socket */
-	  if (count == 5)
-	    {
-	      broadcast (servers, number_of_players, buffer, strlen (buffer));
-	      count = 0;
-	    }
-	  else
-	    count++;
+	  broadcast (servers, number_of_players, buffer, strlen (buffer));
 	  break;
 
 	case 1:
@@ -244,15 +236,6 @@ handle_network_communication (unsigned short port, int read_pipe,
 
 	default:
 	  break;
-	}
-      if (number_of_players > 0)
-	{
-	  /* printf ("Nombre de joueurs : %d\n", number_of_players); */
-	  /* for (unsigned int j = 0; j < number_of_players; j++) */
-	  /*   { */
-	  /*     printf ("j : %d\n", j); */
-	  /*     printf ("IP : %s, port : %d, nom : %s\n", servers[j].IP, servers[j].port, servers[j].name); */
-	  /*   } */
 	}
     }
 
