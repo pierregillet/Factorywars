@@ -120,259 +120,76 @@ get_biome_id (struct coordinates chunk_coordinates, const char* save_file_path)
   return atoi (biome_id_str);
 }
 
-int
-set_surface_item (struct coordinates chunk_coordinates,
-		  struct coordinates square_coordinates, int item_id,
-		  const char* save_file_path)
+int set_surface_item (struct coordinates chunk_coordinates,
+		      struct coordinates square_coordinates, int item_id,
+		      const char* save_file_path)
 {
-  const unsigned int LINE_SIZE = 512;
-  const unsigned int REGEX_STR_SIZE = 512;
-  const unsigned int COORDINATES_STR_SIZE = 20;
+  struct chunk_info chunk = get_chunk_info (chunk_coordinates, save_file_path);
 
-  char line[LINE_SIZE], tmp_line[LINE_SIZE],
-    square_coordinates_str[COORDINATES_STR_SIZE];
-
-  line[0] = '\0';
-  tmp_line[0] = '\0';
-
-  /* On vérifie si le carré contient déjà un objet d’identifiant item_id */
-  /* We verify if the square already contains a item_id of value item_id */
-  if (get_surface_item (chunk_coordinates, square_coordinates, save_file_path)
-      == item_id)
+  if (chunk.biome_id == -1)
     return 0;
+  
+  chunk.squares[square_coordinates.x][square_coordinates.y] = item_id;
 
-  /* Si c’est vrai, la ligne décrivant le chunk n’existe pas */
-  /* If it’s true, the chunk line does not exist */
-  if (find_chunk_line_in_file (chunk_coordinates, line,
-			       LINE_SIZE, save_file_path) == NULL)
-    {
-      fprintf (stderr, "Could not find the chunk line in the save file.\n");
-      return 0;
-    }
+  char line[4096], tmp_line[4096];
 
+  snprintf (line, 4096, "%ld;%ld %d", chunk.chunk.x, chunk.chunk.y, chunk.biome_id);
+
+  int smallest_item_id = -1;
+  int finished = 0;
   int line_number;
   line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
 							  save_file_path);
 
-  /* We need to delete the chunk coordinates and the biome_id from the line */
-  /* to avoid matching the chunk coordinates instead of the square */
-  /* coordinates and because we don’t need the biome_id */
-  int len_of_deleted_part_of_line;
-  len_of_deleted_part_of_line = get_len_of_chunk_and_biome (chunk_coordinates,
-							    save_file_path);
-
-  strncpy (tmp_line, line + len_of_deleted_part_of_line, LINE_SIZE);
-
-  int reti = 0;
-  regmatch_t regmatch;
-
-  regmatch = find_square_coordinates_pos (chunk_coordinates,
-					  square_coordinates,
-					  save_file_path);
-
-  if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
-    reti = 1;
-
-  regex_t regex;
-  char regex_str[REGEX_STR_SIZE];
-  regex_str[0] = '\0';
-
-  /* We fill the square_coordinates_str */
-  coordinates_to_string (square_coordinates, square_coordinates_str, COORDINATES_STR_SIZE);
-
-  if (reti)
+  /* On construit la nouvelle ligne */
+  /* We make the new line */
+  while (!finished)
     {
-      /* printf ("Square coordinates matched\n"); */
-      /* Square_coordinates Not Matched ! */
-      /* we search the provided item_id */
-      /* Should use get_item_id_by_square_coordinates */
-      snprintf (regex_str, REGEX_STR_SIZE, "([^;]|^)%d[^;]", item_id);
-      reti = regcomp (&regex, regex_str, REG_EXTENDED);
-      if (reti)
+      for (int i = 0; i < 16; i++)
 	{
-	  fprintf (stderr, "Could not compile regex\n");
-	  return 2;
+	  for (int j = 0; j < 16; j++)
+	    {
+	      if (smallest_item_id == -1 && chunk.squares[i][j] != -1)
+		smallest_item_id = chunk.squares[i][j];
+
+	      if (chunk.squares[i][j] != -1
+		  && chunk.squares[i][j] < smallest_item_id)
+		smallest_item_id = chunk.squares[i][j];
+	    }
 	}
 
-      reti = regexec (&regex, tmp_line, 1, &regmatch, 0);
-      regfree (&regex);
-
-      if (reti)
+      if (smallest_item_id == -1)
 	{
-	  /* printf ("Item id not found\n"); */
-	  /* item_id not found */
-	  /* so we add it at the end of line with square_coordinates */
-	  tmp_line[0] = '\0';
-
-	  snprintf (tmp_line, LINE_SIZE, " %d %s", item_id,
-		    square_coordinates_str);
-
-	  /* We add the result at the end of the line variable */
-	  strncat (line, tmp_line, LINE_SIZE);
-
-	  /* We add a “\n” at the end of the new line */
-	  strncat (line, "\n", LINE_SIZE);
-
-	  /* And we add it in the file */
-	  /* printf ("1 Ligne : %s\n", line); */
-	  insert_line_in_file (line, strlen (line), line_number,
-	  		       save_file_path, 1);
+	  finished = 1;
+	  break;
 	}
       else
 	{
-	  /* printf ("Item id found\n"); */
-	  /* item id found */
-	  /* we add the square coordinates and a space just after the item_id */
-	  /* and a space */
-	  char right_part_of_line[LINE_SIZE], left_part_of_line[LINE_SIZE];
-
-	  right_part_of_line[0] = '\0';
-	  left_part_of_line[0] = '\0';
-
-	  strncpy (right_part_of_line,
-		   line + regmatch.rm_eo + len_of_deleted_part_of_line,
-		   LINE_SIZE);
-
-	  int len_of_item_id = regmatch.rm_eo - 1 - regmatch.rm_so;
-	  int left_part_of_line_length = regmatch.rm_so + len_of_deleted_part_of_line;
-	  left_part_of_line_length += len_of_item_id + 1;
-
-	  strncpy (left_part_of_line, line, left_part_of_line_length);
-	  left_part_of_line[left_part_of_line_length] = 0;
-
-	  strncpy (line, left_part_of_line, left_part_of_line_length + 1);
-
-	  snprintf (tmp_line, LINE_SIZE, "%s ", square_coordinates_str);
-	  strncat (line, tmp_line, LINE_SIZE);
-	  strncat (line, right_part_of_line, LINE_SIZE);
-
-	  strncat (line, "\n", LINE_SIZE);
-
-	  // We write the line to the save file
-	  /* printf ("2 Ligne : %s\n", line); */
-	  insert_line_in_file (line, strlen (line), line_number,
-	  		       save_file_path, 1);
-	}
-    }
-  else
-    {
-      /* printf ("Square coordinates matched\n"); */
-      /* If they exist, we search for a semicolon before and after the coordinates */
-      /* if a semicolon is found before or after the coordinates without 2 spaces with no semicolon between them */
-      /* we just delete the coordinates */
-      /* else we delete the coordinates and the item_id */
-      
-      /* Then, we search for the item_id, */
-      /*   If it does not exist, we add at the end of the line the item id, a space and the square coordinates */
-      /*   If it is already present in the line, we add the square coordinates and a space just after the item_id and a space */
-      int delete_coordinates_and_item_id = 1;
-      int match_beg = regmatch.rm_so;
-      int match_end = regmatch.rm_eo;
-      int spaces_number = 0;
-      int beg_of_item_id = 0;
-
-      /* We search backward */
-      for (int i = match_beg; i > 0; i--)
-	{
-	  if (spaces_number == 2)
-	    {
-	      beg_of_item_id = i + 2;
-	      break;
-	    }
-
-	  switch (line[i])
-	    {
-	    case ' ':
-	      spaces_number++;
-	      break;
-	    case ';':
-	      delete_coordinates_and_item_id = 0;
-	      break;
-	    }
+	  snprintf (tmp_line, 4096, " %d", smallest_item_id);
+	  strncat (line, tmp_line, 4096);
 	}
 
-      spaces_number = 0;
-
-      /* if a semicolon was not found we search forward */
-      if (delete_coordinates_and_item_id)
+      for (int i = 0; i < 16; i++)
 	{
-	  for (unsigned int i = match_end; i < LINE_SIZE; i++)
+	  for (int j = 0; j < 16; j++)
 	    {
-	      if (spaces_number == 2 || !delete_coordinates_and_item_id)
-		break;
-
-	      if (line[i] == '\0')
-		break;
-
-	      switch (line[i])
+	      if (chunk.squares[i][j] == smallest_item_id)
 		{
-		case ' ':
-		  spaces_number++;
-		  break;
-		case ';':
-		  delete_coordinates_and_item_id = 0;
-		  break;
-		case '\0':
-		  break;
+		  snprintf (tmp_line, 4096, " %d;%d", i, j);
+		  strncat (line, tmp_line, 4096);
+		  chunk.squares[i][j] = -1;
 		}
 	    }
 	}
-      if (delete_coordinates_and_item_id)
-	{
-	  strncpy (line + beg_of_item_id - 1, line + match_end, LINE_SIZE);
-	  if (line[strlen (line) - 1] == ' ')
-	    line[strlen (line) - 1] = '\0';
-	}
-      else
-	{
-	  strncpy (tmp_line, line, match_beg);
-	  tmp_line[match_beg] = '\0';
-	  strncat (tmp_line, line + match_end + 1, LINE_SIZE);
-	  strncpy (line, tmp_line, strlen (tmp_line) + 1);
 
-	  if (line[strlen (line) - 1] == ' ')
-	    line[strlen (line) - 1] = '\0';
-	}
-
-      /* Now we need to search if the item_id exist */
-      regmatch = get_item_id_pos_using_item_id (chunk_coordinates, item_id,
-						save_file_path);
-
-      if (item_id == -1)
-	{
-	  /* printf ("Delete\n"); */
-	  strncat (line, "\n", LINE_SIZE);
-	  /* printf ("3 Ligne : %s\n", line); */
-	  insert_line_in_file (line, strlen (line), line_number, save_file_path, 1);
-	}
-      else if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
-	{
-	  /* printf ("The item id does not exists\n"); */
-	  /* The item id does not exist */
-	  /* We add the item_id a space and the square_coordinates */
-	  /* at the end of line */
-	  snprintf (tmp_line, LINE_SIZE, "%s %d %s\n", line, item_id, square_coordinates_str);
-	  /* printf ("4 Ligne : %s\n", line); */
-	  insert_line_in_file (tmp_line, strlen (tmp_line), line_number, save_file_path, 1);
-	}
-      else
-	{
-	  /* printf ("The item id exists\n"); */
-	  /* The item id exists */
-	  /* We just add a space and the coordinates right after it */
-	  tmp_line[0] = 0;
-	  strncat (tmp_line, line, regmatch.rm_eo + 1);
-	  snprintf (tmp_line + strlen(tmp_line), LINE_SIZE - strlen(tmp_line),
-		    " %s", square_coordinates_str);
-	  strncat (tmp_line, line + regmatch.rm_eo + 1, LINE_SIZE);
-
-	  /* We add a newline character at the end of the line */
-	  tmp_line[strlen (tmp_line)] = '\n';
-	  /* printf ("5 Ligne : %s\n", line); */
- 	  insert_line_in_file (tmp_line, strlen(tmp_line), line_number, save_file_path, 1);
-	}
+      smallest_item_id = -1;
     }
-  
+
+  /* On ajoute un caractère de fin de ligne et on enregistre */
+  /* We add a newline and we save */
+  strncat (line, "\n", 4096);
+  insert_line_in_file (line, strlen (line), line_number, save_file_path, 1);
+
   return 1;
 }
 

@@ -154,7 +154,7 @@ get_chunk_coordinates_from_player_movement (struct coordinates player_offset);
  *
  * @param chunk_coordiantes is the coordinates of the chunk.
  * @param save_file_path is the path to the save file.
- * @return the chunk inforamations in a structure chunk_info or a biome id of
+ * @return the chunk informations in a structure chunk_info or a biome id of
  * -1 if there is an error.
  */
 struct chunk_info get_chunk_info (struct coordinates chunk_coordinates,
