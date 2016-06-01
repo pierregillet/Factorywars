@@ -3,9 +3,11 @@
 
 ### Dependencies ###
 
-+ libxml2
-+ SDL2
-+ SDL2_Image
+Library    | Version | Reason
+---	   | ---     | ---
+libxml2	   | >= 2.9  | Parsing of the configuration file.
+SDL2	   | >= 2.0  | Display everything.
+SDL2_Image | >= 2.0  | PNG images.
 
 ### Compile ###
 
@@ -17,9 +19,11 @@ Just type ``make`` at the root of the project!
 
 ## Dépendences ##
 
-+ libxml2
-+ SDL2
-+ SDL2_Image
+Library    | Version | Reason
+---	   | ---     | ---
+libxml2	   | >= 2.9  | Parsing of the configuration file.
+SDL2	   | >= 2.0  | Display everything.
+SDL2_Image | >= 2.0  | PNG images.
 
 ## Compiler ##
 

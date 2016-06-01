@@ -15,3 +15,4 @@ content of the README.md file.
 + Rewrite the documentation for every function in french.
 + Translate the documentation in esperanto.
 + Translate the game in french and in esperanto.
++ Rewrite gui.cpp.
