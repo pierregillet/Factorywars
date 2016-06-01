@@ -16,3 +16,4 @@ content of the README.md file.
 + Translate the documentation in esperanto.
 + Translate the game in french and in esperanto.
 + Rewrite gui.cpp.
++ Discuss the name.
