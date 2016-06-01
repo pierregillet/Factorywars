@@ -445,7 +445,7 @@ run_gui (int read_pipe,
 
   if (!init (&Window, &Renderer, key_press_texture, biomes, items,
 	     &toolbar, &screen_height, &screen_width))
-    return 1;
+    return -1;
 
   struct coordinates screen_center; 
   screen_center.x = screen_width / 2;
@@ -652,12 +652,6 @@ get_map_coords (struct coordinates click_coords,
   click_map_coords.chunk.y = (int) (y_float + (float) click_coords.y) / 24.0 / 16.0;
   click_map_coords.square.x = (int) ((x_float + (float) click_coords.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
   click_map_coords.square.y = (int) ((y_float + (float) click_coords.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
-
-  // printf("\n chunk.x : %ld \n",click_map_coords.chunk.x);
-  // printf("\n chunk.y : %ld \n",click_map_coords.chunk.y);
-
-  // printf("\n square.x : %ld \n",click_map_coords.square.x);
-  // printf("\n square.y : %ld \n",click_map_coords.square.y);
 
   return click_map_coords;
 }
