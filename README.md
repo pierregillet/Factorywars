@@ -43,7 +43,8 @@ Factorywars est encore en développement et n’est pas jouable pour le moment.
 # Équipe de développeurs #
 
 Nous sommes un groupe de 3 amis venant de France. Ce projet est un travail
-pour le lycée mais nous continuerons son développement ensuite.
+pour le lycée mais nous continuerons son développement ensuite. Nous l’avons
+présenté le 2016-05-30.
 Nous n’avons pas beaucoup d’expériences ni de connaissances en programmation
 avancée ou en algorithmique mais nous sommes motivés et nous essayons de
 trouver des solutions à tout les problèmes que nous rencontrons en apprenant
