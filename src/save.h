@@ -27,7 +27,7 @@
  *
  * @section DESCRIPTION
  *
- * save.h is the header of save.cpp
+ * save.h is the header of save.c
  */
 
 #pragma once
