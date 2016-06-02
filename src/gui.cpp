@@ -33,10 +33,10 @@
 #include "gui.h"
 
 SDL_Texture*
-loadTexture(SDL_Renderer** Renderer, char* path)
+loadTexture(SDL_Renderer** Renderer, std::string path)
 {
   SDL_Texture* NewTexture = NULL;
-  SDL_Surface* loadedSurface = IMG_Load(path);
+  SDL_Surface* loadedSurface = IMG_Load(path.c_str ());
 
   NewTexture = SDL_CreateTextureFromSurface (*Renderer, loadedSurface);
   SDL_FreeSurface (loadedSurface);
