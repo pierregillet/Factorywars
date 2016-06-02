@@ -76,6 +76,10 @@ display_background (SDL_Renderer** Renderer,
 	    {
 	      id = 2;
 	    }
+	  else if (id > 4)
+	    {
+	      id = 2;
+	    }
 
 	  SDL_Texture* display_id = table_biomes[id];
 	  
