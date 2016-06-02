@@ -33,3 +33,4 @@ GUI
 ---
 + Create the player textures.
 + Rewrite gui.cpp.
++ Delete refresh_renderer and display_blits functions.

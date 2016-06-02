@@ -58,17 +58,40 @@ enum KeyPressTexture
     KEY_PRESS_SURFACE_TOTAL
   };  
 
+/**
+ * Store an image into a texture
+ *
+ * @param Renderer is the renderer.
+ * @param path is the path to the image.
+ * @return a pointer to the texture.
+ */
 SDL_Texture* loadTexture (SDL_Renderer** Renderer,
-			  std::string path);
+			  char* path);
 
+/**
+ * Load the player and toolbar’s textures.
+ *
+ * @param Renderer is the renderer.
+ * @param KeyPressTexture is the array where we load the player’s texture.
+ * @param toolbar is the toolbar’s texture pointer.
+ * @return true if success, false if failure.
+ */
 bool loadMedia (SDL_Renderer** Renderer,
 		SDL_Texture** KeyPressTexture,
 		SDL_Texture** toolbar);
 
-/*
+/**
  * Initiates the SDL basics, like Window and Renderer.
+ *
+ * @param Window is the window.
+ * @param Renderer is the window’s renderer.
+ * @param KeyPressTexture is an array where the player’s texture will be.
+ * @param biomes is an array where the biome’s textures will be loaded.
+ * @param items is an array where the item’s textures will be loaded.
+ * @param toolbar is a pointer where the toolbar’s texture will be loaded.
+ * @param screen_height is an int pointer where we will store the screen height.
+ * @param screen_width is an int pointer where we will store the screnn width.
  */
- 
 bool init (SDL_Window** Window,
 	   SDL_Renderer** Renderer,
 	   SDL_Texture** KeyPressTexture,
@@ -78,27 +101,42 @@ bool init (SDL_Window** Window,
 	   int* screen_height,
 	   int* screen_width);
 
+/**
+ * Handle the keydown events.
+ */
 int handle_keydown (SDL_Keycode event_keycode,
 		    bool *keys_state,
 		    SDL_Texture** CurrentTexture,
 		    SDL_Texture** key_press_texture);
 
+/**
+ * Handle the keyup events.
+ */
 int handle_keyup (SDL_Keycode event_keycode,
 		  bool *keys_state,
 		  SDL_Texture** CurrentTexture,
 		  SDL_Texture** key_press_texture);
 
+/**
+ * Handle the clickdown events.
+ */
 int handle_clickdown (int button,
 		      coordinates click_coords,
 		      bool *clicks_state,
 		      struct coordinates* screen_origin,
 		      struct map_coordinates* click_map_coords);
 
+/**
+ * Handle the clickup events.
+ */
 int handle_clickup (int button,
 		    coordinates click_coords,
 		    bool *clicks_state,
 		    struct coordinates* screen_origin);
 
+/**
+ * Handle the SDL events.
+ */
 int handle_events (SDL_Texture** CurrentTexture,
 		   SDL_Texture** biomes,
 		   bool* keys_state,
@@ -110,17 +148,24 @@ int handle_events (SDL_Texture** CurrentTexture,
 		   struct coordinates* click_map_coords,
 		   std::vector<Player>& players);
 
+/**
+ * Move screen_origin and hero_coords coordinates if a key is pressed.
+ */
 int move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 bool* keys_state,
 				 struct coordinates* hero_coords,
 				 struct coordinates screen_center);
 
+/**
+ * Clear the renderer, need to be deleted.
+ */
 void refresh_renderer(SDL_Renderer** Renderer);
 
-/*
+/**
  * Blit Textures at given coordinates x,y.
+ *
+ * @param The Texture needs a Renderer to be blit.
  * @return int true if there is no error
- * The Texture needs a Renderer to be blit.
  */
 int blit (SDL_Renderer** Renderer,
 	  struct coordinates blit_origin,
@@ -128,6 +173,9 @@ int blit (SDL_Renderer** Renderer,
 	  int height,
 	  SDL_Texture* texture);
 
+/**
+ * Update the screen. Need to be deleted.
+ */
 void display_blits(SDL_Renderer** Renderer);
 
 /**
