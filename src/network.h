@@ -160,13 +160,23 @@ void move_command (const char* data,
  *
  * @param write_pipe is the write end of the pipe to communicate with the network process.
  */
-void shutdown_network_process (int write_pipe);
+void
+shutdown_network_process (int write_pipe);
 
 /**
  * Handle new_player commands.
- *
  * 
+ * @param data is the buffer which will contain what was sent.
+ * @param servers is the array of server_credential for every player.
+ * @param number_of_servers is the number of players.
  */
 void new_player_command (const char* data,
 			 struct server_credentials* servers,
 			 unsigned int* number_of_servers);
+
+/**
+ * Fork and run the tcp server which will send the map.
+ *
+ * @param port is the tcp’s server port.
+ */
+void run_map_server (unsigned short port);

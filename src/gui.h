@@ -66,7 +66,7 @@ enum KeyPressTexture
  * @return a pointer to the texture.
  */
 SDL_Texture* loadTexture (SDL_Renderer** Renderer,
-			  char* path);
+			  std::string path);
 
 /**
  * Load the player and toolbar’s textures.

@@ -98,7 +98,7 @@ run_network_process (unsigned short port, int* pipes, char* server_IP,
     {
       /* The fork failed */
       fprintf (stderr, "Fork failed.\n");
-      return EXIT_FAILURE;
+      return 0;
     }
   else
     {
@@ -479,12 +479,12 @@ new_player_command (const char* data,
 
   strncpy (buffer, data, BUFFER_SIZE);
   
-  token = strtok (buffer, " ");
-  token = strtok (NULL, " ");
+  token = strtok (buffer, " ");	/* The command */
+  token = strtok (NULL, " ");	/* The IP */
 
   strncpy (IP, token, BUFFER_SIZE);
 
-  token = strtok (NULL, " ");
+  token = strtok (NULL, " ");	/* The port */
   strncpy (port, token, BUFFER_SIZE);
 
   struct server_credentials client;
@@ -493,4 +493,22 @@ new_player_command (const char* data,
 
   snprintf (buffer, BUFFER_SIZE, "CONNECT %s %s", IP, port);
   send (client, buffer);
+}
+
+void
+run_map_server (unsigned short port)
+{
+  pid_t pid;
+
+  pid = fork ();
+  if (pid == (pid_t) 0)
+    {
+      /* Send map */
+    }
+  else if (pid < (pid_t) 0)
+    {
+      /* The fork failed */
+      fprintf (stderr, "Fork failed.\n");
+      return;
+    }
 }
