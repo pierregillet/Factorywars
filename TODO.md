@@ -13,7 +13,6 @@ content of the README.md file.
 + Follow [XDG Base Directory Specification](https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html).
 + Create a mailing list.
 + Create a website.
-+ Use autotools.
 
 Main
 ----
