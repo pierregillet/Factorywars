@@ -1,8 +1,9 @@
 AC_INIT([factorywars], [0.1], [0x539+bug@nybble.fr])
-AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 
 AC_PROG_CC
 AC_PROG_CXX
+
 PKG_CHECK_MODULES([libxml2], [libxml-2.0 >= 2])
 PKG_CHECK_MODULES([libSDL2], [sdl2 >= 2])
 PKG_CHECK_MODULES([libSDL2Image], [SDL2_image])
