@@ -33,8 +33,13 @@
 #include <vector>
 #include "gui.h"
 #include "player.h"
-#include "network.h"
 #include <getopt.h>
+#include <config.h>
+
+extern "C" {
+#include "network.h"
+#include "config.h"
+}
 
 static const struct option longopts[] = {
   {"help", no_argument, NULL, 'h'},

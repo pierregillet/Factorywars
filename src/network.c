@@ -27,7 +27,7 @@
 #include "network.h"
 
 void
-send (const struct server_credentials server, const char* data)
+send_data (const struct server_credentials server, const char* data)
 {
   int sockfd6, s;
   char port_str[6];
@@ -114,7 +114,7 @@ broadcast (const struct server_credentials *servers,
 	   unsigned int number_of_servers, const char* data, size_t data_size)
 {
   for (unsigned int i = 0; i < number_of_servers; i++)
-    send (servers[i], data);
+    send_data (servers[i], data);
 }
 
 void
@@ -151,7 +151,7 @@ handle_network_communication (unsigned short port, int read_pipe,
       char data[512];
       snprintf (data, 512, "CONNECT %d %s", port, get_config_value ("name"));
 
-      send (server, data);
+      send_data (server, data);
     }
 
   /* On crée le tableau qui contiendra les IP */
@@ -314,7 +314,7 @@ connect_command (const char* data, unsigned int* number_of_servers,
       /* We send him a connect */
       snprintf (buffer, BUFFER_SIZE, "CONNECT %s %s",
 		get_config_value ("port"), get_config_value ("name"));
-      send (servers[*(number_of_servers) - 1], buffer);
+      send_data (servers[*(number_of_servers) - 1], buffer);
 
       /* On transfert à tout le monde une commande nouveau joueur */
       /* We send to everyone a new player command */
@@ -399,7 +399,7 @@ get_ip (char* IP, struct sockaddr_storage peer_addr)
 {
   const char* ret;
   ret = inet_ntop (AF_INET6,
-		   (const void*)((sockaddr_in6*)&peer_addr)->sin6_addr.s6_addr,
+		   (const void*)((struct sockaddr_in6*)&peer_addr)->sin6_addr.s6_addr,
 		   IP, INET6_ADDRSTRLEN);
 
   
@@ -492,7 +492,7 @@ new_player_command (const char* data,
   client.port = (unsigned short) atoi (port);
 
   snprintf (buffer, BUFFER_SIZE, "CONNECT %s %s", IP, port);
-  send (client, buffer);
+  send_data (client, buffer);
 }
 
 void

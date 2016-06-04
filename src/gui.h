@@ -43,10 +43,13 @@
 // #include "action.h"
 #include "display_map.h"
 #include "display_item.h"
-#include "config.h"
 #include <vector>
-#include "save.h"
 #include "multiplayer.h"
+
+extern "C" {
+  #include "save.h"
+  #include "config.h"
+}
 
 enum KeyPressTexture
   {

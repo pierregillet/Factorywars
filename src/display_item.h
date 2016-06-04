@@ -32,10 +32,13 @@
 
 #pragma once
 
-#include "save.h"
 #include "structures.h"
 #include <stdio.h>
 #include "gui.h"
+
+extern "C" {
+#include "save.h"
+}
 
 void display_items (SDL_Renderer** Renderer,
 		    std::string path,

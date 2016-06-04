@@ -259,9 +259,9 @@ get_coordinates_from_string (const char* coordinates_str)
 
   if (!semicolon)
     {
-    ret = {.x = -2147483647,
-	   .y = 2147483647};
-    return ret;
+      ret.x = -2147483647;
+      ret.y = 2147483647;
+      return ret;
     }
   
   coord2_str[coord2_str_filled] = '\0';

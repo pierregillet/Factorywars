@@ -28,7 +28,10 @@
 
 #include <vector>
 #include "player.h"
+
+extern "C" {
 #include "utils.h"
+}
 
 /**
  * Read the pipe if there is something to read and if so, update variables 

@@ -54,7 +54,7 @@ struct server_credentials
  * @param data is the string which will be sent.
  * @return 1 if success, -1 if there is an error.
  */
-void send (const struct server_credentials server, const char* data);
+void send_data (const struct server_credentials server, const char* data);
 
 /**
  * Send data to everyone.
