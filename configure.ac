@@ -1,5 +1,5 @@
 AC_INIT([factorywars], [0.1], [0x539+bug@nybble.fr])
-AM_INIT_AUTOMAKE([foreign -Wall -Werror])
+AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
 
 AC_PROG_CC
 AC_PROG_CXX
