@@ -10,5 +10,5 @@ PKG_CHECK_MODULES([libSDL2Image], [SDL2_image])
 LIBS="$LIBS $libSDL2Image_LIBS -lxml2"
 
 AC_CONFIG_HEADER([config.h])
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
