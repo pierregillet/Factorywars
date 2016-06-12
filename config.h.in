@@ -21,5 +21,9 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
+/* Define if we need to keep every file needed by the game in the current
+   directory */
+#undef RUN_IN_PLACE
+
 /* Version number of package */
 #undef VERSION
