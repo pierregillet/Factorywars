@@ -33,46 +33,46 @@
 #include "gui.h"
 
 SDL_Texture*
-loadTexture(SDL_Renderer** Renderer, std::string path)
+loadTexture(SDL_Renderer** main_renderer, std::string path)
 {
-  SDL_Texture* NewTexture = NULL;
-  SDL_Surface* loadedSurface = IMG_Load(path.c_str ());
+  SDL_Texture* new_texture = NULL;
+  SDL_Surface* loaded_surface = IMG_Load(path.c_str ());
 
-  NewTexture = SDL_CreateTextureFromSurface (*Renderer, loadedSurface);
-  SDL_FreeSurface (loadedSurface);
+  new_texture = SDL_CreateTextureFromSurface (*main_renderer, loaded_surface);
+  SDL_FreeSurface (loaded_surface);
 
-  return NewTexture;
+  return new_texture;
 }
 
 bool 
-loadMedia (SDL_Renderer** Renderer,
+loadMedia (SDL_Renderer** main_renderer,
 	   SDL_Texture** KeyPressTexture,
 	   SDL_Texture** toolbar)
 {
   bool success = true;
   
   // every box of the table is associated to an image
-  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture (Renderer, "media/textures/LEFT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture (main_renderer, "media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture (Renderer, "media/textures/LEFT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture (main_renderer, "media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture (Renderer, "media/textures/RIGHT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture (main_renderer, "media/textures/RIGHT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] == NULL)
     success = false;
     
-  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture (Renderer, "media/textures/LEFT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture (main_renderer, "media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] == NULL)
     success = false;  
     
-  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture (Renderer, "media/textures/RIGHT.png");
+  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture (main_renderer, "media/textures/RIGHT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
     success = false;
 
-  *toolbar = loadTexture (Renderer, "media/hud/toolbar.png");
+  *toolbar = loadTexture (main_renderer, "media/hud/toolbar.png");
   if (*toolbar == NULL)
     success = false;
   
