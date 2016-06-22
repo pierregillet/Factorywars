@@ -21,6 +21,9 @@ handle_data_from_network_pipe (int read_pipe, std::vector<Player>& players,
       return -1;
       break;
 
+    case 3:
+      break;
+
     case 4:
       token = strtok (buffer, " "); // The command
       token = strtok (NULL, " ");   // Player name
