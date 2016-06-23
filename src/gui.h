@@ -51,15 +51,6 @@ extern "C" {
   #include "config.h"
 }
 
-enum KeyPressTexture
-  {
-    KEY_PRESS_SURFACE_DEFAULT, 
-    KEY_PRESS_SURFACE_UP, 
-    KEY_PRESS_SURFACE_DOWN,        
-    KEY_PRESS_SURFACE_LEFT, 
-    KEY_PRESS_SURFACE_RIGHT, 
-    KEY_PRESS_SURFACE_TOTAL
-  };  
 
 /**
  * Store an image into a texture
@@ -75,19 +66,17 @@ SDL_Texture* loadTexture (SDL_Renderer** Renderer,
  * Load the player and toolbar’s textures.
  *
  * @param Renderer is the renderer.
- * @param KeyPressTexture is the array where we load the player’s texture.
  * @param toolbar is the toolbar’s texture pointer.
  */
 void loadMedia (SDL_Renderer** Renderer,
-		SDL_Texture** KeyPressTexture,
-		SDL_Texture** toolbar);
+		SDL_Texture** toolbar,
+		SDL_Texture* textures[][4]);
 
 /**
  * Initiates the SDL basics, like Window and Renderer.
  *
  * @param Window is the window.
  * @param Renderer is the window’s renderer.
- * @param KeyPressTexture is an array where the player’s texture will be.
  * @param biomes is an array where the biome’s textures will be loaded.
  * @param items is an array where the item’s textures will be loaded.
  * @param toolbar is a pointer where the toolbar’s texture will be loaded.
@@ -96,21 +85,20 @@ void loadMedia (SDL_Renderer** Renderer,
  */
 void init (SDL_Window** Window,
 	   SDL_Renderer** Renderer,
-	   SDL_Texture** KeyPressTexture,
 	   SDL_Texture** biomes,
 	   SDL_Texture** items,
 	   SDL_Texture** toolbar,
 	   int* screen_height,
-	   int* screen_width);
+	   int* screen_width,
+	   SDL_Texture* textures[][4]);
 
 /**
  * Handle the keydown events.
  */
 int handle_keydown (SDL_Keycode event_keycode,
 		    bool *keys_state,
-		    SDL_Texture*** textures,
-		    SDL_Texture** current_texture,
-		    SDL_Texture** key_press_texture);
+		    SDL_Texture* textures[][4],
+		    SDL_Texture** current_texture);
 
 /**
  * Handle the keyup events.
@@ -128,21 +116,13 @@ int handle_clickdown (int button,
 		      struct map_coordinates* click_map_coords);
 
 /**
- * Handle the clickup events.
- */
-int handle_clickup (int button,
-		    coordinates click_coords,
-		    bool *clicks_state,
-		    struct coordinates* screen_origin);
-
-/**
  * Handle the SDL events.
  */
-int handle_events (SDL_Texture** CurrentTexture,
+int handle_events (SDL_Texture* textures[][4],
+		   SDL_Texture** CurrentTexture,
 		   SDL_Texture** biomes,
 		   bool* keys_state,
 		   bool* clicks_state,
-		   SDL_Texture** key_press_texture,
 		   int* screen_height,
 		   int* screen_width,
 		   struct coordinates* screen_origin,

@@ -46,9 +46,8 @@ loadTexture(SDL_Renderer** main_renderer, std::string path)
 
 void
 loadMedia (SDL_Renderer** main_renderer,
-	   SDL_Texture** KeyPressTexture,
 	   SDL_Texture** toolbar,
-	   SDL_Texture*** textures)
+	   SDL_Texture* textures[][4])
 {
   SDL_Texture* player_textures[4];
   SDL_Texture* items_textures[4];
@@ -67,55 +66,28 @@ loadMedia (SDL_Renderer** main_renderer,
   
   for (int i = 0; i < 4; i++)
     {
-      player_textures[i] = loadTexture (main_renderer,
-  					textures_paths[i]);
+      textures[0][i] = loadTexture (main_renderer,
+				    textures_paths[i]);
     }
-  textures[0] = player_textures;
 
-  for (int i = 4; i < 7; i++)
+  for (int i = 0; i < 4; i++)
     {
-      items_textures[i - 4] = loadTexture (main_renderer,
-  					   textures_paths[i]);
+      textures[1][i] = loadTexture (main_renderer,
+				    textures_paths[i]);
     }
-    textures[1] = items_textures;
-
-
-  // every box of the table is associated to an image
-  KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture (main_renderer, "media/textures/LEFT.png");
-  // if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
-  //   success = false;
-  
-  KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture (main_renderer, "media/textures/LEFT.png");
-  // if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
-  //   success = false;
-    
-  KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture (main_renderer, "media/textures/RIGHT.png");
-  // if (KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] == NULL)
-  //   success = false;
-    
-  KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture (main_renderer, "media/textures/LEFT.png");
-  // if (KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] == NULL)
-  //   success = false;  
-    
-  KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture (main_renderer, "media/textures/RIGHT.png");
-  // if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
-  //   success = false;
 
   *toolbar = loadTexture (main_renderer, "media/hud/toolbar.png");
-  // if (*toolbar == NULL)
-  //   success = false;
 }
 
 void
 init (SDL_Window** Window,
       SDL_Renderer** Renderer,
-      SDL_Texture** KeyPressTexture,
       SDL_Texture** biomes,
       SDL_Texture** items,
       SDL_Texture** toolbar,
       int* screen_height,
       int* screen_width,
-      SDL_Texture*** textures)
+      SDL_Texture* textures[][4])
 {
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
@@ -144,7 +116,7 @@ init (SDL_Window** Window,
 				  | SDL_RENDERER_PRESENTVSYNC);
   SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 
-  loadMedia (Renderer, KeyPressTexture, toolbar, textures);
+  loadMedia (Renderer, toolbar, textures);
   
   load_biomes (Renderer, biomes);
   load_items (Renderer, items);
@@ -153,9 +125,8 @@ init (SDL_Window** Window,
 int
 handle_keydown (SDL_Keycode event_keycode,
 		bool* keys_state,
-		SDL_Texture*** textures,
-		SDL_Texture** current_texture,
-		SDL_Texture** key_press_texture)
+		SDL_Texture* textures[][4],
+		SDL_Texture** current_texture)
 {
   bool keydown = 1;
   switch (event_keycode)
@@ -168,12 +139,11 @@ handle_keydown (SDL_Keycode event_keycode,
       break;
     case SDLK_LEFT:
       keys_state[2] = keydown;
-      printf ("%d\n", textures[0][2]);
-      *current_texture = textures[0][2]; // left texture // key_press_texture[KEY_PRESS_SURFACE_LEFT];
+      *current_texture = textures[0][2];
       break;
     case SDLK_RIGHT:
       keys_state[3] = keydown;
-      *current_texture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
+      *current_texture = textures[0][3];
       break;
     default:
       break;
@@ -244,42 +214,6 @@ handle_clickdown (int button,
 }
 
 int
-handle_clickup (int button,
-		coordinates click_coords,
-		bool* clicks_state,
-		int* screen_height,
-		int* screen_width,
-		struct coordinates* screen_origin)
-{
-  // Not necessary right now because the clicks_state array elements are set back to 0 once events are handled
-  /*
-  bool clickup = 0;
-
-  switch (button)
-    {
-    case SDL_BUTTON_LEFT:
-      clicks_state[0] = clickup;
-      break;
-    case SDL_BUTTON_MIDDLE:
-      clicks_state[1] = clickup;
-      break;
-    case SDL_BUTTON_RIGHT:
-      clicks_state[2] = clickup;
-      break;
-    case SDL_BUTTON_X1:
-      clicks_state[3] = clickup;
-      break;
-    case SDL_BUTTON_X2:
-      clicks_state[4] = clickup;
-      break;
-    default:
-      break;
-    }
-  */
-  return 1;
-}
-
-int
 handle_mousewheel (int wheel_x,
 		   int* screen_height,
 		   int* screen_width,
@@ -291,12 +225,11 @@ handle_mousewheel (int wheel_x,
 }
 
 int
-handle_events (SDL_Texture*** textures,
+handle_events (SDL_Texture* textures[][4],
 	       SDL_Texture** CurrentTexture,
 	       SDL_Texture** biomes,
 	       bool* keys_state,
 	       bool* clicks_state,
-	       SDL_Texture** key_press_texture,
 	       int* screen_height,
 	       int* screen_width,
 	       struct coordinates screen_origin,
@@ -320,8 +253,7 @@ handle_events (SDL_Texture*** textures,
 	  handle_keydown (event.key.keysym.sym,
 			  keys_state,
 			  textures,
-			  CurrentTexture,
-			  key_press_texture);
+			  CurrentTexture);
 	  break;
 
 	case SDL_KEYUP:
@@ -342,14 +274,6 @@ handle_events (SDL_Texture*** textures,
 	  break;
 
 	case SDL_MOUSEBUTTONUP:
-	  click_coords.x = event.button.x;
-	  click_coords.y = event.button.y;
-	  handle_clickup (event.button.button,
-			  click_coords,
-			  clicks_state,
-			  screen_height,
-			  screen_width,
-			  &screen_origin);
 	  break;
 
 	case SDL_MOUSEWHEEL:
@@ -414,7 +338,6 @@ blit (SDL_Renderer** Renderer,
   SDL_Rect Rect = {.x = (int) blit_origin.x,
 		   .y = (int) blit_origin.y,
 		   .w = width, .h = height};
-  // SDL_QueryTexture (texture, NULL, NULL, &Rect.w, &Rect.h);
   
   SDL_RenderSetViewport(*Renderer, &Rect);
   SDL_RenderCopy (*Renderer, texture, NULL,NULL);
@@ -459,15 +382,13 @@ run_gui (int read_pipe,
   SDL_Window *Window = NULL;
   SDL_Renderer* Renderer = NULL;
 
-  SDL_Texture** textures[2];
+  SDL_Texture* textures[2][4];
   SDL_Texture *biomes[5];
   SDL_Texture *items[5];
-  SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
   SDL_Texture* toolbar = NULL;
 
-  init (&Window, &Renderer, key_press_texture,
-	biomes,	items, &toolbar, &screen_height,
-	&screen_width, textures);
+  init (&Window, &Renderer, biomes, items, &toolbar,
+	&screen_height,	&screen_width, textures);
 
   struct coordinates screen_center; 
   screen_center.x = screen_width / 2;
@@ -480,7 +401,7 @@ run_gui (int read_pipe,
 				    .y = screen_center.y};
   
   SDL_Texture *current_texture = NULL;
-  current_texture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
+  current_texture = textures[0][1];
   
   /* 
    * keys_state contains only 4 elements
@@ -528,7 +449,6 @@ run_gui (int read_pipe,
 			biomes,
 			keys_state,
 			clicks_state,
-			key_press_texture,
 			&screen_height,
 			&screen_width,
 			screen_origin,
