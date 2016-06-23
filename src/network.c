@@ -159,6 +159,9 @@ handle_network_communication (unsigned short port, int read_pipe,
   unsigned int number_of_players = 0;
   struct server_credentials *servers = NULL;
 
+  time_t old_time, current_time;
+  old_time = time (NULL);
+
   int count = 0;
   
   while (!quit)
@@ -244,6 +247,13 @@ handle_network_communication (unsigned short port, int read_pipe,
 
 	default:
 	  break;
+	}
+
+      current_time = time (NULL);
+      if (current_time - old_time > 5)
+	{
+	  old_time = current_time;
+	  write (write_pipe, "PING", 5);
 	}
     }
 
@@ -338,7 +348,7 @@ get_socket (unsigned short port)
   int sockfd6, s;
   struct addrinfo hints, *result, *rp;
 
-  memset (&hints, 0, sizeof(struct addrinfo));
+  memset (&hints, 0, sizeof (struct addrinfo));
   hints.ai_family = AF_INET6; // Allow IPv4 and IPv6
   hints.ai_socktype = SOCK_DGRAM; // Datagram socket
   hints.ai_flags = AI_PASSIVE;	  // For wildcard IP address
@@ -365,7 +375,7 @@ get_socket (unsigned short port)
       if (bind (sockfd6, rp->ai_addr, rp->ai_addrlen) != -1)
 	break; // Success
 
-      close(sockfd6);
+      close (sockfd6);
     }
 
   if (rp == NULL)
@@ -511,4 +521,48 @@ run_map_server (unsigned short port)
       fprintf (stderr, "Fork failed.\n");
       return;
     }
+}
+
+int
+get_tcp_socket (unsigned short port)
+{
+  int sockfd6, s;
+  struct addrinfo hints, *result, *rp;
+
+  memset (&hints, 0, sizeof (struct addrinfo));
+  hints.ai_family = AF_INET6; // Allow IPv4 and IPv6
+  hints.ai_socktype = SOCK_STREAM; // Stream socket
+  hints.ai_flags = AI_PASSIVE;	  // For wildcard IP address
+  hints.ai_protocol = 0; //Any protocol
+  hints.ai_canonname = NULL;
+  hints.ai_addr = NULL;
+  hints.ai_next = NULL;
+
+  char port_str[6];
+  snprintf (port_str, 6, "%d", port);
+
+  s = getaddrinfo (NULL, port_str, &hints, &result);
+  if (s != 0)
+    {
+      exit (EXIT_FAILURE);
+    }
+
+  for (rp = result; rp != NULL; rp = rp->ai_next)
+    {
+      sockfd6 = socket (rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+      if(sockfd6 == -1)
+	continue;
+      
+      if (bind (sockfd6, rp->ai_addr, rp->ai_addrlen) != -1)
+	break; // Success
+
+      close (sockfd6);
+    }
+
+  if (rp == NULL)
+    exit (EXIT_FAILURE);
+
+  freeaddrinfo (result);
+
+  return sockfd6;
 }

@@ -180,3 +180,11 @@ void new_player_command (const char* data,
  * @param port is the tcp’s server port.
  */
 void run_map_server (unsigned short port);
+
+/**
+ * Get a tcp socket binded to a specified port.
+ *
+ * @param port is the port where the server will listen.
+ * @return the socket.
+ */
+int get_tcp_socket (unsigned short port);

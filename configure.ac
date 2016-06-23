@@ -9,6 +9,14 @@ PKG_CHECK_MODULES([libSDL2], [sdl2 >= 2])
 PKG_CHECK_MODULES([libSDL2Image], [SDL2_image])
 LIBS="$LIBS $libSDL2Image_LIBS -lxml2"
 
+AC_ARG_ENABLE([run-in-place],
+  AS_HELP_STRING([--enable-run-in-place],
+    [Enable the run in place option to keep every file needed by the game in the directory where we compiled it]))
+
+AS_IF([test "$enable_run_in_place" = "yes"], [
+  AC_DEFINE([RUN_IN_PLACE], [1],
+  [Define if we need to keep every file needed by the game in the current directory])])
+
 AC_CONFIG_HEADER([config.h])
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile])
 AC_OUTPUT
