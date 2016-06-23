@@ -47,10 +47,40 @@ loadTexture(SDL_Renderer** main_renderer, std::string path)
 bool 
 loadMedia (SDL_Renderer** main_renderer,
 	   SDL_Texture** KeyPressTexture,
-	   SDL_Texture** toolbar)
+	   SDL_Texture** toolbar,
+	   SDL_Texture*** textures)
 {
-  bool success = true;
+  SDL_Texture* player_textures[4];
+  SDL_Texture* items_textures[4];
   
+  std::string textures_paths[] = {"media/textures/left.png",
+  				  "media/textures/right.png",
+  				  "media/textures/left.png",
+  				  "media/textures/right.png",
+  				  //ending of player_textures
+
+  				  // Beginning items_textures
+  				  "media/textures/arbre.png",
+  				  "media/textures/pierre1.png",
+  				  "media/textures/pierre2.png",
+  				  "media/textures/pierre3.png"};
+  
+  for (int i = 0; i < 4; i++)
+    {
+      player_textures[i] = loadTexture (main_renderer,
+  					textures_paths[i]);
+    }
+  textures[0] = player_textures;
+
+  for (int i = 4; i < 7; i++)
+    {
+      items_textures[i - 4] = loadTexture (main_renderer,
+  					   textures_paths[i]);
+    }
+    textures[0] = items_textures;
+
+
+  bool success = true;
   // every box of the table is associated to an image
   KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture (main_renderer, "media/textures/LEFT.png");
   if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
@@ -87,7 +117,8 @@ init (SDL_Window** Window,
       SDL_Texture** items,
       SDL_Texture** toolbar,
       int* screen_height,
-      int* screen_width)
+      int* screen_width,
+      SDL_Texture*** textures)
 {
   bool success = true;
 	
@@ -122,7 +153,7 @@ init (SDL_Window** Window,
 				  | SDL_RENDERER_PRESENTVSYNC);
   SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 
-  if (!loadMedia (Renderer, KeyPressTexture, toolbar))
+  if (!loadMedia (Renderer, KeyPressTexture, toolbar, textures))
     success = false;
   
   load_biomes (Renderer, biomes);
@@ -438,13 +469,21 @@ run_gui (int read_pipe,
   SDL_Window *Window = NULL;
   SDL_Renderer* Renderer = NULL;
 
+  SDL_Texture** textures[2];
   SDL_Texture *biomes[5];
   SDL_Texture *items[5];
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
   SDL_Texture* toolbar = NULL;
 
-  if (!init (&Window, &Renderer, key_press_texture, biomes, items,
-	     &toolbar, &screen_height, &screen_width))
+  if (!init (&Window,
+	     &Renderer,
+	     key_press_texture,
+	     biomes,
+	     items,
+	     &toolbar,
+	     &screen_height,
+	     &screen_width,
+	     textures))
     return -1;
 
   struct coordinates screen_center; 
