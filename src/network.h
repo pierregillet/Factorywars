@@ -37,6 +37,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <ifaddrs.h>
+#include <time.h>
 #include "utils.h"
 #include "config.h"
 
