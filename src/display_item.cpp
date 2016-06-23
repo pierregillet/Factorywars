@@ -37,7 +37,7 @@ display_items (SDL_Renderer** Renderer,
 	      bliting_coords.y = (l - screen_origin.y % 384) + 24 * j - blit_y / 2;
 	      
 	      SDL_Texture* item_texture = table_items[item_id];
-	      blit(Renderer, bliting_coords, blit_x, blit_y, item_texture);
+	      blit (Renderer, bliting_coords, blit_x, blit_y, item_texture);
 	    }
 	}
   }

@@ -85,10 +85,13 @@ display_background (SDL_Renderer** Renderer,
 	  
 	  struct coordinates temp = {.x = j - screen_origin.x % chunk_width,
 	  			     .y = i - screen_origin.y % chunk_width};
-	  blit (Renderer, temp, chunk_width, chunk_width,  display_id);
+	  blit (Renderer, temp, chunk_width,
+		chunk_width, display_id);
 	  
-	  struct chunk_info _info = get_chunk_info (coords, path.c_str());
-	  display_items (Renderer, path.c_str(), table_items, screen_origin, _info, i, j);
+	  struct chunk_info current_chunk_info = get_chunk_info (coords, path.c_str());
+	  display_items (Renderer, path.c_str(),
+			 table_items, screen_origin,
+			 current_chunk_info, i, j);
 	}
     }
 }  

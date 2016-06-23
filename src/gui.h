@@ -77,9 +77,8 @@ SDL_Texture* loadTexture (SDL_Renderer** Renderer,
  * @param Renderer is the renderer.
  * @param KeyPressTexture is the array where we load the player’s texture.
  * @param toolbar is the toolbar’s texture pointer.
- * @return true if success, false if failure.
  */
-bool loadMedia (SDL_Renderer** Renderer,
+void loadMedia (SDL_Renderer** Renderer,
 		SDL_Texture** KeyPressTexture,
 		SDL_Texture** toolbar);
 
@@ -95,7 +94,7 @@ bool loadMedia (SDL_Renderer** Renderer,
  * @param screen_height is an int pointer where we will store the screen height.
  * @param screen_width is an int pointer where we will store the screnn width.
  */
-bool init (SDL_Window** Window,
+void init (SDL_Window** Window,
 	   SDL_Renderer** Renderer,
 	   SDL_Texture** KeyPressTexture,
 	   SDL_Texture** biomes,
@@ -109,16 +108,15 @@ bool init (SDL_Window** Window,
  */
 int handle_keydown (SDL_Keycode event_keycode,
 		    bool *keys_state,
-		    SDL_Texture** CurrentTexture,
+		    SDL_Texture*** textures,
+		    SDL_Texture** current_texture,
 		    SDL_Texture** key_press_texture);
 
 /**
  * Handle the keyup events.
  */
 int handle_keyup (SDL_Keycode event_keycode,
-		  bool *keys_state,
-		  SDL_Texture** CurrentTexture,
-		  SDL_Texture** key_press_texture);
+		  bool *keys_state);
 
 /**
  * Handle the clickdown events.

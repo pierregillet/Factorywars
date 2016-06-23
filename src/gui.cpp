@@ -44,7 +44,7 @@ loadTexture(SDL_Renderer** main_renderer, std::string path)
   return new_texture;
 }
 
-bool 
+void
 loadMedia (SDL_Renderer** main_renderer,
 	   SDL_Texture** KeyPressTexture,
 	   SDL_Texture** toolbar,
@@ -53,10 +53,10 @@ loadMedia (SDL_Renderer** main_renderer,
   SDL_Texture* player_textures[4];
   SDL_Texture* items_textures[4];
   
-  std::string textures_paths[] = {"media/textures/left.png",
-  				  "media/textures/right.png",
-  				  "media/textures/left.png",
-  				  "media/textures/right.png",
+  std::string textures_paths[] = {"media/textures/LEFT.png",
+  				  "media/textures/RIGHT.png",
+  				  "media/textures/LEFT.png",
+  				  "media/textures/RIGHT.png",
   				  //ending of player_textures
 
   				  // Beginning items_textures
@@ -77,39 +77,36 @@ loadMedia (SDL_Renderer** main_renderer,
       items_textures[i - 4] = loadTexture (main_renderer,
   					   textures_paths[i]);
     }
-    textures[0] = items_textures;
+    textures[1] = items_textures;
 
 
-  bool success = true;
   // every box of the table is associated to an image
   KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] = loadTexture (main_renderer, "media/textures/LEFT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
-    success = false;
-    
+  // if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
+  //   success = false;
+  
   KeyPressTexture[KEY_PRESS_SURFACE_UP] = loadTexture (main_renderer, "media/textures/LEFT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
-    success = false;
+  // if (KeyPressTexture[KEY_PRESS_SURFACE_UP ] == NULL)
+  //   success = false;
     
   KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] = loadTexture (main_renderer, "media/textures/RIGHT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] == NULL)
-    success = false;
+  // if (KeyPressTexture[KEY_PRESS_SURFACE_DOWN ] == NULL)
+  //   success = false;
     
   KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] = loadTexture (main_renderer, "media/textures/LEFT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] == NULL)
-    success = false;  
+  // if (KeyPressTexture[KEY_PRESS_SURFACE_LEFT ] == NULL)
+  //   success = false;  
     
   KeyPressTexture[KEY_PRESS_SURFACE_RIGHT ] = loadTexture (main_renderer, "media/textures/RIGHT.png");
-  if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
-    success = false;
+  // if (KeyPressTexture[KEY_PRESS_SURFACE_DEFAULT] == NULL)
+  //   success = false;
 
   *toolbar = loadTexture (main_renderer, "media/hud/toolbar.png");
-  if (*toolbar == NULL)
-    success = false;
-  
-  return success;
+  // if (*toolbar == NULL)
+  //   success = false;
 }
 
-bool 
+void
 init (SDL_Window** Window,
       SDL_Renderer** Renderer,
       SDL_Texture** KeyPressTexture,
@@ -120,13 +117,9 @@ init (SDL_Window** Window,
       int* screen_width,
       SDL_Texture*** textures)
 {
-  bool success = true;
-	
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
       printf ("Error: %s\n", SDL_GetError ());
-      success = false;
-      return success;
     }
 	
   // if the SDL launched correctly
@@ -142,8 +135,6 @@ init (SDL_Window** Window,
     {
       printf ("Couldn’t create window: %s\n", SDL_GetError());
       SDL_Quit();
-      success = false;
-      return success;
     }
 	  
   // if window has been created without errors
@@ -153,18 +144,17 @@ init (SDL_Window** Window,
 				  | SDL_RENDERER_PRESENTVSYNC);
   SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
 
-  if (!loadMedia (Renderer, KeyPressTexture, toolbar, textures))
-    success = false;
+  loadMedia (Renderer, KeyPressTexture, toolbar, textures);
   
   load_biomes (Renderer, biomes);
   load_items (Renderer, items);
-  return success;
 }
 
 int
 handle_keydown (SDL_Keycode event_keycode,
 		bool* keys_state,
-		SDL_Texture** CurrentTexture,
+		SDL_Texture*** textures,
+		SDL_Texture** current_texture,
 		SDL_Texture** key_press_texture)
 {
   bool keydown = 1;
@@ -178,11 +168,12 @@ handle_keydown (SDL_Keycode event_keycode,
       break;
     case SDLK_LEFT:
       keys_state[2] = keydown;
-      *CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_LEFT];
+      printf ("%d\n", textures[0][2]);
+      *current_texture = textures[0][2]; // left texture // key_press_texture[KEY_PRESS_SURFACE_LEFT];
       break;
     case SDLK_RIGHT:
       keys_state[3] = keydown;
-      *CurrentTexture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
+      *current_texture = key_press_texture[KEY_PRESS_SURFACE_RIGHT];
       break;
     default:
       break;
@@ -192,9 +183,7 @@ handle_keydown (SDL_Keycode event_keycode,
 
 int
 handle_keyup (SDL_Keycode event_keycode,
-	      bool* keys_state,
-	      SDL_Texture** CurrentTexture,
-	      SDL_Texture** key_press_texture)
+	      bool* keys_state)
 {
   bool keyup = 0;
   switch (event_keycode)
@@ -262,7 +251,7 @@ handle_clickup (int button,
 		int* screen_width,
 		struct coordinates* screen_origin)
 {
-  // Not necessary right now because the clicks_state array elements are put to 0 once events are handles
+  // Not necessary right now because the clicks_state array elements are set back to 0 once events are handled
   /*
   bool clickup = 0;
 
@@ -302,7 +291,8 @@ handle_mousewheel (int wheel_x,
 }
 
 int
-handle_events (SDL_Texture** CurrentTexture,
+handle_events (SDL_Texture*** textures,
+	       SDL_Texture** CurrentTexture,
 	       SDL_Texture** biomes,
 	       bool* keys_state,
 	       bool* clicks_state,
@@ -329,15 +319,14 @@ handle_events (SDL_Texture** CurrentTexture,
 	case SDL_KEYDOWN:
 	  handle_keydown (event.key.keysym.sym,
 			  keys_state,
+			  textures,
 			  CurrentTexture,
 			  key_press_texture);
 	  break;
 
 	case SDL_KEYUP:
 	  handle_keyup (event.key.keysym.sym,
-			keys_state,
-			CurrentTexture,
-			key_press_texture);
+			keys_state);
 	  break;
 
 	case SDL_MOUSEBUTTONDOWN:
@@ -457,6 +446,7 @@ quit_sdl (SDL_Window** Window,
   SDL_DestroyWindow (*Window);
 
   SDL_Quit();
+  printf ("Goodbye !\n");
 }
 
 int 
@@ -475,16 +465,9 @@ run_gui (int read_pipe,
   SDL_Texture *key_press_texture [KEY_PRESS_SURFACE_TOTAL];
   SDL_Texture* toolbar = NULL;
 
-  if (!init (&Window,
-	     &Renderer,
-	     key_press_texture,
-	     biomes,
-	     items,
-	     &toolbar,
-	     &screen_height,
-	     &screen_width,
-	     textures))
-    return -1;
+  init (&Window, &Renderer, key_press_texture,
+	biomes,	items, &toolbar, &screen_height,
+	&screen_width, textures);
 
   struct coordinates screen_center; 
   screen_center.x = screen_width / 2;
@@ -496,8 +479,8 @@ run_gui (int read_pipe,
   struct coordinates hero_coords = {.x = screen_center.x,
 				    .y = screen_center.y};
   
-  SDL_Texture *CurrentTexture = NULL;
-  CurrentTexture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
+  SDL_Texture *current_texture = NULL;
+  current_texture = key_press_texture [KEY_PRESS_SURFACE_DEFAULT];
   
   /* 
    * keys_state contains only 4 elements
@@ -521,10 +504,11 @@ run_gui (int read_pipe,
   struct map_coordinates click_map_coords;
 
   // We need to display the map at the beginning
-  display_background (&Renderer, "save", biomes, items, screen_origin);
+  display_background (&Renderer, "save", biomes,
+		      items, screen_origin);
 
   // Display character
-  blit (&Renderer, screen_center, 25, 41, CurrentTexture);
+  blit (&Renderer, screen_center, 25, 41, current_texture);
   
   // Display HUD
   struct coordinates toolbar_origin = {.x = screen_width / 4 ,
@@ -539,7 +523,8 @@ run_gui (int read_pipe,
 
   display_blits(&Renderer);
 
-  while (handle_events (&CurrentTexture,
+  while (handle_events (textures,
+			&current_texture,
 			biomes,
 			keys_state,
 			clicks_state,
@@ -561,11 +546,11 @@ run_gui (int read_pipe,
 
 	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save", biomes, items, screen_origin);
-	      blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
+	      blit (&Renderer, hero_coords, 25, 41, current_texture);
 	      blit (&Renderer, toolbar_origin, toolbar_size.x,
 		    toolbar_size.y, toolbar);
 
-	      display_players (players, screen_origin, &Renderer, CurrentTexture,
+	      display_players (players, screen_origin, &Renderer, current_texture,
 			       screen_height, screen_width);
 
 	      display_blits(&Renderer);
@@ -596,14 +581,14 @@ run_gui (int read_pipe,
 		    hero_coords,
 		    25,
 		    41,
-		    CurrentTexture);
+		    current_texture);
 	      blit (&Renderer,
 		    toolbar_origin,
 		    toolbar_size.x,
 		    toolbar_size.y,
 		    toolbar);
 
-	      display_players (players, screen_origin, &Renderer, CurrentTexture,
+	      display_players (players, screen_origin, &Renderer, current_texture,
 			       screen_height, screen_width);
 
 	      display_blits(&Renderer);
@@ -634,14 +619,14 @@ run_gui (int read_pipe,
 		    hero_coords,
 		    25,
 		    41,
-		    CurrentTexture);
+		    current_texture);
 	      blit (&Renderer,
 		    toolbar_origin,
 		    toolbar_size.x,
 		    toolbar_size.y,
 		    toolbar);
 
-	      display_players (players, screen_origin, &Renderer, CurrentTexture,
+	      display_players (players, screen_origin, &Renderer, current_texture,
 			       screen_height, screen_width);
 	      
 	      display_blits (&Renderer);
@@ -655,14 +640,14 @@ run_gui (int read_pipe,
       	{
 	  refresh_renderer (&Renderer);
 	  display_background (&Renderer, "save", biomes, items, screen_origin);
-	  blit (&Renderer, hero_coords, 25, 41, CurrentTexture);
+	  blit (&Renderer, hero_coords, 25, 41, current_texture);
 	  blit (&Renderer,
 		toolbar_origin,
 		toolbar_size.x,
 		toolbar_size.y,
 		toolbar);
 	      
-	  display_players (players, screen_origin, &Renderer, CurrentTexture,
+	  display_players (players, screen_origin, &Renderer, current_texture,
 			   screen_height, screen_width);
 	      
       	  display_blits (&Renderer);
@@ -671,7 +656,7 @@ run_gui (int read_pipe,
       SDL_Delay (1/200);
     }
 
-  quit_sdl (&Window, &Renderer, &CurrentTexture, biomes, items);
+  quit_sdl (&Window, &Renderer, &current_texture, biomes, items);
   
   return 0;
 }  

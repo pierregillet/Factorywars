@@ -690,6 +690,7 @@ ac_user_opts='
 enable_option_checking
 enable_silent_rules
 enable_dependency_tracking
+enable_run_in_place
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1331,6 +1332,9 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking
                           speeds up one-time build
+  --enable-run-in-place   Enable the run in place option to keep every file
+                          needed by the game in the directory where we
+                          compiled it
 
 Some influential environment variables:
   CC          C compiler command
@@ -4296,9 +4300,22 @@ $as_echo "yes" >&6; }
 fi
 LIBS="$LIBS $libSDL2Image_LIBS -lxml2"
 
+# Check whether --enable-run-in-place was given.
+if test "${enable_run_in_place+set}" = set; then :
+  enableval=$enable_run_in_place;
+fi
+
+
+if test "$enable_run_in_place" = "yes"; then :
+
+
+$as_echo "#define RUN_IN_PLACE 1" >>confdefs.h
+
+fi
+
 ac_config_headers="$ac_config_headers config.h"
 
-ac_config_files="$ac_config_files Makefile src/Makefile"
+ac_config_files="$ac_config_files Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -5032,7 +5049,6 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
