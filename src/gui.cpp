@@ -80,8 +80,8 @@ loadMedia (SDL_Renderer** main_renderer,
 }
 
 void
-init (SDL_Window** Window,
-      SDL_Renderer** Renderer,
+init (SDL_Window** main_window,
+      SDL_Renderer** main_renderer,
       SDL_Texture** biomes,
       SDL_Texture** items,
       SDL_Texture** toolbar,
@@ -95,7 +95,7 @@ init (SDL_Window** Window,
     }
 	
   // if the SDL launched correctly
-  *Window = SDL_CreateWindow ("Factorywars",
+  *main_window = SDL_CreateWindow ("Factorywars",
 			      SDL_WINDOWPOS_UNDEFINED,
 			      SDL_WINDOWPOS_UNDEFINED,
 			      *screen_width,
@@ -103,23 +103,23 @@ init (SDL_Window** Window,
 			      SDL_WINDOW_SHOWN
 			      /*| SDL_WINDOW_RESIZABLE*/);
 	  
-  if (*Window == NULL) 
+  if (*main_window == NULL) 
     {
-      printf ("Couldn’t create window: %s\n", SDL_GetError());
+      printf ("Couldn’t create window : %s\n", SDL_GetError());
       SDL_Quit();
     }
 	  
   // if window has been created without errors
-  *Renderer = SDL_CreateRenderer (*Window,
+  *main_renderer = SDL_CreateRenderer (*main_window,
 				  -1,
 				  SDL_RENDERER_ACCELERATED
 				  | SDL_RENDERER_PRESENTVSYNC);
-  SDL_SetRenderDrawColor (*Renderer, 0xFF,0xFF,0xFF,0xFF);
+  SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
 
-  loadMedia (Renderer, toolbar, textures);
+  loadMedia (main_renderer, toolbar, textures);
   
-  load_biomes (Renderer, biomes);
-  load_items (Renderer, items);
+  load_biomes (main_renderer, biomes);
+  load_items (main_renderer, items);
 }
 
 int
