@@ -325,12 +325,6 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
   return 1;
 }
 
-void 
-refresh_renderer (SDL_Renderer** Renderer)
-{
-  SDL_RenderClear (*Renderer);
-}
-
 int
 blit (SDL_Renderer** Renderer,
       struct coordinates blit_origin,
@@ -472,7 +466,6 @@ run_gui (int read_pipe,
 				 screen_height,
 				 screen_width);
 
-	      refresh_renderer (&Renderer);
 	      display_background (&Renderer, "save",
 				  biomes, items,
 				  screen_origin);
@@ -502,7 +495,6 @@ run_gui (int read_pipe,
 			       click_map_coords.square,
 			       1,
 			       "save");
-	      refresh_renderer (&Renderer);
 	      display_background (&Renderer,
 				  "save",
 				  biomes,
@@ -541,7 +533,6 @@ run_gui (int read_pipe,
 			       click_map_coords.square,
 			       -1,
 			       "save");
-	      refresh_renderer (&Renderer);
 	      display_background (&Renderer,
 				  "save",
 				  biomes,
@@ -571,7 +562,6 @@ run_gui (int read_pipe,
       // Network pipe handling
       if (handle_data_from_network_pipe (read_pipe, players, "save") > 0)
       	{
-	  refresh_renderer (&Renderer);
 	  display_background (&Renderer, "save", biomes,
 			      items, screen_origin);
 	  blit (&Renderer, hero_coords, 25, 41, current_texture);

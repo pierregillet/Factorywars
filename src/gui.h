@@ -136,11 +136,6 @@ int move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 struct coordinates screen_center);
 
 /**
- * Clear the renderer, need to be deleted.
- */
-void refresh_renderer(SDL_Renderer** Renderer);
-
-/**
  * Blit Textures at given coordinates x,y.
  *
  * @return int true if there is no error
