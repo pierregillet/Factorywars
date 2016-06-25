@@ -32,5 +32,5 @@ GUI
 ---
 + Create the player textures.
 + Rewrite gui.cpp.
-+ Delete refresh_renderer and display_blits functions.
++ Delete display_blits function.
 + Blit by layers, first the ground textures then the objects.
