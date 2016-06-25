@@ -63,31 +63,29 @@ SDL_Texture* loadTexture (SDL_Renderer** Renderer,
 			  std::string path);
 
 /**
- * Load the player and toolbar’s textures.
+ * Loads the textures.
  *
  * @param Renderer is the renderer.
- * @param toolbar is the toolbar’s texture pointer.
+ * @param textures is an array of arrays containing the textures.
  */
 void loadMedia (SDL_Renderer** Renderer,
-		SDL_Texture** toolbar,
 		SDL_Texture* textures[][4]);
 
 /**
- * Initiates the SDL basics, like Window and Renderer.
+ * Initiates the SDL basics, like the window and the renderer.
  *
- * @param Window is the window.
- * @param Renderer is the window’s renderer.
+ * @param main_window is the main window.
+ * @param main_renderer is the main renderer.
  * @param biomes is an array where the biome’s textures will be loaded.
  * @param items is an array where the item’s textures will be loaded.
- * @param toolbar is a pointer where the toolbar’s texture will be loaded.
  * @param screen_height is an int pointer where we will store the screen height.
  * @param screen_width is an int pointer where we will store the screnn width.
+ * @param textures is an array of arrays containing the textures.
  */
-void init (SDL_Window** Window,
-	   SDL_Renderer** Renderer,
+void init (SDL_Window** main_window,
+	   SDL_Renderer** main_renderer,
 	   SDL_Texture** biomes,
 	   SDL_Texture** items,
-	   SDL_Texture** toolbar,
 	   int* screen_height,
 	   int* screen_width,
 	   SDL_Texture* textures[][4]);
@@ -145,7 +143,6 @@ void refresh_renderer(SDL_Renderer** Renderer);
 /**
  * Blit Textures at given coordinates x,y.
  *
- * @param The Texture needs a Renderer to be blit.
  * @return int true if there is no error
  */
 int blit (SDL_Renderer** Renderer,
@@ -162,15 +159,15 @@ void display_blits(SDL_Renderer** Renderer);
 /**
  * Free what needed to be freed from the SDL library.
  *
- * @param Window is the window.
- * @param Renderer is the window’s renderer.
- * @param CurrentTexture is the player’s texture.
+ * @param main_window is the main window.
+ * @param main_renderer is the main renderer.
+ * @param current_texture is the player’s texture.
  * @param biomes is the biome’s textures.
  * @param items is the item’s textures.
  */
-void quit_sdl (SDL_Window** Window,
-	       SDL_Renderer** Renderer,
-	       SDL_Texture** CurrentTexture,
+void quit_sdl (SDL_Window** main_window,
+	       SDL_Renderer** main_renderer,
+	       SDL_Texture** current_texture,
 	       SDL_Texture** biomes,
 	       SDL_Texture** items);
 
@@ -212,6 +209,9 @@ struct map_coordinates get_map_coords (coordinates click_coords,
  * @param screen_height is the screen’s height.
  * @param screen_width is the screen’s width.
  */
-void display_players (std::vector<Player>& players, struct coordinates screen_origin,
-		     SDL_Renderer** renderer, SDL_Texture* player_texture,
-		     int screen_height, int screen_width);
+void display_players (std::vector<Player>& players,
+		      struct coordinates screen_origin,
+		      SDL_Renderer** renderer,
+		      SDL_Texture* player_texture,
+		      int screen_height,
+		      int screen_width);
