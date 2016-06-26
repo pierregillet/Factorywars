@@ -41,21 +41,24 @@ display_items (SDL_Renderer** Renderer,
 	       int l,
 	       int m)
 {
+  int item_id, blit_x, blit_y;
+  struct coordinates bliting_coords;
+  SDL_Texture* item_texture;
+  
   for (int i(16) ; i > 0 ; i--)
     {
       for (int j(0) ; j < 16 ; j++)
 	{
-	  int item_id = chunk.squares[i][j];
+	  item_id = chunk.squares[i][j];
 	  if (item_id > 0 && item_id < 4)
 	    {
-	      int blit_x = (item_id == 1)? 48 :24;
-	      int blit_y = (item_id == 1)? 48 :24;
-	      struct coordinates bliting_coords;
+	      blit_x = (item_id == 1)? 48 :24;
+	      blit_y = (item_id == 1)? 48 :24;
 	      
 	      bliting_coords.x = (m - screen_origin.x % 384) + 24 * i - blit_x / 4;
 	      bliting_coords.y = (l - screen_origin.y % 384) + 24 * j - blit_y / 2;
 	      
-	      SDL_Texture* item_texture = textures[2][item_id];
+	      item_texture = textures[2][item_id];
 	      blit (Renderer, bliting_coords, blit_x, blit_y, item_texture);
 	    }
 	}
