@@ -42,11 +42,8 @@ extern "C" {
 
 void display_items (SDL_Renderer** Renderer,
 		    std::string path,
-		    SDL_Texture** table_items,
+		    SDL_Texture* textures[][10],
 		    struct coordinates screen_origin,
 		    struct chunk_info chunk,
 		    int l,
 		    int m); 
-
-void load_items (SDL_Renderer** Renderer, SDL_Texture** table);
-

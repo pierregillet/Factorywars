@@ -84,8 +84,6 @@ void loadMedia (SDL_Renderer** Renderer,
  */
 void init (SDL_Window** main_window,
 	   SDL_Renderer** main_renderer,
-	   /* SDL_Texture** biomes, */
-	   SDL_Texture** items,
 	   int* screen_height,
 	   int* screen_width,
 	   SDL_Texture* textures[][10]);

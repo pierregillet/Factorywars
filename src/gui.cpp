@@ -100,8 +100,6 @@ loadMedia (SDL_Renderer** main_renderer,
 void
 init (SDL_Window** main_window,
       SDL_Renderer** main_renderer,
-      // SDL_Texture** biomes,
-      SDL_Texture** items,
       int* screen_height,
       int* screen_width,
       SDL_Texture* textures[][10])
@@ -134,9 +132,6 @@ init (SDL_Window** main_window,
   SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
 
   loadMedia (main_renderer, textures);
-  
-  // load_biomes (main_renderer, biomes);
-  load_items (main_renderer, items);
 }
 
 int
@@ -244,7 +239,6 @@ handle_mousewheel (int wheel_x,
 int
 handle_events (SDL_Texture* textures[][10],
 	       SDL_Texture** CurrentTexture,
-	       // SDL_Texture** biomes,
 	       bool* keys_state,
 	       bool* clicks_state,
 	       int* screen_height,
@@ -366,12 +360,10 @@ void
 quit_sdl (SDL_Window** Window,
 	  SDL_Renderer** Renderer,
 	  SDL_Texture** CurrentTexture,
-	  // SDL_Texture** biomes,
 	  SDL_Texture** items)
 {
   for (int i = 0; i < 5; i++)
     {
-      // SDL_DestroyTexture (biomes[i]);
       SDL_DestroyTexture (items[i]);
     }
   
@@ -394,12 +386,10 @@ run_gui (int read_pipe,
   SDL_Renderer* Renderer = NULL;
 
   SDL_Texture* textures[4][10];
-  // SDL_Texture *biomes[5];
   SDL_Texture *items[5];
 
-  init (&Window, &Renderer, // biomes,
-	items,
-	&screen_height, &screen_width, textures);
+  init (&Window, &Renderer, &screen_height,
+	&screen_width, textures);
 
   struct coordinates screen_center; 
   screen_center.x = screen_width / 2;
@@ -436,9 +426,9 @@ run_gui (int read_pipe,
   struct map_coordinates click_map_coords;
 
   // We need to display the map at the beginning
-  display_background (&Renderer, "save", // biomes,
-		      textures,
-		      items, screen_origin);
+  display_background (&Renderer, "save", textures,
+		      // items,
+		      screen_origin);
 
   // Display character
   blit (&Renderer, screen_center, 25, 41, current_texture);
@@ -458,7 +448,6 @@ run_gui (int read_pipe,
 
   while (handle_events (textures,
 			&current_texture,
-			// biomes,
 			keys_state,
 			clicks_state,
 			&screen_height,
@@ -483,9 +472,8 @@ run_gui (int read_pipe,
 				 screen_width);
 
 	      display_background (&Renderer, "save",
-				  // biomes,
 				  textures,
-				  items,
+				  // items,
 				  screen_origin);
 	      blit (&Renderer, hero_coords,
 		    25, 41, current_texture);
@@ -515,9 +503,8 @@ run_gui (int read_pipe,
 			       "save");
 	      display_background (&Renderer,
 				  "save",
-				  // biomes,
 				  textures,
-				  items,
+				  // items,
 				  screen_origin);
 	      
 	      blit (&Renderer,
@@ -554,9 +541,8 @@ run_gui (int read_pipe,
 			       "save");
 	      display_background (&Renderer,
 				  "save",
-				  // biomes,
 				  textures,
-				  items,
+				  // items,
 				  screen_origin);
 	      blit (&Renderer,
 		    hero_coords,
@@ -582,9 +568,9 @@ run_gui (int read_pipe,
       // Network pipe handling
       if (handle_data_from_network_pipe (read_pipe, players, "save") > 0)
       	{
-	  display_background (&Renderer, "save", // biomes,
-			      textures,
-			      items, screen_origin);
+	  display_background (&Renderer, "save", textures,
+			      // items,
+			      screen_origin);
 	  blit (&Renderer, hero_coords, 25, 41, current_texture);
 	  blit (&Renderer,
 		toolbar_origin,
@@ -602,9 +588,7 @@ run_gui (int read_pipe,
       SDL_Delay (1/200);
     }
 
-  quit_sdl (&Window, &Renderer, &current_texture,
-	    // biomes,
-	    items);
+  quit_sdl (&Window, &Renderer, &current_texture, items);
   
   return 0;
 }  

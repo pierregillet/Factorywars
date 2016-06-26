@@ -56,5 +56,5 @@ void display_background (SDL_Renderer** Renderer,
 			 std::string path,
 			 /* SDL_Texture** table_biomes, */
 			 SDL_Texture* textures[][10],
-			 SDL_Texture** table_items,
+			 /* SDL_Texture** table_items, */
 			 struct coordinates screen_origin);
