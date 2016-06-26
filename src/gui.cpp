@@ -46,7 +46,7 @@ loadTexture(SDL_Renderer** main_renderer, std::string path)
 
 void
 loadMedia (SDL_Renderer** main_renderer,
-	   SDL_Texture* textures[][4])
+	   SDL_Texture* textures[][10])
 {
   std::string textures_paths[] = {"media/textures/LEFT.png",
   				  "media/textures/RIGHT.png",
@@ -54,7 +54,15 @@ loadMedia (SDL_Renderer** main_renderer,
   				  "media/textures/RIGHT.png",
   				  // End of player textures
 
-  				  // Beginning items textures
+				  // Beginning of biomes textures
+				  "media/textures/biome1.png",
+				  "media/textures/biome1.png",
+				  "media/textures/biome2.png",
+				  "media/textures/biome1.png",
+				  "media/textures/biome1.png",
+				  // End of biomes textures
+
+  				  // Beginning of items textures
   				  "media/textures/arbre.png",
   				  "media/textures/pierre1.png",
   				  "media/textures/pierre2.png",
@@ -70,27 +78,33 @@ loadMedia (SDL_Renderer** main_renderer,
 				    textures_paths[i]);
     }
 
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 5; i++)
     {
       textures[1][i] = loadTexture (main_renderer,
 				    textures_paths[4 + i]);
     }
 
-  for (int i = 0; i < 1; i++)
+  for (int i = 0; i < 4; i++)
     {
       textures[2][i] = loadTexture (main_renderer,
-				    textures_paths[8 + i]);
+				    textures_paths[9 + i]);
+    }
+
+  for (int i = 0; i < 1; i++)
+    {
+      textures[3][i] = loadTexture (main_renderer,
+				    textures_paths[13 + i]);
     }
 }
 
 void
 init (SDL_Window** main_window,
       SDL_Renderer** main_renderer,
-      SDL_Texture** biomes,
+      // SDL_Texture** biomes,
       SDL_Texture** items,
       int* screen_height,
       int* screen_width,
-      SDL_Texture* textures[][4])
+      SDL_Texture* textures[][10])
 {
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
@@ -121,14 +135,14 @@ init (SDL_Window** main_window,
 
   loadMedia (main_renderer, textures);
   
-  load_biomes (main_renderer, biomes);
+  // load_biomes (main_renderer, biomes);
   load_items (main_renderer, items);
 }
 
 int
 handle_keydown (SDL_Keycode event_keycode,
 		bool* keys_state,
-		SDL_Texture* textures[][4],
+		SDL_Texture* textures[][10],
 		SDL_Texture** current_texture)
 {
   bool keydown = 1;
@@ -228,9 +242,9 @@ handle_mousewheel (int wheel_x,
 }
 
 int
-handle_events (SDL_Texture* textures[][4],
+handle_events (SDL_Texture* textures[][10],
 	       SDL_Texture** CurrentTexture,
-	       SDL_Texture** biomes,
+	       // SDL_Texture** biomes,
 	       bool* keys_state,
 	       bool* clicks_state,
 	       int* screen_height,
@@ -352,12 +366,12 @@ void
 quit_sdl (SDL_Window** Window,
 	  SDL_Renderer** Renderer,
 	  SDL_Texture** CurrentTexture,
-	  SDL_Texture** biomes,
+	  // SDL_Texture** biomes,
 	  SDL_Texture** items)
 {
   for (int i = 0; i < 5; i++)
     {
-      SDL_DestroyTexture (biomes[i]);
+      // SDL_DestroyTexture (biomes[i]);
       SDL_DestroyTexture (items[i]);
     }
   
@@ -379,11 +393,12 @@ run_gui (int read_pipe,
   SDL_Window *Window = NULL;
   SDL_Renderer* Renderer = NULL;
 
-  SDL_Texture* textures[3][4];
-  SDL_Texture *biomes[5];
+  SDL_Texture* textures[4][10];
+  // SDL_Texture *biomes[5];
   SDL_Texture *items[5];
 
-  init (&Window, &Renderer, biomes, items,
+  init (&Window, &Renderer, // biomes,
+	items,
 	&screen_height, &screen_width, textures);
 
   struct coordinates screen_center; 
@@ -421,7 +436,8 @@ run_gui (int read_pipe,
   struct map_coordinates click_map_coords;
 
   // We need to display the map at the beginning
-  display_background (&Renderer, "save", biomes,
+  display_background (&Renderer, "save", // biomes,
+		      textures,
 		      items, screen_origin);
 
   // Display character
@@ -436,13 +452,13 @@ run_gui (int read_pipe,
 	toolbar_origin,
 	toolbar_size.x,
 	toolbar_size.y,
-	textures[2][0]);
+	textures[3][0]);
 
   display_blits(&Renderer);
 
   while (handle_events (textures,
 			&current_texture,
-			biomes,
+			// biomes,
 			keys_state,
 			clicks_state,
 			&screen_height,
@@ -467,12 +483,14 @@ run_gui (int read_pipe,
 				 screen_width);
 
 	      display_background (&Renderer, "save",
-				  biomes, items,
+				  // biomes,
+				  textures,
+				  items,
 				  screen_origin);
 	      blit (&Renderer, hero_coords,
 		    25, 41, current_texture);
 	      blit (&Renderer, toolbar_origin, toolbar_size.x,
-		    toolbar_size.y, textures[2][0]);
+		    toolbar_size.y, textures[3][0]);
 
 	      display_players (players, screen_origin,
 			       &Renderer, current_texture,
@@ -497,7 +515,8 @@ run_gui (int read_pipe,
 			       "save");
 	      display_background (&Renderer,
 				  "save",
-				  biomes,
+				  // biomes,
+				  textures,
 				  items,
 				  screen_origin);
 	      
@@ -510,7 +529,7 @@ run_gui (int read_pipe,
 		    toolbar_origin,
 		    toolbar_size.x,
 		    toolbar_size.y,
-		    textures[2][0]);
+		    textures[3][0]);
 
 	      display_players (players, screen_origin, &Renderer, current_texture,
 			       screen_height, screen_width);
@@ -535,7 +554,8 @@ run_gui (int read_pipe,
 			       "save");
 	      display_background (&Renderer,
 				  "save",
-				  biomes,
+				  // biomes,
+				  textures,
 				  items,
 				  screen_origin);
 	      blit (&Renderer,
@@ -547,7 +567,7 @@ run_gui (int read_pipe,
 		    toolbar_origin,
 		    toolbar_size.x,
 		    toolbar_size.y,
-		    textures[2][0]);
+		    textures[3][0]);
 
 	      display_players (players, screen_origin,
 			       &Renderer, current_texture,
@@ -562,14 +582,15 @@ run_gui (int read_pipe,
       // Network pipe handling
       if (handle_data_from_network_pipe (read_pipe, players, "save") > 0)
       	{
-	  display_background (&Renderer, "save", biomes,
+	  display_background (&Renderer, "save", // biomes,
+			      textures,
 			      items, screen_origin);
 	  blit (&Renderer, hero_coords, 25, 41, current_texture);
 	  blit (&Renderer,
 		toolbar_origin,
 		toolbar_size.x,
 		toolbar_size.y,
-		textures[2][0]);
+		textures[3][0]);
 	      
 	  display_players (players, screen_origin,
 			   &Renderer, current_texture,
@@ -582,7 +603,8 @@ run_gui (int read_pipe,
     }
 
   quit_sdl (&Window, &Renderer, &current_texture,
-	    biomes, items);
+	    // biomes,
+	    items);
   
   return 0;
 }  

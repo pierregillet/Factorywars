@@ -69,7 +69,7 @@ SDL_Texture* loadTexture (SDL_Renderer** Renderer,
  * @param textures is an array of arrays containing the textures.
  */
 void loadMedia (SDL_Renderer** Renderer,
-		SDL_Texture* textures[][4]);
+		SDL_Texture* textures[][10]);
 
 /**
  * Initiates the SDL basics, like the window and the renderer.
@@ -84,18 +84,18 @@ void loadMedia (SDL_Renderer** Renderer,
  */
 void init (SDL_Window** main_window,
 	   SDL_Renderer** main_renderer,
-	   SDL_Texture** biomes,
+	   /* SDL_Texture** biomes, */
 	   SDL_Texture** items,
 	   int* screen_height,
 	   int* screen_width,
-	   SDL_Texture* textures[][4]);
+	   SDL_Texture* textures[][10]);
 
 /**
  * Handle the keydown events.
  */
 int handle_keydown (SDL_Keycode event_keycode,
 		    bool *keys_state,
-		    SDL_Texture* textures[][4],
+		    SDL_Texture* textures[][10],
 		    SDL_Texture** current_texture);
 
 /**
@@ -116,9 +116,9 @@ int handle_clickdown (int button,
 /**
  * Handle the SDL events.
  */
-int handle_events (SDL_Texture* textures[][4],
+int handle_events (SDL_Texture* textures[][10],
 		   SDL_Texture** CurrentTexture,
-		   SDL_Texture** biomes,
+		   /* SDL_Texture** biomes, */
 		   bool* keys_state,
 		   bool* clicks_state,
 		   int* screen_height,
@@ -163,7 +163,7 @@ void display_blits(SDL_Renderer** Renderer);
 void quit_sdl (SDL_Window** main_window,
 	       SDL_Renderer** main_renderer,
 	       SDL_Texture** current_texture,
-	       SDL_Texture** biomes,
+	       /* SDL_Texture** biomes, */
 	       SDL_Texture** items);
 
 /**
