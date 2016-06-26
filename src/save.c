@@ -34,7 +34,8 @@
 
 regmatch_t
 get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
-		 struct coordinates square_coordinates, const char* save_file_path)
+				       struct coordinates square_coordinates,
+				       const char* save_file_path)
 {
   const unsigned int LINE_SIZE = 512;
 
@@ -516,4 +517,125 @@ get_chunk_info (struct coordinates chunk_coordinates,
     }
 
   return chunk_info;
+}
+
+int
+read_save_file (Map* map, const char* save_file_path)
+{
+  Map *tmp_map;
+  Chunk **chunks;
+  Square ***squares;
+
+  uint8_t *buffer;
+  buffer = malloc (sizeof (uint8_t));
+
+  char c;
+  int n = 0;
+
+  int save_file = open (save_file_path, O_RDONLY);
+
+  while (read (save_file, &c, sizeof (char)) > 0)
+    {
+      buffer[n] = c;
+
+      n++;
+      buffer = (uint8_t*) realloc (buffer, sizeof (uint8_t) * (n + 1));
+      if (buffer == NULL)
+	{
+	  fprintf (stderr, "Error while reading save file.\n");
+	  fprintf (stderr, "It is not possible to reallocate memory for the buffer.\n");
+	  return 0;
+	}
+    }
+  
+  tmp_map = map__unpack (NULL, n, buffer);
+
+  if (tmp_map == NULL)
+    {
+      fprintf (stderr, "Error while reading the file\n");
+      return 0;
+    }
+
+  /* On copie tmp_map dans map */
+  /* We copy tmp_map in map */
+  map->n_chunks = tmp_map->n_chunks;
+
+  squares = malloc (sizeof (Square**) * map->n_chunks);
+  chunks = malloc (sizeof (Chunk*) * map->n_chunks);
+  for (int i = 0; i < map->n_chunks; i++)
+    {
+      chunks[i] = malloc (sizeof (Chunk));
+      chunk__init (chunks[i]);
+
+      chunks[i]->x = tmp_map->chunks[i]->x;
+      chunks[i]->y = tmp_map->chunks[i]->y;
+
+      chunks[i]->n_squares = tmp_map->chunks[i]->n_squares;
+      squares[i] = malloc (sizeof (Square*) * chunks[i]->n_squares);
+
+      for (int j = 0; j < chunks[i]->n_squares; j++)
+	{
+	  squares[i][j] = malloc (sizeof (Square));
+	  square__init (squares[i][j]);
+
+	  squares[i][j]->x = tmp_map->chunks[i]->squares[j]->x;
+	  squares[i][j]->y = tmp_map->chunks[i]->squares[j]->y;
+
+	  squares[i][j]->floor = tmp_map->chunks[i]->squares[j]->floor;
+	  squares[i][j]->item = tmp_map->chunks[i]->squares[j]->item;
+	}
+
+      chunks[i]->squares = squares[i];
+    }
+
+  map->chunks = chunks;
+
+  map__free_unpacked (tmp_map, NULL);
+
+  close (save_file);
+  free (buffer);
+
+  return 1;
+}
+
+int
+save_to_file (Map* map, const char* save_file_path)
+{
+  unsigned long len = map__get_packed_size (map);
+
+  void *buffer = malloc (len);
+  if (buffer == NULL)
+    return 0;
+
+  map__pack (map, buffer);
+
+  FILE *save_file = fopen (save_file_path, "w");
+  if (save_file == NULL)
+    {
+      fprintf (stderr, "Error the save file cannot be opened.\n");
+      return 0;
+    }
+
+  fwrite (buffer, len, 1, save_file);
+  fclose (save_file);
+  
+  free (buffer);
+
+  return 1;
+}
+
+void
+free_map_struct (Map* map)
+{
+  for (int i = 0; i < map->n_chunks; i++)
+    {
+      for (int j = 0; j < map->chunks[i]->n_squares; j++)
+	{
+	  free (map->chunks[i]->squares[j]);
+	}
+      free (map->chunks[i]->squares);
+      free (map->chunks[i]);
+    }
+
+  free (map->chunks);
 }

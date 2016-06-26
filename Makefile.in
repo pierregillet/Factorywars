@@ -108,7 +108,7 @@ am_factorywars_OBJECTS = src/main.$(OBJEXT) src/gui.$(OBJEXT) \
 	src/XMLParser.$(OBJEXT) src/player.$(OBJEXT) \
 	src/config.$(OBJEXT) src/network.$(OBJEXT) \
 	src/display_map.$(OBJEXT) src/display_item.$(OBJEXT) \
-	src/multiplayer.$(OBJEXT)
+	src/multiplayer.$(OBJEXT) src/map.pb-c.$(OBJEXT)
 factorywars_OBJECTS = $(am_factorywars_OBJECTS)
 factorywars_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -245,6 +245,8 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+PROTOBUF_C_CFLAGS = @PROTOBUF_C_CFLAGS@
+PROTOBUF_C_LIBS = @PROTOBUF_C_LIBS@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -320,6 +322,7 @@ factorywars_SOURCES = \
 	src/display_map.cpp src/display_map.h\
 	src/display_item.cpp src/display_item.h\
 	src/multiplayer.cpp src/multiplayer.h\
+	src/map.pb-c.c src/map.pb-c.h\
 	src/structures.h
 
 AM_CFLAGS = -std=gnu99 $(libxml2_CFLAGS)
@@ -444,6 +447,8 @@ src/display_item.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/multiplayer.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/map.pb-c.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 
 factorywars$(EXEEXT): $(factorywars_OBJECTS) $(factorywars_DEPENDENCIES) $(EXTRA_factorywars_DEPENDENCIES) 
 	@rm -f factorywars$(EXEEXT)
@@ -463,6 +468,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/gui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/items.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/map.pb-c.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/multiplayer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/network.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/player.Po@am__quote@
