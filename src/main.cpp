@@ -37,8 +37,8 @@
 #include <config.h>
 
 extern "C" {
-#include "network.h"
-#include "config.h"
+  #include "network.h"
+  #include "config.h"
 }
 
 static const struct option longopts[] = {
@@ -60,7 +60,7 @@ main (int argc, char *argv[])
   char *IP = NULL;
   unsigned short port = 0;
 
-  program_name = argv [0];
+  program_name = argv[0];
 
   while ((optc = getopt_long (argc, argv, "hs:p:", longopts, NULL)) != -1)
     {
