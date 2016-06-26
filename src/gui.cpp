@@ -309,20 +309,20 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
 			     struct coordinates* hero_coords,
 			     struct coordinates screen_center)
 {
-  if (hero_coords -> x >= 680 && hero_coords -> y >= 400  )
-  {
-        screen_origin->y += (keys_state[0])? (-5) : 0;
-        screen_origin->y += (keys_state[1])? 5 : 0;
-        screen_origin->x += (keys_state[2])? (-5) : 0;
-        screen_origin->x += (keys_state[3])? 5 : 0;
-  }  
+  if (hero_coords -> x >= 640 && hero_coords -> y >= 370  )
+    {
+      screen_origin->y += (keys_state[0])? (-5) : 0;
+      screen_origin->y += (keys_state[1])? 5 : 0;
+      screen_origin->x += (keys_state[2])? (-5) : 0;
+      screen_origin->x += (keys_state[3])? 5 : 0;
+    }
   if (screen_origin -> y <= 0 || screen_origin->x <= 0)
-  {
-        hero_coords->y += (keys_state[0])? (-5) : 0;
-        hero_coords->y += (keys_state[1])? 5 : 0;
-        hero_coords->x += (keys_state[2])? (-5) : 0;
-        hero_coords->x += (keys_state[3])? 5 : 0;        
-  }
+    {
+      hero_coords->y += (keys_state[0])? (-5) : 0;
+      hero_coords->y += (keys_state[1])? 5 : 0;
+      hero_coords->x += (keys_state[2])? (-5) : 0;
+      hero_coords->x += (keys_state[3])? 5 : 0;
+    }
   
   hero_coords->x = (hero_coords->x < 0 )? 0 : hero_coords->x;
   hero_coords->y = (hero_coords->y < 0 )? 0 : hero_coords->y;
