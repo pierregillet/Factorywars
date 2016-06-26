@@ -376,6 +376,10 @@ run_gui (int read_pipe,
 {
   int screen_height = atoi (get_config_value ("height"));
   int screen_width = atoi (get_config_value ("width"));
+
+  Map map = MAP__INIT;
+  read_save_file (&map, "protosave");
+
   SDL_Window *Window = NULL;
   SDL_Renderer* Renderer = NULL;
 
@@ -419,7 +423,7 @@ run_gui (int read_pipe,
   struct map_coordinates click_map_coords;
 
   // We need to display the map at the beginning
-  display_background (&Renderer, "save",
+  display_background (&Renderer, &map,
 		      textures, screen_origin);
 
   // Display character
@@ -463,7 +467,7 @@ run_gui (int read_pipe,
 				 screen_height,
 				 screen_width);
 
-	      display_background (&Renderer, "save",
+	      display_background (&Renderer, &map,
 				  textures, screen_origin);
 	      blit (&Renderer, hero_coords,
 		    25, 41, current_texture);
@@ -485,14 +489,14 @@ run_gui (int read_pipe,
 	{
 	  if (get_surface_item (click_map_coords.chunk,
 				click_map_coords.square,
-				"save") == -1)
+				&map) == -1)
 	    {
 	      set_surface_item(click_map_coords.chunk,
 			       click_map_coords.square,
 			       1,
-			       "save");
+			       &map);
 	      display_background (&Renderer,
-				  "save",
+				  &map,
 				  textures,
 				  screen_origin);
 	      
@@ -522,14 +526,14 @@ run_gui (int read_pipe,
 	{
 	  if (get_surface_item (click_map_coords.chunk,
 				click_map_coords.square,
-				"save") != -1)
+				&map) != -1)
 	    {
 	      set_surface_item(click_map_coords.chunk,
 			       click_map_coords.square,
 			       -1,
-			       "save");
+			       &map);
 	      display_background (&Renderer,
-				  "save",
+				  &map,
 				  textures,
 				  screen_origin);
 	      blit (&Renderer,
@@ -554,9 +558,9 @@ run_gui (int read_pipe,
       // End of right click handling
 
       // Network pipe handling
-      if (handle_data_from_network_pipe (read_pipe, players, "save") > 0)
+      if (handle_data_from_network_pipe (read_pipe, players) > 0)
       	{
-	  display_background (&Renderer, "save", textures,
+	  display_background (&Renderer, &map, textures,
 			      screen_origin);
 	  blit (&Renderer, hero_coords, 25, 41, current_texture);
 	  blit (&Renderer,

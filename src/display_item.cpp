@@ -27,25 +27,28 @@
  *
  * @section DESCRIPTION
  *
- * display_item.cpp contains the function displaying the items on the map
+ * display_item.cpp contains the function displaying the items on the map.
  */
 
 #include "display_item.h"
 
 void
 display_items (SDL_Renderer** Renderer,
-	       std::string path,
 	       SDL_Texture* textures[][10],
 	       struct coordinates screen_origin,
 	       struct chunk_info chunk,
 	       int l,
 	       int m)
 {
-  for (int i(16) ; i > 0 ; i--)
+  if (chunk.biome_id == -1)
+    return;
+
+  for (int i(15) ; i >= 0 ; i--)
     {
       for (int j(0) ; j < 16 ; j++)
 	{
 	  int item_id = chunk.squares[i][j];
+
 	  if (item_id > 0 && item_id < 4)
 	    {
 	      int blit_x = (item_id == 1)? 48 :24;

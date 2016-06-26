@@ -27,7 +27,7 @@
  *
  * @section DESCRIPTION
  *
- * save.h is the header of save.c
+ * save.h is the header of save.c.
  */
 
 #pragma once
@@ -48,12 +48,12 @@
  * Get the surface item at given coordinates.
  * @param chunk_coordinates is the chunk coordinates.
  * @param square_coordinates is the square coordinates.
- * @param save_file_path is the path to the save file.
+ * @param map is a structure which contain the map.
  * @return -1 if there is an error, anything else if not.
  */
 int get_surface_item (struct coordinates chunk_coordinates,
 		      struct coordinates square_coordinates,
-		      const char* save_file_path);
+		      Map* map);
 
 /**
  * Get the biome id of the given chunk.
@@ -61,53 +61,20 @@ int get_surface_item (struct coordinates chunk_coordinates,
  * @param save_file_path is the path to the save file.
  * @return -1 if there is an error, anything else if not.
  */
-int get_biome_id (struct coordinates chunk_coordinates, const char* save_file_path);
+int get_biome_id (struct coordinates chunk_coordinates, Map* map);
 
 /**
  * Set the surface item at given coordinates.
  * @param chunk_coordinates is the chunk coordinates.
  * @param square_coordinates is the square coordinates.
  * @param item_id is the item id.
- * @param save_file_path is the path to the save file
+ * @param map is the map’s structure.
  * @return 1 if there are no errors, 0 if the chunk line does not exist
  * and 2 for other errors.
  */
 int set_surface_item (struct coordinates chunk_coordinates,
 		      struct coordinates square_coordinates, int item_id,
-		      const char* save_file_path);
-
-/**
- * Set the biome id for the given chunk.
- * @param chunk_coordinates is the chunk coordinates.
- * @param biome_id is the biome id.
- * @param save_file_path it the path to the save file
- * @return 0 if there is an error, 1 if not.
- */
-int set_biome_id (struct coordinates chunk_coordinates, int biome_id, const char* save_file_path);
-
-/**
- * Get the position of the item id in the line describing the chunk.
- * @param chunk_coordinates are the coordinates of the chunk.
- * @param save_file_path is the path to the file.
- * @return the position of the id in the string or 0 for rm_so and rm_eo if
- * there is an error.
- */
-regmatch_t
-get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
-				       struct coordinates square_coordinates,
-				       const char* save_file_path);
-
-
-/**
- * Get the position of the item id by specifing which item_id we are 
- * searching for.
- * @param chunk_coordinates are the coordinates of the chunk coordinates.
- * @param item_id is the item_id.
- * @param save_file_path is the path to the save file.
- * @return the position
- */
-regmatch_t get_item_id_pos_using_item_id (struct coordinates chunk_coordinates,
-					  int item_id, const char* save_file_path);
+		      Map* map);
 
 /**
  * Get the position of the square coordinates in the line describing the chunk.
@@ -122,27 +89,6 @@ regmatch_t find_square_coordinates_pos (struct coordinates chunk_coordinates,
 					const char* save_file_path);
 
 /**
- * Return the length of the chunk coordinates plus
- * biome id (the spaces are included).
- * @param chunk_coordinates are the chunk coordinates.
- * @param save_file_path is the path to the save file.
- * @return the length of the chunk coordinates plus biome_id.
- */
-int get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
-				const char* save_file_path);
-
-/**
-  * Create a line describing a new chunk in the save file.
-  * @param chunk_coordinates is the chunk_coordinates.
-  * @param biome_id is the biome id.
-  * @param save_file_path is the path to the save file.
-  * @return 0 if there is an error, 1 if not.
-  */
-int create_chunk_line (struct coordinates chunk_coordinates,
-		       int biome_id,
-		       const char* save_file_path);
-
-/**
  * Get the chunk coordinates of the bottom left corner chunk for displaying it.
  * @param player_offset is the number of pixels from the left bottom corner
  * of the map.
@@ -155,15 +101,56 @@ get_chunk_coordinates_from_player_movement (struct coordinates player_offset);
  * Get the chunk info.
  *
  * @param chunk_coordiantes is the coordinates of the chunk.
- * @param save_file_path is the path to the save file.
+ * @param map is the map informations.
  * @return the chunk informations in a structure chunk_info or a biome id of
  * -1 if there is an error.
  */
 struct chunk_info get_chunk_info (struct coordinates chunk_coordinates,
-				  const char* save_file_path);
+				  Map* map);
 
+/**
+ * Read a file and write informations in a Map structure.
+ *
+ * @param map is the map structure where we’ll write the informations from the file.
+ * @param save_file_path is the path to the save file.
+ * @return 1 if success and < 1 if there is an error.
+ */
 int read_save_file (Map* map, const char* save_file_path);
 
+/**
+ * Write a Map structure to a file.
+ *
+ * @param map is the map structure where we’ll get the informations.
+ * @param save_file_path is the path to the save file.
+ * @return 1 if success and < 1 if there is an error.
+ */
 int save_to_file (Map* map, const char* save_file_path);
 
+/**
+ * Free a map structure.
+ *
+ * @param map is the map structure we’ll free.
+ */
 void free_map_struct (Map* map);
+
+/**
+ * Get chunk number using chunk coordinates
+ *
+ * @param chunk_coordinates is the chunk’s coordinates.
+ * @param map is the structure containing the map.
+ * @return the chunk number or -1 if there is an error.
+ */
+int find_chunk_using_chunk_coordinates (struct coordinates chunk_coordinates,
+					Map* map);
+/**
+ * Get square number using its coordinates
+ *
+ * @param chunk_coordinates is the chunk’s coordinates.
+ * @param square_coordinates is the square’s coordinates.
+ * @param map is the structure containing the map.
+ * @return the square number or -1 if there is an error.
+ */
+int
+find_square_using_square_coordinates (struct coordinates chunk_coordinates,
+					     struct coordinates square_coordinates,
+					     Map* map);

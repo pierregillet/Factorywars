@@ -43,7 +43,7 @@ extern "C" {
  * @return a positive number if success, a negative 
  * number if there is an error.
  */
-int handle_data_from_network_pipe (int read_pipe, std::vector<Player>& players, const char* save_file_path);
+int handle_data_from_network_pipe (int read_pipe, std::vector<Player>& players);
 
 /**
  * Send a move command to others players.
