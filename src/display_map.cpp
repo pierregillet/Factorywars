@@ -63,7 +63,7 @@ display_background (SDL_Renderer** Renderer,
 			 .y = (int) screen_origin.y + i};
 	  coords = get_chunk_coordinates_from_player_movement (hero_coords);
      
-	  id = get_biome_id (coords, path.c_str ());
+	  id = get_biome_id (coords, map);
 	  if (id == -1 || id > 4)
 	    {
 	      id = 2;
