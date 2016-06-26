@@ -40,7 +40,6 @@
 #include "structures.h"
 #include "display_item.h"
 #include "player.h"
-// #include "action.h"
 #include "display_map.h"
 #include "display_item.h"
 #include <vector>
@@ -51,15 +50,6 @@ extern "C" {
   #include "config.h"
 }
 
-enum KeyPressTexture
-  {
-    KEY_PRESS_SURFACE_DEFAULT, 
-    KEY_PRESS_SURFACE_UP, 
-    KEY_PRESS_SURFACE_DOWN,        
-    KEY_PRESS_SURFACE_LEFT, 
-    KEY_PRESS_SURFACE_RIGHT, 
-    KEY_PRESS_SURFACE_TOTAL
-  };  
 
 /**
  * Store an image into a texture
@@ -72,53 +62,42 @@ SDL_Texture* loadTexture (SDL_Renderer** Renderer,
 			  std::string path);
 
 /**
- * Load the player and toolbar’s textures.
+ * Loads the textures.
  *
  * @param Renderer is the renderer.
- * @param KeyPressTexture is the array where we load the player’s texture.
- * @param toolbar is the toolbar’s texture pointer.
- * @return true if success, false if failure.
+ * @param textures is an array of arrays containing the textures.
  */
-bool loadMedia (SDL_Renderer** Renderer,
-		SDL_Texture** KeyPressTexture,
-		SDL_Texture** toolbar);
+void loadMedia (SDL_Renderer** Renderer,
+		SDL_Texture* textures[][10]);
 
 /**
- * Initiates the SDL basics, like Window and Renderer.
+ * Initiates the SDL basics, like the window and the renderer.
  *
- * @param Window is the window.
- * @param Renderer is the window’s renderer.
- * @param KeyPressTexture is an array where the player’s texture will be.
- * @param biomes is an array where the biome’s textures will be loaded.
- * @param items is an array where the item’s textures will be loaded.
- * @param toolbar is a pointer where the toolbar’s texture will be loaded.
+ * @param main_window is the main window.
+ * @param main_renderer is the main renderer.
  * @param screen_height is an int pointer where we will store the screen height.
  * @param screen_width is an int pointer where we will store the screnn width.
+ * @param textures is an array of arrays containing the textures.
  */
-bool init (SDL_Window** Window,
-	   SDL_Renderer** Renderer,
-	   SDL_Texture** KeyPressTexture,
-	   SDL_Texture** biomes,
-	   SDL_Texture** items,
-	   SDL_Texture** toolbar,
+void init (SDL_Window** main_window,
+	   SDL_Renderer** main_renderer,
 	   int* screen_height,
-	   int* screen_width);
+	   int* screen_width,
+	   SDL_Texture* textures[][10]);
 
 /**
  * Handle the keydown events.
  */
 int handle_keydown (SDL_Keycode event_keycode,
 		    bool *keys_state,
-		    SDL_Texture** CurrentTexture,
-		    SDL_Texture** key_press_texture);
+		    SDL_Texture* textures[][10],
+		    SDL_Texture** current_texture);
 
 /**
  * Handle the keyup events.
  */
 int handle_keyup (SDL_Keycode event_keycode,
-		  bool *keys_state,
-		  SDL_Texture** CurrentTexture,
-		  SDL_Texture** key_press_texture);
+		  bool *keys_state);
 
 /**
  * Handle the clickdown events.
@@ -130,21 +109,13 @@ int handle_clickdown (int button,
 		      struct map_coordinates* click_map_coords);
 
 /**
- * Handle the clickup events.
- */
-int handle_clickup (int button,
-		    coordinates click_coords,
-		    bool *clicks_state,
-		    struct coordinates* screen_origin);
-
-/**
  * Handle the SDL events.
  */
-int handle_events (SDL_Texture** CurrentTexture,
-		   SDL_Texture** biomes,
+int handle_events (SDL_Texture* textures[][10],
+		   SDL_Texture** CurrentTexture,
+		   /* SDL_Texture** biomes, */
 		   bool* keys_state,
 		   bool* clicks_state,
-		   SDL_Texture** key_press_texture,
 		   int* screen_height,
 		   int* screen_width,
 		   struct coordinates* screen_origin,
@@ -160,14 +131,8 @@ int move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 struct coordinates screen_center);
 
 /**
- * Clear the renderer, need to be deleted.
- */
-void refresh_renderer(SDL_Renderer** Renderer);
-
-/**
  * Blit Textures at given coordinates x,y.
  *
- * @param The Texture needs a Renderer to be blit.
  * @return int true if there is no error
  */
 int blit (SDL_Renderer** Renderer,
@@ -184,17 +149,13 @@ void display_blits(SDL_Renderer** Renderer);
 /**
  * Free what needed to be freed from the SDL library.
  *
- * @param Window is the window.
- * @param Renderer is the window’s renderer.
- * @param CurrentTexture is the player’s texture.
- * @param biomes is the biome’s textures.
- * @param items is the item’s textures.
+ * @param main_window is the main window.
+ * @param main_renderer is the main renderer.
+ * @param current_texture is the player’s texture.
  */
-void quit_sdl (SDL_Window** Window,
-	       SDL_Renderer** Renderer,
-	       SDL_Texture** CurrentTexture,
-	       SDL_Texture** biomes,
-	       SDL_Texture** items);
+void quit_sdl (SDL_Window** main_window,
+	       SDL_Renderer** main_renderer,
+	       SDL_Texture** current_texture);
 
 /**
  * Run the gui
@@ -234,6 +195,9 @@ struct map_coordinates get_map_coords (coordinates click_coords,
  * @param screen_height is the screen’s height.
  * @param screen_width is the screen’s width.
  */
-void display_players (std::vector<Player>& players, struct coordinates screen_origin,
-		     SDL_Renderer** renderer, SDL_Texture* player_texture,
-		     int screen_height, int screen_width);
+void display_players (std::vector<Player>& players,
+		      struct coordinates screen_origin,
+		      SDL_Renderer** renderer,
+		      SDL_Texture* player_texture,
+		      int screen_height,
+		      int screen_width);

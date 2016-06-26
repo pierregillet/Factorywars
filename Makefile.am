@@ -22,6 +22,7 @@ factorywars_SOURCES = \
 	src/display_map.cpp src/display_map.h\
 	src/display_item.cpp src/display_item.h\
 	src/multiplayer.cpp src/multiplayer.h\
+	src/map.pb-c.c src/map.pb-c.h\
 	src/structures.h
 
 AM_CFLAGS = -std=gnu99 $(libxml2_CFLAGS)

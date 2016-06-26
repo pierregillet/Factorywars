@@ -34,13 +34,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "structures.h"
-#include "config.h"
-#include "utils.h"
 #include <sys/types.h>
 #include <string.h>
 #include <regex.h>
 #include <math.h>
+
+#include "structures.h"
+#include "config.h"
+#include "utils.h"
+#include "map.pb-c.h"
 
 /**
  * Get the surface item at given coordinates.
@@ -160,3 +162,8 @@ get_chunk_coordinates_from_player_movement (struct coordinates player_offset);
 struct chunk_info get_chunk_info (struct coordinates chunk_coordinates,
 				  const char* save_file_path);
 
+int read_save_file (Map* map, const char* save_file_path);
+
+int save_to_file (Map* map, const char* save_file_path);
+
+void free_map_struct (Map* map);
