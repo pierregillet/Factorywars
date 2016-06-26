@@ -1,8 +1,7 @@
 #include "multiplayer.h"
 
 int
-handle_data_from_network_pipe (int read_pipe, std::vector<Player>& players,
-			       const char* save_file_path)
+handle_data_from_network_pipe (int read_pipe, std::vector<Player>& players)
 {
   const int BUFFER_SIZE = 512;
 

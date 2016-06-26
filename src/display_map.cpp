@@ -32,10 +32,9 @@
 
 #include "display_map.h"
 
-
 void
 display_background (SDL_Renderer** Renderer,
-		    std::string path,
+		    Map* map,
 		    SDL_Texture* textures[][10],
 		    struct coordinates screen_origin)
 {
@@ -64,7 +63,7 @@ display_background (SDL_Renderer** Renderer,
 			 .y = (int) screen_origin.y + i};
 	  coords = get_chunk_coordinates_from_player_movement (hero_coords);
      
-	  id = get_biome_id (coords, path.c_str ());
+	  id = get_biome_id (coords, map);
 	  if (id == -1 || id > 4)
 	    {
 	      id = 2;
@@ -77,9 +76,12 @@ display_background (SDL_Renderer** Renderer,
 	  blit (Renderer, temp, chunk_width,
 		chunk_width, display_id);
 	  
-	  current_chunk_info = get_chunk_info (coords,
-					       path.c_str());
-	  display_items (Renderer, path.c_str(),
+	  current_chunk_info = get_chunk_info (coords, map);
+
+	  if (current_chunk_info.biome_id == -1)
+	    continue;
+
+	  display_items (Renderer,
 			 textures,
 			 screen_origin,
 			 current_chunk_info, i, j);

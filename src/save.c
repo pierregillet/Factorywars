@@ -27,422 +27,65 @@
  *
  * @section DESCRIPTION
  *
- * save.cpp provide functions to read and write the save file
+ * save.cpp provide functions to read and write save files.
  */
 
 #include "save.h"
 
-regmatch_t
-get_item_id_pos_by_square_coordinates (struct coordinates chunk_coordinates,
-				       struct coordinates square_coordinates,
-				       const char* save_file_path)
-{
-  const unsigned int LINE_SIZE = 512;
-
-  char line[LINE_SIZE];
-
-  regmatch_t item_id_pos;
-  item_id_pos.rm_so = 0;
-  item_id_pos.rm_eo = 0;
-
-  find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
-  if (line == NULL)
-    {
-      /* Chunk coordinates doesn’t exist */
-      return item_id_pos;
-    }
-
-
-  regmatch_t square_coordinates_pos;
-  square_coordinates_pos = find_square_coordinates_pos (chunk_coordinates,
-  							square_coordinates,
-  							save_file_path);
-  if (square_coordinates_pos.rm_so == 0 && square_coordinates_pos.rm_eo == 0)
-    {
-      return item_id_pos;
-    }
-  
-
-  int spaces = 0;
-  int item_id_beg = 0;
-  int item_id_end = 0;
-
-  /* Finding the position of the beginning of the item id */
-  for (int i = square_coordinates_pos.rm_eo - 1; i > 0; i--)
-    {
-      if (line[i] == ';')
-  	spaces = 0;
-      if (line[i] == ' ')
-  	spaces++;
-      if (spaces == 1)
-  	item_id_end = i - 1;
-      else if (spaces == 2)
-  	{
-  	  item_id_beg = i + 1;
-  	  break;
-  	}
-    }
-
-  /* Finding the position of the end of the item id */
-  /* We start at the beginning of the item id */
-  item_id_end = item_id_beg;
-  for (int i = item_id_beg; line[i] != ' '; i++)
-    item_id_end++;
-  /* line[item_id_end] points to the character after the end of item id */
-  item_id_end--;
-
-  item_id_pos.rm_so = item_id_beg;
-  item_id_pos.rm_eo = item_id_end;
-
-  return item_id_pos;
-}
-
 int
-get_biome_id (struct coordinates chunk_coordinates, const char* save_file_path)
+get_biome_id (struct coordinates chunk_coordinates, Map* map)
 {
-  const unsigned int LINE_SIZE = 512;
-  const unsigned int BIOME_ID_STR_SIZE = 4;
-  char line[LINE_SIZE], biome_id_str[BIOME_ID_STR_SIZE];
+  int chunk_number, biome_id;
+  chunk_number = find_chunk_using_chunk_coordinates (chunk_coordinates, map);
 
-  if (find_chunk_line_in_file (chunk_coordinates,
-			       line, LINE_SIZE, save_file_path) == NULL)
+  if (chunk_number == -1)
     return -1;
 
-  for (unsigned int i= 0; i < LINE_SIZE; i++)
-    {
-      if (line[i] == ' ')
-	{
-	  for (unsigned int j = i+1; line[j] != ' ' && j < LINE_SIZE; j++)
-	    biome_id_str[j-(i+1)] = line[j];
-	  break;
-	}
-    }
-
-  return atoi (biome_id_str);
+  biome_id = map->chunks[chunk_number]->squares[0]->floor;
+  return biome_id;
 }
 
 int set_surface_item (struct coordinates chunk_coordinates,
 		      struct coordinates square_coordinates, int item_id,
-		      const char* save_file_path)
+		      Map* map)
 {
-  struct chunk_info chunk = get_chunk_info (chunk_coordinates, save_file_path);
+  int chunk_number, square_number;
 
-  if (chunk.biome_id == -1)
+  chunk_number = find_chunk_using_chunk_coordinates (chunk_coordinates, map);
+  if (chunk_number == -1)
     return 0;
-  
-  chunk.squares[square_coordinates.x][square_coordinates.y] = item_id;
 
-  char line[4096], tmp_line[4096];
+  square_number = find_square_using_square_coordinates (chunk_coordinates,
+							square_coordinates,
+							map);
+  if (square_number == -1)
+    return 0;
 
-  snprintf (line, 4096, "%ld;%ld %d", chunk.chunk.x, chunk.chunk.y, chunk.biome_id);
-
-  int smallest_item_id = -1;
-  int finished = 0;
-  int line_number;
-  line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
-							  save_file_path);
-
-  /* On construit la nouvelle ligne */
-  /* We make the new line */
-  while (!finished)
-    {
-      for (int i = 0; i < 16; i++)
-	{
-	  for (int j = 0; j < 16; j++)
-	    {
-	      if (smallest_item_id == -1 && chunk.squares[i][j] != -1)
-		smallest_item_id = chunk.squares[i][j];
-
-	      if (chunk.squares[i][j] != -1
-		  && chunk.squares[i][j] < smallest_item_id)
-		smallest_item_id = chunk.squares[i][j];
-	    }
-	}
-
-      if (smallest_item_id == -1)
-	{
-	  finished = 1;
-	  break;
-	}
-      else
-	{
-	  snprintf (tmp_line, 4096, " %d", smallest_item_id);
-	  strncat (line, tmp_line, 4096);
-	}
-
-      for (int i = 0; i < 16; i++)
-	{
-	  for (int j = 0; j < 16; j++)
-	    {
-	      if (chunk.squares[i][j] == smallest_item_id)
-		{
-		  snprintf (tmp_line, 4096, " %d;%d", i, j);
-		  strncat (line, tmp_line, 4096);
-		  chunk.squares[i][j] = -1;
-		}
-	    }
-	}
-
-      smallest_item_id = -1;
-    }
-
-  /* On ajoute un caractère de fin de ligne et on enregistre */
-  /* We add a newline and we save */
-  strncat (line, "\n", 4096);
-  insert_line_in_file (line, strlen (line), line_number, save_file_path, 1);
+  map->chunks[chunk_number]->squares[square_number]->item = item_id;
 
   return 1;
 }
 
 int
 get_surface_item (struct coordinates chunk_coordinates,
-		  struct coordinates square_coordinates, const char* save_file_path)
+		  struct coordinates square_coordinates,
+		  Map* map)
 {
-  const int ITEM_ID_LEN = 20;
-  const int LINE_SIZE = 512;
+  int chunk_number, surface_item, square_number;
 
-  char item_id_str[ITEM_ID_LEN], line[LINE_SIZE];
-
-  /* We fill the variable line with the line describing the chunk */
-  find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
-
-  /* If the line does not exist we return -1 */
-  if (line == NULL)
+  chunk_number = find_chunk_using_chunk_coordinates (chunk_coordinates, map);
+  if (chunk_number == -1)
     return -1;
 
-  regmatch_t regmatch;
-  regmatch = get_item_id_pos_by_square_coordinates (chunk_coordinates,
-						    square_coordinates,
-						    save_file_path);
-
-  if (regmatch.rm_so == 0 && regmatch.rm_eo == 0)
+  square_number = find_square_using_square_coordinates (chunk_coordinates,
+							square_coordinates,
+							map);
+  if (square_number == -1)
     return -1;
 
-  int len_of_item_id_str = regmatch.rm_eo - regmatch.rm_so + 1;
+  surface_item = map->chunks[chunk_number]->squares[square_number]->item;
 
-  strncpy (item_id_str, line + regmatch.rm_so, len_of_item_id_str);
-  if (len_of_item_id_str + 1 <= ITEM_ID_LEN)
-    item_id_str[len_of_item_id_str + 1] = 0;
-  else
-    {
-      fprintf (stderr, "Need to increase the ITEM_ID_LEN limit in ");
-      fprintf (stderr, "get_surface_item function\n");
-      return -1;
-    }
-
-  return atoi (item_id_str);
-}
-
-regmatch_t
-find_square_coordinates_pos (struct coordinates chunk_coordinates,
-			     struct coordinates square_coordinates,
-			     const char* save_file_path)
-{
-  const int COORDINATES_STR_SIZE = 20;
-  const int REGEX_STR_SIZE = COORDINATES_STR_SIZE;
-  const int LINE_SIZE = 512;
-
-  char regex_str[REGEX_STR_SIZE], line[LINE_SIZE];
-  regex_t regex;
-  int reti;
-
-  regmatch_t square_coordinates_pos;
-  square_coordinates_pos.rm_so = 0;
-  square_coordinates_pos.rm_eo = 0;
-  
-  coordinates_to_string (square_coordinates, regex_str, REGEX_STR_SIZE);
-  find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
-
-  /* We need to ignore the chunk coordinates because it could be the same 
-     as the square coordinates. We also ignore the biome id. */
-  int number_of_deleted_char = 0;
-  int number_of_spaces = 0;
-    
-  for (int i = 0; i < LINE_SIZE; i++)
-    {
-      if (line[i] == ' ')
-	number_of_spaces++;
-      if (number_of_spaces == 2)
-	{
-	  number_of_deleted_char = i + 1;
-	  break;
-	}
-    }
-  
-  reti = regcomp (&regex, regex_str, REG_EXTENDED);
-  if (reti)
-    {
-      fprintf (stderr, "Could not compile regex\n");
-      return square_coordinates_pos;
-    }
-
-  regmatch_t regmatch[1];
-  reti = regexec (&regex, line + number_of_deleted_char, 1, regmatch, 0);
-  if (reti)
-    {
-      // Not Matched !
-      return square_coordinates_pos;
-    }
-  regfree (&regex);
-
-  square_coordinates_pos.rm_so = regmatch[0].rm_so + number_of_deleted_char;
-  square_coordinates_pos.rm_eo = regmatch[0].rm_eo + number_of_deleted_char;
-
-  return square_coordinates_pos;
-}
-
-int
-get_len_of_chunk_and_biome (struct coordinates chunk_coordinates,
-			    const char* save_file_path)
-{
-  const int LINE_SIZE = 512;
-
-  int number_of_spaces = 0;
-  int len_of_chunk_and_biome = 0;
-  char line[LINE_SIZE];
-  find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
-
-  for (int i = 0; i < LINE_SIZE; i++)
-    {
-      if (line[i] == ' ')
-	number_of_spaces++;
-      if (number_of_spaces == 2)
-	len_of_chunk_and_biome = i;
-    }
-
-  return len_of_chunk_and_biome;
-}
-
-regmatch_t get_item_id_pos_using_item_id (struct coordinates chunk_coordinates,
-					  int item_id, const char* save_file_path)
-{
-  const int REGEX_STR_SIZE = 32;
-  const int LINE_SIZE = 512;
-
-  char regex_str[REGEX_STR_SIZE], line[LINE_SIZE];
-
-  regmatch_t regmatch;
-  regex_t regex;
-  int reti;
-
-  find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
-
-  int len_of_deleted_part_of_line;
-  len_of_deleted_part_of_line = get_len_of_chunk_and_biome (chunk_coordinates,
-							    save_file_path);
-  strncpy (line, line + len_of_deleted_part_of_line, LINE_SIZE);
-
-  snprintf (regex_str, REGEX_STR_SIZE, " %d ", item_id);
-
-  reti = regcomp (&regex, regex_str, REG_EXTENDED);
-  if (reti)
-    {
-      fprintf (stderr, "Couldn’t compile regex\n");
-      return regmatch;
-    }
-
-  reti = regexec (&regex, line, 1, &regmatch, 0);
-  if (reti)
-    {
-      /* Not found */
-      regmatch.rm_so = 0;
-      regmatch.rm_eo = 0;
-      return regmatch;
-    }
-
-  /* We add the deleted part of line length and we delete 
-     spaces between the item id */
-  regmatch.rm_so += len_of_deleted_part_of_line + 1;
-  regmatch.rm_eo += len_of_deleted_part_of_line - 2;
-
-  return regmatch;
-}
-
-int
-set_biome_id (struct coordinates chunk_coordinates, int biome_id, const char* save_file_path)
-{
-  const int LINE_SIZE = 512;
-  const int BIOME_ID_STR_SIZE = 20;
-
-  char line[LINE_SIZE], tmp_line[LINE_SIZE], biome_id_str[BIOME_ID_STR_SIZE];
-  line[0] = 0;
-  tmp_line[0] = 0;
-  biome_id_str[0] = 0;
-
-  /* Finding the line */
-  find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, save_file_path);
-  if (line == NULL)
-    return 0;
-
-  /* Store the biome id as a string in biome_id_str */
-  snprintf (biome_id_str, BIOME_ID_STR_SIZE, "%d", biome_id);
-
-  /* Copy the begining of the string until we reached the */
-  /* first space (it’s included) */
-  int beg_of_biome_id = 0;
-  for (int i = 0; i < LINE_SIZE; i++)
-    {
-      if (line[i] == ' ')
-	{
-	  strncpy (tmp_line, line, i + 1);
-	  tmp_line[i + 1] = 0;
-	  beg_of_biome_id = i + 1;
-	  break;
-	}
-    }
-
-  /* Concatenate the string with the biome id */
-  strncat (tmp_line, biome_id_str, BIOME_ID_STR_SIZE);
-
-  /* Then we add the rest of the line without the old biome id */
-  for (int i = beg_of_biome_id; i < LINE_SIZE - beg_of_biome_id; i++)
-  {
-    if (line[i] == ' ')
-      {
-	strncat (tmp_line, line + i, LINE_SIZE - i);
-	break;
-      }
-  }
-
-  /* Write the new line with the good biome id in the save file */
-  int line_number;
-  line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
-							  save_file_path);
-  insert_line_in_file (tmp_line, strlen (tmp_line), line_number, save_file_path, 1);
-
-  return 1;
-}
-
-int
-create_chunk_line (struct coordinates chunk_coordinates,
-		   int biome_id,
-		   const char* save_file_path)
-{
-  const int LINE_SIZE = 512;
-  const int COORDINATES_STR_SIZE = 20;
-  char line[LINE_SIZE], coordinates_str[COORDINATES_STR_SIZE], *ret;
-
-  ret = find_chunk_line_in_file (chunk_coordinates, line,
-				 LINE_SIZE, save_file_path);
-  if (ret != NULL)
-    return 0;
-
-  /* On construit la ligne que l’on va écrire */
-  /* We build the line we will write */
-  line[0] = '\0';
-  coordinates_to_string (chunk_coordinates, coordinates_str, COORDINATES_STR_SIZE);
-  snprintf (line, LINE_SIZE, "%s %d\n", coordinates_str, biome_id);
-
-  /* On écrit la ligne dans le fichier */
-  /* We write the line in the file */
-  FILE *file = fopen (save_file_path, "a");
-  if (file == NULL)
-    return 0;
-  
-  fprintf (file, "%s", line);
-  fclose (file);
-
-  return 1;
+  return surface_item;
 }
 
 struct coordinates
@@ -467,55 +110,34 @@ get_chunk_coordinates_from_player_movement (struct coordinates player_offset)
 
 struct chunk_info
 get_chunk_info (struct coordinates chunk_coordinates,
-		const char* save_file_path)
+		Map* map)
 {
-  const int LINE_SIZE = 512;
+  int chunk_number, item;
+  struct coordinates square;
 
-  char* token;
   struct chunk_info chunk_info;
+
   chunk_info.chunk = chunk_coordinates;
   chunk_info.biome_id = -1;
 
-  struct coordinates square;
-
-  int item_id = -1;
-  for (int i = 0; i < 16; i++)
-      for (int j = 0; j < 16; j++)
-	chunk_info.squares[i][j] = -1;
-
-  int x = 0;
-  int y = 0;
-
-  char line[LINE_SIZE], *ret;
-  ret = find_chunk_line_in_file (chunk_coordinates, line, LINE_SIZE, "save");
-  if (ret == NULL)
+  chunk_number = find_chunk_using_chunk_coordinates (chunk_coordinates, map);
+  if (chunk_number == -1)
     return chunk_info;
 
-  token = strtok (line, " "); /* Chunck coordinates */
-  token = strtok (NULL, " "); /* biome id */
-  chunk_info.biome_id = atoi (token);
-
-  token = strtok (NULL, " "); /* item id */
-
-  while (token != NULL)
+  for (int i = 0; i < map->chunks[chunk_number]->n_squares; i++)
     {
-      square = get_coordinates_from_string (token);
+      square.x = map->chunks[chunk_number]->squares[i]->x;
+      square.y = map->chunks[chunk_number]->squares[i]->y;
 
-      if (square.x == -2147483647 && square.y == 2147483647) /* Error */
-	item_id = atoi (token);
-      else
-	{
-	  x = (int) square.x;
-	  y = (int) square.y;
-	  if (x <= 15 && y <= 15)
-	    chunk_info.squares[x][y] = item_id;
-	  else
-	    fprintf (stderr, "Error in save file\n");
-	}
+      if (square.x >= 16 || square.y >= 16)
+	return chunk_info;
 
-      token = strtok (NULL, " ");
+      item = map->chunks[chunk_number]->squares[i]->item;
+      chunk_info.squares[square.x][square.y] = item;
     }
 
+  chunk_info.biome_id = get_biome_id (chunk_coordinates, map);
+      
   return chunk_info;
 }
 
@@ -638,4 +260,60 @@ free_map_struct (Map* map)
     }
 
   free (map->chunks);
+}
+
+int
+find_chunk_using_chunk_coordinates (struct coordinates chunk_coordinates,
+				    Map* map)
+{
+  int chunk_number;
+
+  int chunk_found = 0;
+
+  for (int i = 0; i < map->n_chunks; i++)
+    {
+      if (map->chunks[i]->x == chunk_coordinates.x)
+	{
+	  if (map->chunks[i]->y == chunk_coordinates.y)
+	    {
+	      chunk_number = i;
+	      chunk_found = 1;
+	    }
+	}
+    }
+  if (!chunk_found)
+    return -1;
+  else
+    return chunk_number;
+}
+
+int
+find_square_using_square_coordinates (struct coordinates chunk_coordinates,
+					     struct coordinates square_coordinates,
+					     Map* map)
+{
+  int chunk_number = find_chunk_using_chunk_coordinates (chunk_coordinates,
+							 map);
+
+  if (chunk_number == -1)
+    return -1;
+
+  int square_number, square_found = 0;
+
+  for (int i = 0; i < map->chunks[chunk_number]->n_squares; i++)
+    {
+      if (map->chunks[chunk_number]->squares[i]->x == square_coordinates.x)
+	{
+	  if (map->chunks[chunk_number]->squares[i]->y == square_coordinates.y)
+	    {
+	      square_number = i;
+	      square_found = 1;
+	    }
+	}
+    }
+
+  if (!square_found)
+    return -1;
+  else
+    return square_number;
 }

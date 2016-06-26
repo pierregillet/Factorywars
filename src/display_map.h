@@ -53,7 +53,7 @@ extern "C" {
   * and a table with biomes
   */ 
 void display_background (SDL_Renderer** Renderer,
-			 std::string path,
+			 Map* map,
 			 /* SDL_Texture** table_biomes, */
 			 SDL_Texture* textures[][10],
 			 /* SDL_Texture** table_items, */
