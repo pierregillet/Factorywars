@@ -41,9 +41,9 @@ display_items (SDL_Renderer** Renderer,
 	       int l,
 	       int m)
 {
-  for (int i(16) ; i > 0 ; i -= 1)
+  for (int i(16) ; i > 0 ; i--)
     {
-      for (int j(0) ; j < 16 ; j += 1)
+      for (int j(0) ; j < 16 ; j++)
 	{
 	  int item_id = chunk.squares[i][j];
 	  if (item_id > 0 && item_id < 4)

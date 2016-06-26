@@ -4412,19 +4412,6 @@ $as_echo "#define RUN_IN_PLACE 1" >>confdefs.h
 
 fi
 
-# Check whether --enable-run-in-place was given.
-if test "${enable_run_in_place+set}" = set; then :
-  enableval=$enable_run_in_place;
-fi
-
-
-if test "$enable_run_in_place" = "yes"; then :
-
-
-$as_echo "#define RUN_IN_PLACE 1" >>confdefs.h
-
-fi
-
 ac_config_headers="$ac_config_headers config.h"
 
 ac_config_files="$ac_config_files Makefile"
