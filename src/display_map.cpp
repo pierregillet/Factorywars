@@ -33,24 +33,10 @@
 #include "display_map.h"
 
 
-void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table)
-{
-  table[0] = loadTexture (Renderer, "media/textures/biome1.png");
-  table[1] = loadTexture (Renderer, "media/textures/biome1.png");    
-  table[2] = loadTexture (Renderer, "media/textures/biome2.png");    
-  table[3] = loadTexture (Renderer, "media/textures/biome1.png");    
-  table[4] = loadTexture (Renderer, "media/textures/biome1.png");                  
-  if (table[0] == NULL)
-    printf("erreur %s\n", SDL_GetError()); 
-}
-
-
-
 void
 display_background (SDL_Renderer** Renderer,
 		    std::string path,
-		    SDL_Texture** table_biomes,
-		    SDL_Texture** table_items,
+		    SDL_Texture* textures[][10],
 		    struct coordinates screen_origin)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
@@ -72,23 +58,23 @@ display_background (SDL_Renderer** Renderer,
 	  struct coordinates coords = get_chunk_coordinates_from_player_movement (hero_coords);
      
 	  int id = get_biome_id (coords, path.c_str ());
-	  if (id == -1)
-	    {
-	      id = 2;
-	    }
-	  else if (id > 4)
+	  if (id == -1 || id > 4)
 	    {
 	      id = 2;
 	    }
 
-	  SDL_Texture* display_id = table_biomes[id];
+	  SDL_Texture* display_id = textures[1][id];
 	  
 	  struct coordinates temp = {.x = j - screen_origin.x % chunk_width,
 	  			     .y = i - screen_origin.y % chunk_width};
-	  blit (Renderer, temp, chunk_width, chunk_width,  display_id);
+	  blit (Renderer, temp, chunk_width,
+		chunk_width, display_id);
 	  
-	  struct chunk_info _info = get_chunk_info (coords, path.c_str());
-	  display_items (Renderer, path.c_str(), table_items, screen_origin, _info, i, j);
+	  struct chunk_info current_chunk_info = get_chunk_info (coords, path.c_str());
+	  display_items (Renderer, path.c_str(),
+			 textures,
+			 screen_origin,
+			 current_chunk_info, i, j);
 	}
     }
 }  
