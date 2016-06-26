@@ -197,6 +197,13 @@ handle_network_communication (unsigned short port, int read_pipe,
 	}
 
       sleep (0.002);
+
+      current_time = time (NULL);
+      if (current_time - old_time > 5)
+	{
+	  old_time = current_time;
+	  write (write_pipe, "PING", 5);
+	}
       
       /* Read the socket */
       nread = read_socket (buffer, BUFFER_SIZE, sockfd6, &peer_addr,
@@ -247,13 +254,6 @@ handle_network_communication (unsigned short port, int read_pipe,
 
 	default:
 	  break;
-	}
-
-      current_time = time (NULL);
-      if (current_time - old_time > 5)
-	{
-	  old_time = current_time;
-	  write (write_pipe, "PING", 5);
 	}
     }
 
