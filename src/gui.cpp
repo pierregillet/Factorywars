@@ -129,7 +129,7 @@ init (SDL_Window** main_window,
 				  -1,
 				  SDL_RENDERER_ACCELERATED
 				  | SDL_RENDERER_PRESENTVSYNC);
-  SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
+  // SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
 
   loadMedia (main_renderer, textures);
 }

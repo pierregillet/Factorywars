@@ -49,28 +49,36 @@ display_background (SDL_Renderer** Renderer,
   screen_origin.x = (screen_origin.x < 0)? 0 : screen_origin.x;
   screen_origin.y = (screen_origin.y < 0)? 0 : screen_origin.y;
 
+  struct coordinates hero_coords;
+  struct coordinates coords;
+  int id;
+  SDL_Texture* display_id;
+  struct coordinates temp;
+  struct chunk_info current_chunk_info;
+
   for(int i(0) ; i < screen_height + screen_origin.y % chunk_width; i += chunk_width)
     {
       for(int j(0); j < screen_width + screen_origin.x % chunk_width ; j += chunk_width)
 	{
-	  struct coordinates hero_coords = {.x = (int) screen_origin.x + j,
-					    .y = (int) screen_origin.y + i};
-	  struct coordinates coords = get_chunk_coordinates_from_player_movement (hero_coords);
+	  hero_coords = {.x = (int) screen_origin.x + j,
+			 .y = (int) screen_origin.y + i};
+	  coords = get_chunk_coordinates_from_player_movement (hero_coords);
      
-	  int id = get_biome_id (coords, path.c_str ());
+	  id = get_biome_id (coords, path.c_str ());
 	  if (id == -1 || id > 4)
 	    {
 	      id = 2;
 	    }
 
-	  SDL_Texture* display_id = textures[1][id];
+	  display_id = textures[1][id];
 	  
-	  struct coordinates temp = {.x = j - screen_origin.x % chunk_width,
-	  			     .y = i - screen_origin.y % chunk_width};
+	  temp = {.x = j - screen_origin.x % chunk_width,
+		  .y = i - screen_origin.y % chunk_width};
 	  blit (Renderer, temp, chunk_width,
 		chunk_width, display_id);
 	  
-	  struct chunk_info current_chunk_info = get_chunk_info (coords, path.c_str());
+	  current_chunk_info = get_chunk_info (coords,
+					       path.c_str());
 	  display_items (Renderer, path.c_str(),
 			 textures,
 			 screen_origin,
