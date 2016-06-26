@@ -40,7 +40,6 @@
 #include "structures.h"
 #include "display_item.h"
 #include "player.h"
-// #include "action.h"
 #include "display_map.h"
 #include "display_item.h"
 #include <vector>
@@ -76,8 +75,6 @@ void loadMedia (SDL_Renderer** Renderer,
  *
  * @param main_window is the main window.
  * @param main_renderer is the main renderer.
- * @param biomes is an array where the biome’s textures will be loaded.
- * @param items is an array where the item’s textures will be loaded.
  * @param screen_height is an int pointer where we will store the screen height.
  * @param screen_width is an int pointer where we will store the screnn width.
  * @param textures is an array of arrays containing the textures.
@@ -155,14 +152,10 @@ void display_blits(SDL_Renderer** Renderer);
  * @param main_window is the main window.
  * @param main_renderer is the main renderer.
  * @param current_texture is the player’s texture.
- * @param biomes is the biome’s textures.
- * @param items is the item’s textures.
  */
 void quit_sdl (SDL_Window** main_window,
 	       SDL_Renderer** main_renderer,
-	       SDL_Texture** current_texture,
-	       /* SDL_Texture** biomes, */
-	       SDL_Texture** items);
+	       SDL_Texture** current_texture);
 
 /**
  * Run the gui

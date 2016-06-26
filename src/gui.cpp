@@ -359,14 +359,8 @@ display_blits(SDL_Renderer** Renderer)
 void
 quit_sdl (SDL_Window** Window,
 	  SDL_Renderer** Renderer,
-	  SDL_Texture** CurrentTexture,
-	  SDL_Texture** items)
-{
-  for (int i = 0; i < 5; i++)
-    {
-      SDL_DestroyTexture (items[i]);
-    }
-  
+	  SDL_Texture** CurrentTexture)
+{  
   SDL_DestroyTexture (*CurrentTexture);
   SDL_DestroyRenderer (*Renderer);
   SDL_DestroyWindow (*Window);
@@ -386,7 +380,6 @@ run_gui (int read_pipe,
   SDL_Renderer* Renderer = NULL;
 
   SDL_Texture* textures[4][10];
-  SDL_Texture *items[5];
 
   init (&Window, &Renderer, &screen_height,
 	&screen_width, textures);
@@ -426,9 +419,8 @@ run_gui (int read_pipe,
   struct map_coordinates click_map_coords;
 
   // We need to display the map at the beginning
-  display_background (&Renderer, "save", textures,
-		      // items,
-		      screen_origin);
+  display_background (&Renderer, "save",
+		      textures, screen_origin);
 
   // Display character
   blit (&Renderer, screen_center, 25, 41, current_texture);
@@ -472,9 +464,7 @@ run_gui (int read_pipe,
 				 screen_width);
 
 	      display_background (&Renderer, "save",
-				  textures,
-				  // items,
-				  screen_origin);
+				  textures, screen_origin);
 	      blit (&Renderer, hero_coords,
 		    25, 41, current_texture);
 	      blit (&Renderer, toolbar_origin, toolbar_size.x,
@@ -504,7 +494,6 @@ run_gui (int read_pipe,
 	      display_background (&Renderer,
 				  "save",
 				  textures,
-				  // items,
 				  screen_origin);
 	      
 	      blit (&Renderer,
@@ -542,7 +531,6 @@ run_gui (int read_pipe,
 	      display_background (&Renderer,
 				  "save",
 				  textures,
-				  // items,
 				  screen_origin);
 	      blit (&Renderer,
 		    hero_coords,
@@ -569,7 +557,6 @@ run_gui (int read_pipe,
       if (handle_data_from_network_pipe (read_pipe, players, "save") > 0)
       	{
 	  display_background (&Renderer, "save", textures,
-			      // items,
 			      screen_origin);
 	  blit (&Renderer, hero_coords, 25, 41, current_texture);
 	  blit (&Renderer,
@@ -588,7 +575,7 @@ run_gui (int read_pipe,
       SDL_Delay (1/200);
     }
 
-  quit_sdl (&Window, &Renderer, &current_texture, items);
+  quit_sdl (&Window, &Renderer, &current_texture);
   
   return 0;
 }  
