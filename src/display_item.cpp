@@ -1,21 +1,8 @@
 #include "display_item.h"
 
-// void 
-// load_items (SDL_Renderer** Renderer, SDL_Texture** table)
-// {
-//   table[0] = loadTexture (Renderer, "media/textures/square1.png");
-//   table[1] = loadTexture (Renderer, "media/textures/arbre.png");    
-//   table[2] = loadTexture (Renderer, "media/textures/pierre1.png");    
-//   table[3] = loadTexture (Renderer, "media/textures/square1.png");    
-//   table[4] = loadTexture (Renderer, "media/textures/square1.png");                  
-//   if (table[0] == NULL)
-//     printf("erreur %s\n", SDL_GetError()); 
-// }
-
 void
 display_items (SDL_Renderer** Renderer,
 	       std::string path,
-	       // SDL_Texture** table_items,
 	       SDL_Texture* textures[][10],
 	       struct coordinates screen_origin,
 	       struct chunk_info chunk,
@@ -36,7 +23,7 @@ display_items (SDL_Renderer** Renderer,
 	      bliting_coords.x = (m - screen_origin.x % 384) + 24 * i - blit_x / 4;
 	      bliting_coords.y = (l - screen_origin.y % 384) + 24 * j - blit_y / 2;
 	      
-	      SDL_Texture* item_texture = textures[2][item_id]; // table_items[item_id];
+	      SDL_Texture* item_texture = textures[2][item_id];
 	      blit (Renderer, bliting_coords, blit_x, blit_y, item_texture);
 	    }
 	}
