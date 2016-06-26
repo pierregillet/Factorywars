@@ -38,17 +38,18 @@
 
 extern "C" {
   #include "network.h"
-  #include "config.h"
 }
 
 static const struct option longopts[] = {
   {"help", no_argument, NULL, 'h'},
+  {"version", no_argument, NULL, 'v'},
   {"server", required_argument, NULL, 's'},
   {"server-port", required_argument, NULL, 'p'},
   {NULL, 0, NULL, 0}
 };
 
 static void print_help (void);
+static void print_version (void);
 
 const char *program_name = NULL;
 
@@ -62,7 +63,7 @@ main (int argc, char *argv[])
 
   program_name = argv[0];
 
-  while ((optc = getopt_long (argc, argv, "hs:p:", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "hvs:p:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
@@ -75,6 +76,10 @@ main (int argc, char *argv[])
 	  break;
 	case 'p':
 	  port = atoi (optarg);
+	  break;
+	case 'v':
+	  print_version ();
+	  exit(EXIT_SUCCESS);
 	  break;
 	default:
 	  lose = 1;
@@ -120,4 +125,19 @@ print_help (void)
   printf ("-s, --server <IP> specify the ip of the server you want to join.\n");
   printf ("-p, --server-port <port> specify the port of the server you want to join (default: 4284).\n");
   printf ("\n");
+}
+
+static void
+print_version (void)
+{
+  printf ("%s (%s) %s\n", PACKAGE, PACKAGE_NAME, VERSION);
+  printf ("\n");
+
+  printf ("\
+Copyright (C) 2016 Corentin Bocquillon.\n\
+Copyright (C) 2016 Loup Fourment.\n\
+Copyright (C) 2016 Pierre Gillet.\n\
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html\n\
+This is free software: you are free to change and destribute it.\n\
+There is NO WARRANTY, to the extent permitted by law.\n");
 }
