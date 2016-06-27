@@ -69,6 +69,18 @@ Player::getName () const
 }
 
 void
+Player::setName (const char* name)
+{
+  m_name = name;
+}
+
+void
+Player::setName (std::string name)
+{
+  m_name = name;
+}
+
+void
 Player::setCoordinates (struct coordinates new_coords)
 {
   this->m_coordinates.x = new_coords.x;

@@ -96,6 +96,7 @@ main (int argc, char *argv[])
 
   int pipes[4];
   std::vector<Player> players (1, Player ());
+  players[0].setName (get_config_value ("name"));
   
   pipe (pipes);
   pipe (pipes + 2);

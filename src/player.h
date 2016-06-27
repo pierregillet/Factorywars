@@ -81,6 +81,9 @@ Player
    */
   std::string getName () const;
 
+  void setName (const char* name);
+  void setName (std::string name);
+
   /**
    * Set the player’s coordinates.
    * @param The new coordinates of the player.

@@ -608,10 +608,17 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 		 SDL_Renderer** renderer, SDL_Texture* player_texture,
 		 int screen_height, int screen_width)
 {
+  const char* my_name = get_config_value ("name");
+  struct coordinates player_coordinates;
+
   // Display players
   for (Player player : players)
     {
-      struct coordinates player_coordinates = player.getCoordinates ();
+      if (strcmp (player.getName ().c_str (), my_name) == 0)
+	continue;
+
+      player_coordinates = player.getCoordinates ();
+
       if (player_coordinates.x >= screen_origin.x
 	  && player_coordinates.x <= screen_origin.x + screen_width)
 	{
