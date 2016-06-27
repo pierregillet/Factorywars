@@ -81,8 +81,8 @@ void loadMedia (SDL_Renderer** Renderer,
  */
 void init (SDL_Window** main_window,
 	   SDL_Renderer** main_renderer,
-	   int* screen_height,
-	   int* screen_width,
+	   const int screen_height,
+	   const int screen_width,
 	   SDL_Texture* textures[][10]);
 
 /**

@@ -48,60 +48,66 @@ void
 loadMedia (SDL_Renderer** main_renderer,
 	   SDL_Texture* textures[][10])
 {
-  std::string textures_paths[] = {"media/textures/LEFT.png",
-  				  "media/textures/RIGHT.png",
-  				  "media/textures/LEFT.png",
-  				  "media/textures/RIGHT.png",
-  				  // End of player textures
+  std::string player_textures_paths[] = {"media/textures/LEFT.png",
+					 "media/textures/RIGHT.png",
+					 "media/textures/LEFT.png",
+					 "media/textures/RIGHT.png"};
 
-				  // Beginning of biomes textures
-				  "media/textures/biome1.png",
-				  "media/textures/biome1.png",
-				  "media/textures/biome2.png",
-				  "media/textures/biome1.png",
-				  "media/textures/biome1.png",
-				  // End of biomes textures
+  std::string biomes_textures_paths[] = {"media/textures/biome1.png",
+					 "media/textures/biome1.png",
+					 "media/textures/biome2.png",
+					 "media/textures/biome1.png",
+					 "media/textures/biome1.png"};
 
-  				  // Beginning of items textures
-  				  "media/textures/arbre.png",
-  				  "media/textures/pierre1.png",
-  				  "media/textures/pierre2.png",
-  				  "media/textures/pierre3.png",
-				  // End of items textures
+  std::string objects_textures_paths[] = {"media/textures/arbre.png",
+					  "media/textures/pierre1.png",
+					  "media/textures/pierre2.png",
+					  "media/textures/pierre3.png"};
 
-				  //Beginning of hud textures
-				  "media/hud/toolbar.png"};
+  std::string hud_textures_paths[] = {"media/hud/toolbar.png"};
+
+  int i = 0;
   
-  for (int i = 0; i < 4; i++)
+  for (std::string path : player_textures_paths)
     {
       textures[0][i] = loadTexture (main_renderer,
-				    textures_paths[i]);
+				    path);
+      i++;
     }
 
-  for (int i = 0; i < 5; i++)
+  i = 0;
+  
+  for (std::string path : biomes_textures_paths)
     {
       textures[1][i] = loadTexture (main_renderer,
-				    textures_paths[4 + i]);
+				    path);
+      i++;
     }
 
-  for (int i = 0; i < 4; i++)
+  i = 0;
+
+  for (std::string path : objects_textures_paths)
     {
       textures[2][i] = loadTexture (main_renderer,
-				    textures_paths[9 + i]);
+				    path);
+      i++;
     }
 
-  for (int i = 0; i < 1; i++)
+  i = 0;
+  
+  for (std::string path : hud_textures_paths)
     {
       textures[3][i] = loadTexture (main_renderer,
-				    textures_paths[13 + i]);
+				    path);
+      i++;
     }
 }
 
 void
 init (SDL_Window** main_window,
       SDL_Renderer** main_renderer,
-      int* screen_height,
-      int* screen_width,
+      const int screen_height,
+      const int screen_width,
       SDL_Texture* textures[][10])
 {
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
@@ -113,8 +119,8 @@ init (SDL_Window** main_window,
   *main_window = SDL_CreateWindow ("Factorywars",
 			      SDL_WINDOWPOS_UNDEFINED,
 			      SDL_WINDOWPOS_UNDEFINED,
-			      *screen_width,
-			      *screen_height,
+			      screen_width,
+			      screen_height,
 			      SDL_WINDOW_SHOWN
 			      /*| SDL_WINDOW_RESIZABLE*/);
 	  
@@ -261,26 +267,20 @@ handle_events (SDL_Texture* textures[][10],
 	  break;
 	      
 	case SDL_KEYDOWN:
-	  handle_keydown (event.key.keysym.sym,
-			  keys_state,
-			  textures,
-			  CurrentTexture);
+	  handle_keydown (event.key.keysym.sym, keys_state,
+			  textures, CurrentTexture);
 	  break;
 
 	case SDL_KEYUP:
-	  handle_keyup (event.key.keysym.sym,
-			keys_state);
+	  handle_keyup (event.key.keysym.sym, keys_state);
 	  break;
 
 	case SDL_MOUSEBUTTONDOWN:
 	  click_coords.x = event.button.x;
 	  click_coords.y = event.button.y;
-	  handle_clickdown (event.button.button,
-			    click_coords,
-			    clicks_state,
-			    screen_height,
-			    screen_width,
-			    &screen_origin,
+	  handle_clickdown (event.button.button, click_coords,
+			    clicks_state, screen_height,
+			    screen_width, &screen_origin,
 			    click_map_coords);
 	  break;
 
@@ -288,10 +288,8 @@ handle_events (SDL_Texture* textures[][10],
 	  break;
 
 	case SDL_MOUSEWHEEL:
-	  handle_mousewheel (event.wheel.y,
-			     screen_height,
-			     screen_width,
-			     &screen_origin,
+	  handle_mousewheel (event.wheel.y, screen_height,
+			     screen_width, &screen_origin,
 			     players);
 	  break;
 	  
@@ -385,8 +383,8 @@ run_gui (int read_pipe,
 
   SDL_Texture* textures[4][10];
 
-  init (&Window, &Renderer, &screen_height,
-	&screen_width, textures);
+  init (&Window, &Renderer, screen_height,
+	screen_width, textures);
 
   struct coordinates screen_center; 
   screen_center.x = screen_width / 2;
