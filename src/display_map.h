@@ -54,7 +54,7 @@ extern "C" {
   */ 
 void display_background (SDL_Renderer** Renderer,
 			 Map* map,
-			 /* SDL_Texture** table_biomes, */
 			 SDL_Texture* textures[][10],
-			 /* SDL_Texture** table_items, */
-			 struct coordinates screen_origin);
+			 struct coordinates screen_origin,
+			 const int screen_height,
+			 const int screen_width);

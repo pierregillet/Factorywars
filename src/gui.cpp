@@ -41,6 +41,7 @@ loadTexture(SDL_Renderer** main_renderer, std::string path)
   new_texture = SDL_CreateTextureFromSurface (*main_renderer, loaded_surface);
   SDL_FreeSurface (loaded_surface);
 
+  
   return new_texture;
 }
 
@@ -48,60 +49,70 @@ void
 loadMedia (SDL_Renderer** main_renderer,
 	   SDL_Texture* textures[][10])
 {
-  std::string textures_paths[] = {"media/textures/LEFT.png",
-  				  "media/textures/RIGHT.png",
-  				  "media/textures/LEFT.png",
-  				  "media/textures/RIGHT.png",
-  				  // End of player textures
+  std::string
+    player_textures_paths[] = {"media/textures/LEFT.png",
+			       "media/textures/RIGHT.png",
+			       "media/textures/LEFT.png",
+			       "media/textures/RIGHT.png"};
 
-				  // Beginning of biomes textures
-				  "media/textures/biome1.png",
-				  "media/textures/biome1.png",
-				  "media/textures/biome2.png",
-				  "media/textures/biome1.png",
-				  "media/textures/biome1.png",
-				  // End of biomes textures
+  std::string
+    biomes_textures_paths[] = {"media/textures/biome1.png",
+			       "media/textures/biome1.png",
+			       "media/textures/biome2.png",
+			       "media/textures/biome1.png",
+			       "media/textures/biome1.png"};
 
-  				  // Beginning of items textures
-  				  "media/textures/arbre.png",
-  				  "media/textures/pierre1.png",
-  				  "media/textures/pierre2.png",
-  				  "media/textures/pierre3.png",
-				  // End of items textures
+  std::string
+    objects_textures_paths[] = {"media/textures/arbre.png",
+				"media/textures/pierre1.png",
+				"media/textures/pierre2.png",
+				"media/textures/pierre3.png"};
 
-				  //Beginning of hud textures
-				  "media/hud/toolbar.png"};
+  std::string
+    hud_textures_paths[] = {"media/hud/toolbar.png"};
+
+  int i = 0;
   
-  for (int i = 0; i < 4; i++)
+  for (std::string path : player_textures_paths)
     {
       textures[0][i] = loadTexture (main_renderer,
-				    textures_paths[i]);
+				    path);
+      i++;
     }
 
-  for (int i = 0; i < 5; i++)
+  i = 0;
+  
+  for (std::string path : biomes_textures_paths)
     {
       textures[1][i] = loadTexture (main_renderer,
-				    textures_paths[4 + i]);
+				    path);
+      i++;
     }
 
-  for (int i = 0; i < 4; i++)
+  i = 0;
+
+  for (std::string path : objects_textures_paths)
     {
       textures[2][i] = loadTexture (main_renderer,
-				    textures_paths[9 + i]);
+				    path);
+      i++;
     }
 
-  for (int i = 0; i < 1; i++)
+  i = 0;
+  
+  for (std::string path : hud_textures_paths)
     {
       textures[3][i] = loadTexture (main_renderer,
-				    textures_paths[13 + i]);
+				    path);
+      i++;
     }
 }
 
 void
 init (SDL_Window** main_window,
       SDL_Renderer** main_renderer,
-      int* screen_height,
-      int* screen_width,
+      const int screen_height,
+      const int screen_width,
       SDL_Texture* textures[][10])
 {
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
@@ -113,8 +124,8 @@ init (SDL_Window** main_window,
   *main_window = SDL_CreateWindow ("Factorywars",
 			      SDL_WINDOWPOS_UNDEFINED,
 			      SDL_WINDOWPOS_UNDEFINED,
-			      *screen_width,
-			      *screen_height,
+			      screen_width,
+			      screen_height,
 			      SDL_WINDOW_SHOWN
 			      /*| SDL_WINDOW_RESIZABLE*/);
 	  
@@ -132,6 +143,12 @@ init (SDL_Window** main_window,
   // SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
 
   loadMedia (main_renderer, textures);
+}
+
+void
+display_main_menu ()
+{
+  
 }
 
 int
@@ -261,26 +278,20 @@ handle_events (SDL_Texture* textures[][10],
 	  break;
 	      
 	case SDL_KEYDOWN:
-	  handle_keydown (event.key.keysym.sym,
-			  keys_state,
-			  textures,
-			  CurrentTexture);
+	  handle_keydown (event.key.keysym.sym, keys_state,
+			  textures, CurrentTexture);
 	  break;
 
 	case SDL_KEYUP:
-	  handle_keyup (event.key.keysym.sym,
-			keys_state);
+	  handle_keyup (event.key.keysym.sym, keys_state);
 	  break;
 
 	case SDL_MOUSEBUTTONDOWN:
 	  click_coords.x = event.button.x;
 	  click_coords.y = event.button.y;
-	  handle_clickdown (event.button.button,
-			    click_coords,
-			    clicks_state,
-			    screen_height,
-			    screen_width,
-			    &screen_origin,
+	  handle_clickdown (event.button.button, click_coords,
+			    clicks_state, screen_height,
+			    screen_width, &screen_origin,
 			    click_map_coords);
 	  break;
 
@@ -288,10 +299,8 @@ handle_events (SDL_Texture* textures[][10],
 	  break;
 
 	case SDL_MOUSEWHEEL:
-	  handle_mousewheel (event.wheel.y,
-			     screen_height,
-			     screen_width,
-			     &screen_origin,
+	  handle_mousewheel (event.wheel.y, screen_height,
+			     screen_width, &screen_origin,
 			     players);
 	  break;
 	  
@@ -306,8 +315,8 @@ handle_events (SDL_Texture* textures[][10],
 int
 move_coordinates_on_keydown (struct coordinates* screen_origin,
 			     bool* keys_state,
-			     struct coordinates* hero_coords,
-			     struct coordinates screen_center)
+			     struct size* hero_coords,
+			     struct size screen_center)
 {
   if (hero_coords -> x >= 640 && hero_coords -> y >= 370  )
     {
@@ -334,18 +343,19 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
 }
 
 int
-blit (SDL_Renderer** Renderer,
-      struct coordinates blit_origin,
+blit (SDL_Renderer** main_renderer,
+      struct size blit_origin,
       int width,
       int height,
       SDL_Texture* texture)
 {
-  SDL_Rect Rect = {.x = (int) blit_origin.x,
-		   .y = (int) blit_origin.y,
-		   .w = width, .h = height};
+  SDL_Rect rectangle = {.x = blit_origin.x,
+			.y = blit_origin.y,
+			.w = width,
+			.h = height};
   
-  SDL_RenderSetViewport(*Renderer, &Rect);
-  SDL_RenderCopy (*Renderer, texture, NULL,NULL);
+  SDL_RenderSetViewport (*main_renderer, &rectangle);
+  SDL_RenderCopy (*main_renderer, texture, NULL, NULL);
 
   return 1;
 }
@@ -357,13 +367,34 @@ display_blits(SDL_Renderer** Renderer)
 }
 
 void
-quit_sdl (SDL_Window** Window,
-	  SDL_Renderer** Renderer,
-	  SDL_Texture** CurrentTexture)
+quit_sdl (SDL_Window** main_window,
+	  SDL_Renderer** main_renderer,
+	  SDL_Texture** current_texture,
+	  SDL_Texture* textures[][10])
 {  
-  SDL_DestroyTexture (*CurrentTexture);
-  SDL_DestroyRenderer (*Renderer);
-  SDL_DestroyWindow (*Window);
+  for (int i = 0 ; i < 4 ; i++)
+    {
+      SDL_DestroyTexture (textures[0][i]);
+    }
+
+  for (int i = 0 ; i < 5 ; i++)
+    {
+      SDL_DestroyTexture (textures[1][i]);
+    }
+
+  for (int i = 0 ; i < 4 ; i++)
+    {
+      SDL_DestroyTexture (textures[2][i]);
+    }
+
+  for (int i = 0 ; i < 1 ; i++)
+    {
+      SDL_DestroyTexture (textures[3][i]);
+    }
+
+  SDL_DestroyTexture (*current_texture);
+  SDL_DestroyRenderer (*main_renderer);
+  SDL_DestroyWindow (*main_window);
 
   SDL_Quit();
   printf ("Goodbye !\n");
@@ -376,6 +407,8 @@ run_gui (int read_pipe,
 {
   int screen_height = atoi (get_config_value ("height"));
   int screen_width = atoi (get_config_value ("width"));
+  struct size screen_dimensions = {.x = screen_width,
+				   .y = screen_height};
 
   Map map = MAP__INIT;
   read_save_file (&map, "protosave");
@@ -385,18 +418,18 @@ run_gui (int read_pipe,
 
   SDL_Texture* textures[4][10];
 
-  init (&Window, &Renderer, &screen_height,
-	&screen_width, textures);
+  init (&Window, &Renderer, screen_height,
+	screen_width, textures);
 
-  struct coordinates screen_center; 
+  struct size screen_center; 
   screen_center.x = screen_width / 2;
   screen_center.y = screen_height / 2;
  
   struct coordinates screen_origin = {.x = 0,
 				      .y = 0};
 
-  struct coordinates hero_coords = {.x = screen_center.x,
-				    .y = screen_center.y};
+  struct size hero_coords = {.x = screen_center.x,
+			     .y = screen_center.y};
   
   SDL_Texture *current_texture = NULL;
   current_texture = textures[0][1];
@@ -424,16 +457,19 @@ run_gui (int read_pipe,
 
   // We need to display the map at the beginning
   display_background (&Renderer, &map,
-		      textures, screen_origin);
+		      textures, screen_origin,
+		      screen_height, screen_width);
 
   // Display character
   blit (&Renderer, screen_center, 25, 41, current_texture);
   
   // Display HUD
-  struct coordinates toolbar_origin = {.x = screen_width / 4 ,
-				       .y = (int) (screen_height - (screen_width / 2 * 0.11))}; 
-  struct coordinates toolbar_size = {.x = screen_width / 2,
-				     .y = (int) (screen_width / 2 * 0.11)};
+  struct size
+    toolbar_origin = {.x = (int) (screen_width / 4),
+				.y = (int) (screen_height - (screen_width / 2 * 0.11))}; 
+  struct size
+    toolbar_size = {.x = (int) (screen_width / 2),
+		    .y = (int) (screen_width / 2 * 0.11)};
   blit (&Renderer,
 	toolbar_origin,
 	toolbar_size.x,
@@ -468,7 +504,8 @@ run_gui (int read_pipe,
 				 screen_width);
 
 	      display_background (&Renderer, &map,
-				  textures, screen_origin);
+				  textures, screen_origin,
+				  screen_height, screen_width);
 	      blit (&Renderer, hero_coords,
 		    25, 41, current_texture);
 	      blit (&Renderer, toolbar_origin, toolbar_size.x,
@@ -495,10 +532,9 @@ run_gui (int read_pipe,
 			       click_map_coords.square,
 			       1,
 			       &map);
-	      display_background (&Renderer,
-				  &map,
-				  textures,
-				  screen_origin);
+	      display_background (&Renderer, &map,
+				  textures, screen_origin,
+				  screen_height, screen_width);
 	      
 	      blit (&Renderer,
 		    hero_coords,
@@ -532,10 +568,9 @@ run_gui (int read_pipe,
 			       click_map_coords.square,
 			       -1,
 			       &map);
-	      display_background (&Renderer,
-				  &map,
-				  textures,
-				  screen_origin);
+	      display_background (&Renderer, &map,
+				  textures, screen_origin,
+				  screen_height, screen_width);
 	      blit (&Renderer,
 		    hero_coords,
 		    25,
@@ -560,8 +595,9 @@ run_gui (int read_pipe,
       // Network pipe handling
       if (handle_data_from_network_pipe (read_pipe, players) > 0)
       	{
-	  display_background (&Renderer, &map, textures,
-			      screen_origin);
+	  display_background (&Renderer, &map,
+			      textures, screen_origin,
+			      screen_height, screen_width);
 	  blit (&Renderer, hero_coords, 25, 41, current_texture);
 	  blit (&Renderer,
 		toolbar_origin,
@@ -579,7 +615,7 @@ run_gui (int read_pipe,
       SDL_Delay (1/200);
     }
 
-  quit_sdl (&Window, &Renderer, &current_texture);
+  quit_sdl (&Window, &Renderer, &current_texture, textures);
   
   return 0;
 }  
@@ -610,6 +646,7 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 {
   const char* my_name = players[0].getName ().c_str ();
   struct coordinates player_coordinates;
+  struct size player_placement;
 
   // Display players
   for (Player player : players)
@@ -628,8 +665,21 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 	      player_coordinates.x -= screen_origin.x;
 	      player_coordinates.y -= screen_origin.y;
 
-	      blit (renderer, player_coordinates, 25, 41, player_texture);
+	      player_placement = {.x = (int) player_coordinates.x,
+				  .y = (int) player_coordinates.y};
+	      blit (renderer, player_placement, 25, 41,
+		    player_texture);
 	    }
 	}
     }
 }
+
+// WORK IN PROGRESS : just needs confirmation on how we manage the save with protobuf.
+// void
+// display_ground (SDL_Texture* texture[][10])
+// {
+//   const int NUMBER_OF_SQUARE_PER_ROW = 16;
+//   const int SQUARE_WIDTH = 24; // In pixels
+
+//   const int chunk_width = NUMBER_OF_SQUARE_PER_ROW * SQUARE_WIDTH;
+// }

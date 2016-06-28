@@ -81,8 +81,8 @@ void loadMedia (SDL_Renderer** Renderer,
  */
 void init (SDL_Window** main_window,
 	   SDL_Renderer** main_renderer,
-	   int* screen_height,
-	   int* screen_width,
+	   const int screen_height,
+	   const int screen_width,
 	   SDL_Texture* textures[][10]);
 
 /**
@@ -127,8 +127,8 @@ int handle_events (SDL_Texture* textures[][10],
  */
 int move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 bool* keys_state,
-				 struct coordinates* hero_coords,
-				 struct coordinates screen_center);
+				 struct size* hero_coords,
+				 struct size screen_center);
 
 /**
  * Blit Textures at given coordinates x,y.
@@ -136,7 +136,7 @@ int move_coordinates_on_keydown (struct coordinates* screen_origin,
  * @return int true if there is no error
  */
 int blit (SDL_Renderer** Renderer,
-	  struct coordinates blit_origin,
+	  struct size blit_origin,
 	  int width,
 	  int height,
 	  SDL_Texture* texture);
@@ -155,7 +155,8 @@ void display_blits(SDL_Renderer** Renderer);
  */
 void quit_sdl (SDL_Window** main_window,
 	       SDL_Renderer** main_renderer,
-	       SDL_Texture** current_texture);
+	       SDL_Texture** current_texture,
+	       SDL_Texture* textures[][10]);
 
 /**
  * Run the gui
