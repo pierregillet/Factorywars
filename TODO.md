@@ -31,6 +31,7 @@ Network
 GUI
 ---
 + Create the player textures.
++ Replace screen_height and screen_width with a structure
 + Rewrite gui.cpp.
 + Delete display_blits function.
 + Blit by layers, first the ground textures then the objects.
