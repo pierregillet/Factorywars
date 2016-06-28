@@ -127,8 +127,8 @@ int handle_events (SDL_Texture* textures[][10],
  */
 int move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 bool* keys_state,
-				 struct coordinates* hero_coords,
-				 struct coordinates screen_center);
+				 struct size* hero_coords,
+				 struct size screen_center);
 
 /**
  * Blit Textures at given coordinates x,y.
@@ -136,7 +136,7 @@ int move_coordinates_on_keydown (struct coordinates* screen_origin,
  * @return int true if there is no error
  */
 int blit (SDL_Renderer** Renderer,
-	  struct coordinates blit_origin,
+	  struct size blit_origin,
 	  int width,
 	  int height,
 	  SDL_Texture* texture);

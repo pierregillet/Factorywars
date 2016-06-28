@@ -42,7 +42,7 @@ display_items (SDL_Renderer** Renderer,
 {
 
   int item_id, blit_x, blit_y;
-  struct coordinates bliting_coords;
+  struct size bliting_coords;
   SDL_Texture* item_texture;
   
   if (chunk.biome_id == -1)
@@ -58,8 +58,8 @@ display_items (SDL_Renderer** Renderer,
 	      blit_x = (item_id == 1)? 48 :24;
 	      blit_y = (item_id == 1)? 48 :24;
 	      
-	      bliting_coords.x = (m - screen_origin.x % 384) + 24 * i - blit_x / 4;
-	      bliting_coords.y = (l - screen_origin.y % 384) + 24 * j - blit_y / 2;
+	      bliting_coords = {.x = (int) ((m - screen_origin.x % 384) + 24 * i - blit_x / 4),
+				.y = (int) ((l - screen_origin.y % 384) + 24 * j - blit_y / 2)};
 	      
 	      item_texture = textures[2][item_id];
 	      blit (Renderer, bliting_coords, blit_x, blit_y, item_texture);

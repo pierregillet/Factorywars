@@ -41,6 +41,7 @@ loadTexture(SDL_Renderer** main_renderer, std::string path)
   new_texture = SDL_CreateTextureFromSurface (*main_renderer, loaded_surface);
   SDL_FreeSurface (loaded_surface);
 
+  
   return new_texture;
 }
 
@@ -142,6 +143,12 @@ init (SDL_Window** main_window,
   // SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
 
   loadMedia (main_renderer, textures);
+}
+
+void
+display_main_menu ()
+{
+  
 }
 
 int
@@ -308,8 +315,8 @@ handle_events (SDL_Texture* textures[][10],
 int
 move_coordinates_on_keydown (struct coordinates* screen_origin,
 			     bool* keys_state,
-			     struct coordinates* hero_coords,
-			     struct coordinates screen_center)
+			     struct size* hero_coords,
+			     struct size screen_center)
 {
   if (hero_coords -> x >= 640 && hero_coords -> y >= 370  )
     {
@@ -336,18 +343,19 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
 }
 
 int
-blit (SDL_Renderer** Renderer,
-      struct coordinates blit_origin,
+blit (SDL_Renderer** main_renderer,
+      struct size blit_origin,
       int width,
       int height,
       SDL_Texture* texture)
 {
-  SDL_Rect Rect = {.x = (int) blit_origin.x,
-		   .y = (int) blit_origin.y,
-		   .w = width, .h = height};
+  SDL_Rect rectangle = {.x = blit_origin.x,
+			.y = blit_origin.y,
+			.w = width,
+			.h = height};
   
-  SDL_RenderSetViewport(*Renderer, &Rect);
-  SDL_RenderCopy (*Renderer, texture, NULL,NULL);
+  SDL_RenderSetViewport (*main_renderer, &rectangle);
+  SDL_RenderCopy (*main_renderer, texture, NULL, NULL);
 
   return 1;
 }
@@ -413,15 +421,15 @@ run_gui (int read_pipe,
   init (&Window, &Renderer, screen_height,
 	screen_width, textures);
 
-  struct coordinates screen_center; 
+  struct size screen_center; 
   screen_center.x = screen_width / 2;
   screen_center.y = screen_height / 2;
  
   struct coordinates screen_origin = {.x = 0,
 				      .y = 0};
 
-  struct coordinates hero_coords = {.x = screen_center.x,
-				    .y = screen_center.y};
+  struct size hero_coords = {.x = screen_center.x,
+			     .y = screen_center.y};
   
   SDL_Texture *current_texture = NULL;
   current_texture = textures[0][1];
@@ -456,10 +464,12 @@ run_gui (int read_pipe,
   blit (&Renderer, screen_center, 25, 41, current_texture);
   
   // Display HUD
-  struct coordinates toolbar_origin = {.x = screen_width / 4 ,
-				       .y = (int) (screen_height - (screen_width / 2 * 0.11))}; 
-  struct coordinates toolbar_size = {.x = screen_width / 2,
-				     .y = (int) (screen_width / 2 * 0.11)};
+  struct size
+    toolbar_origin = {.x = (int) (screen_width / 4),
+				.y = (int) (screen_height - (screen_width / 2 * 0.11))}; 
+  struct size
+    toolbar_size = {.x = (int) (screen_width / 2),
+		    .y = (int) (screen_width / 2 * 0.11)};
   blit (&Renderer,
 	toolbar_origin,
 	toolbar_size.x,
@@ -636,6 +646,7 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 {
   const char* my_name = get_config_value ("name");
   struct coordinates player_coordinates;
+  struct size player_placement;
 
   // Display players
   for (Player player : players)
@@ -654,14 +665,21 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 	      player_coordinates.x -= screen_origin.x;
 	      player_coordinates.y -= screen_origin.y;
 
-	      blit (renderer, player_coordinates, 25, 41, player_texture);
+	      player_placement = {.x = (int) player_coordinates.x,
+				  .y = (int) player_coordinates.y};
+	      blit (renderer, player_placement, 25, 41,
+		    player_texture);
 	    }
 	}
     }
 }
 
-void
-display_ground (SDL_Texture* texture[][10])
-{
-  
-}
+// WORK IN PROGRESS : just needs confirmation on how we manage the save with protobuf.
+// void
+// display_ground (SDL_Texture* texture[][10])
+// {
+//   const int NUMBER_OF_SQUARE_PER_ROW = 16;
+//   const int SQUARE_WIDTH = 24; // In pixels
+
+//   const int chunk_width = NUMBER_OF_SQUARE_PER_ROW * SQUARE_WIDTH;
+// }

@@ -52,7 +52,7 @@ display_background (SDL_Renderer** Renderer,
   struct coordinates coords;
   int id;
   SDL_Texture* display_id;
-  struct coordinates temp;
+  struct size temp;
   struct chunk_info current_chunk_info;
 
   for(int i(0) ; i < screen_height + screen_origin.y % chunk_width; i += chunk_width)
@@ -71,8 +71,10 @@ display_background (SDL_Renderer** Renderer,
 
 	  display_id = textures[1][id];
 	  
-	  temp = {.x = j - screen_origin.x % chunk_width,
-		  .y = i - screen_origin.y % chunk_width};
+	  temp = {.x = (int) (j - screen_origin.x % chunk_width),
+		  .y = (int) (i - screen_origin.y % chunk_width)};
+	  
+
 	  blit (Renderer, temp, chunk_width,
 		chunk_width, display_id);
 	  
