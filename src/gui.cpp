@@ -608,7 +608,7 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 		 SDL_Renderer** renderer, SDL_Texture* player_texture,
 		 int screen_height, int screen_width)
 {
-  const char* my_name = get_config_value ("name");
+  const char* my_name = players[0].getName ().c_str ();
   struct coordinates player_coordinates;
 
   // Display players
