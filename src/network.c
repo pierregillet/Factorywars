@@ -133,7 +133,19 @@ handle_network_communication (unsigned short port, int read_pipe,
   struct sockaddr_storage peer_addr;
   socklen_t peer_addr_len;
 
-  port = (unsigned short) atoi(get_config_value ("port"));
+  const int config_value_len = 256;
+  char config_value[config_value_len];
+
+  char *my_name;
+  int my_name_len = 0;
+
+  get_config_value ("name", config_value, config_value_len);
+  my_name_len = strlen (config_value);
+  my_name = malloc (sizeof (char) * my_name_len);
+  strcpy (my_name, config_value);
+  
+  get_config_value ("port", config_value, config_value_len);
+  port = (unsigned short) atoi(config_value);
   char buffer[BUFFER_SIZE], tmp_string[BUFFER_SIZE];
 
   /* On récupère l’interface de connexion */
@@ -149,7 +161,9 @@ handle_network_communication (unsigned short port, int read_pipe,
       server.port = (server_port != 0)? server_port : 4284;
 
       char data[512];
-      snprintf (data, 512, "CONNECT %d %s", port, get_config_value ("name"));
+      get_config_value ("name", config_value, config_value_len);
+
+      snprintf (data, 512, "CONNECT %d %s", port, config_value);
 
       send_data (server, data);
     }
@@ -238,7 +252,7 @@ handle_network_communication (unsigned short port, int read_pipe,
 		     * sizeof (struct server_credentials));
 
 	  if (!connect_command (tmp_string, &number_of_players, servers,
-				peer_addr, write_pipe))
+				peer_addr, port, my_name, write_pipe))
 	    servers = (struct server_credentials*)
 	      realloc (servers,
 		       number_of_players * sizeof (struct server_credentials));
@@ -260,12 +274,14 @@ handle_network_communication (unsigned short port, int read_pipe,
   close (read_pipe);
   close (write_pipe);
   free (servers);
+  free (my_name);
 }
 
 int
 connect_command (const char* data, unsigned int* number_of_servers,
 		 struct server_credentials* servers,
 		 struct sockaddr_storage peer_addr,
+		 unsigned short port, const char* name,
 		 int write_pipe)
 {
   char *token;
@@ -322,8 +338,7 @@ connect_command (const char* data, unsigned int* number_of_servers,
     {
       /* On lui transfert un message de connexion */
       /* We send him a connect */
-      snprintf (buffer, BUFFER_SIZE, "CONNECT %s %s",
-		get_config_value ("port"), get_config_value ("name"));
+      snprintf (buffer, BUFFER_SIZE, "CONNECT %d %s", port, name);
       send_data (servers[*(number_of_servers) - 1], buffer);
 
       /* On transfert à tout le monde une commande nouveau joueur */

@@ -405,8 +405,15 @@ run_gui (int read_pipe,
 	 int write_pipe,
 	 std::vector<Player>& players)
 {
-  int screen_height = atoi (get_config_value ("height"));
-  int screen_width = atoi (get_config_value ("width"));
+  const int config_value_len = 256;
+  char config_value[config_value_len];
+
+  get_config_value ("height", config_value, config_value_len);
+  int screen_height = atoi (config_value);
+
+  get_config_value ("width", config_value, config_value_len);
+  int screen_width = atoi (config_value);
+
   struct size screen_dimensions = {.x = screen_width,
 				   .y = screen_height};
 
@@ -644,14 +651,15 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 		 SDL_Renderer** renderer, SDL_Texture* player_texture,
 		 int screen_height, int screen_width)
 {
-  const char* my_name = players[0].getName ().c_str ();
+  std::string my_name = players[0].getName ();
+
   struct coordinates player_coordinates;
   struct size player_placement;
 
   // Display players
   for (Player player : players)
     {
-      if (strcmp (player.getName ().c_str (), my_name) == 0)
+      if (player.getName () == my_name)
 	continue;
 
       player_coordinates = player.getCoordinates ();

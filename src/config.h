@@ -33,11 +33,30 @@
 #pragma once
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <config.h>
+#include <string.h>
+
 #include "XMLParser.h"
 
 /**
  * Get the value of a parameter in the config file.
  * @param key is the name of the parameter.
- * @return the value or NULL if there is an error.
+ * @param dst is the destination string.
+ * @param dst_len is the length of the destination string.
+ * @return 1 if success, 0 otherwise.
  */
-char* get_config_value (const char* key);
+int get_config_value (const char* key, char* dst, size_t dst_len);
+
+/**
+ * Get the defaul value of a parameter.
+ *
+ * @param key is the name of the parameter.
+ * @param dst is the destination string.
+ * @param dst_len is the length of the destination string.
+ * @return 1 if there is a default value, 0 otherwise.
+ */
+int default_config_value (const char* key, char* dst, size_t dst_len);
