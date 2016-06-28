@@ -155,7 +155,8 @@ void display_blits(SDL_Renderer** Renderer);
  */
 void quit_sdl (SDL_Window** main_window,
 	       SDL_Renderer** main_renderer,
-	       SDL_Texture** current_texture);
+	       SDL_Texture** current_texture,
+	       SDL_Texture* textures[][10]);
 
 /**
  * Run the gui

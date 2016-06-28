@@ -36,14 +36,14 @@ void
 display_background (SDL_Renderer** Renderer,
 		    Map* map,
 		    SDL_Texture* textures[][10],
-		    struct coordinates screen_origin)
+		    struct coordinates screen_origin,
+		    const int screen_height,
+		    const int screen_width)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
   const int SQUARE_WIDTH = 24;
 
   const int chunk_width = NUMBER_OF_SQUARE_PER_ROW * SQUARE_WIDTH;
-  const int screen_height = atoi (get_config_value ("height"));
-  const int screen_width = atoi (get_config_value ("width"));
 
   screen_origin.x = (screen_origin.x < 0)? 0 : screen_origin.x;
   screen_origin.y = (screen_origin.y < 0)? 0 : screen_origin.y;
