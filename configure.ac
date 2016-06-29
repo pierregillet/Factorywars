@@ -8,7 +8,8 @@ PKG_CHECK_MODULES([libxml2], [libxml-2.0 >= 2])
 PKG_CHECK_MODULES([libSDL2], [sdl2 >= 2])
 PKG_CHECK_MODULES([libSDL2Image], [SDL2_image])
 PKG_CHECK_MODULES([PROTOBUF_C], [libprotobuf-c >= 1.0.0])
-LIBS="$LIBS $libSDL2Image_LIBS -lxml2 -lprotobuf-c"
+PKG_CHECK_MODULES([SDL2_ttf], [sdl2 >= 2])
+LIBS="$LIBS $libSDL2Image_LIBS -lxml2 -lprotobuf-c -lSDL2_ttf"
 
 AC_ARG_ENABLE([run-in-place],
   AS_HELP_STRING([--enable-run-in-place],

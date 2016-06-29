@@ -675,11 +675,22 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 }
 
 // WORK IN PROGRESS : just needs confirmation on how we manage the save with protobuf.
-// void
-// display_ground (SDL_Texture* texture[][10])
-// {
-//   const int NUMBER_OF_SQUARE_PER_ROW = 16;
-//   const int SQUARE_WIDTH = 24; // In pixels
+void
+display_ground (SDL_Texture* texture[][10])
+{
+  int SQUARE_WIDTH = 24; // In pixels
+  
+  
+}
 
-//   const int chunk_width = NUMBER_OF_SQUARE_PER_ROW * SQUARE_WIDTH;
-// }
+int
+get_fps (unsigned int* start_time)
+{
+  unsigned int current_fps = 0;
+  unsigned int current_time = SDL_GetTicks ();
+  unsigned int delta_time = current_time - *start_time;
+  *start_time = current_time;
+  if (delta_time != 0)
+    current_fps = 1000 / delta_time;
+  return current_fps;
+}
