@@ -488,15 +488,10 @@ run_gui (int read_pipe,
 
   display_blits(&Renderer);
 
-  while (handle_events (textures,
-			&current_texture,
-			keys_state,
-			clicks_state,
-			&screen_height,
-			&screen_width,
-			screen_origin,
-			&click_map_coords,
-			players) != 0)
+  while (handle_events (textures, &current_texture, keys_state,
+			clicks_state, &screen_height,
+			&screen_width, screen_origin,
+			&click_map_coords, players) != 0)
     {
       // Keyboard handling
       for (int i = 0; i < 4; i++)
@@ -523,8 +518,6 @@ run_gui (int read_pipe,
 	      display_players (players, screen_origin,
 			       &Renderer, current_texture,
 			       screen_height, screen_width);
-
-	      display_blits(&Renderer);
 	      break;
 	    }
 	}
@@ -558,8 +551,6 @@ run_gui (int read_pipe,
 
 	      display_players (players, screen_origin, &Renderer, current_texture,
 			       screen_height, screen_width);
-
-	      display_blits(&Renderer);
 	    }
 	    
 	  clicks_state[0] = 0;
@@ -595,8 +586,6 @@ run_gui (int read_pipe,
 	      display_players (players, screen_origin,
 			       &Renderer, current_texture,
 			       screen_height, screen_width);
-	      
-	      display_blits (&Renderer);
 	    }
 	  clicks_state[2] = 0;
 	}
@@ -618,10 +607,8 @@ run_gui (int read_pipe,
 	  display_players (players, screen_origin,
 			   &Renderer, current_texture,
 			   screen_height, screen_width);
-	      
-      	  display_blits (&Renderer);
       	}
-
+      display_blits(&Renderer);
       SDL_Delay (1/200);
     }
 
