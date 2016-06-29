@@ -31,7 +31,6 @@ Network
 
 GUI
 ---
-+ Create the player textures.
 + Replace screen_height and screen_width with a structure
 + Rewrite gui.cpp.
 + Delete display_blits function.
@@ -39,3 +38,9 @@ GUI
 + FPS counter.
 + FPS limit.
 + Display menus.
+
+Textures
+--------
++ Create the player textures.
++ Create ores’ textures.
++ Create menu’s textures.
