@@ -14,6 +14,7 @@ content of the README.md file.
 + Create a mailing list.
 + Create a website.
 + Auto saving.
++ Use Texlive for documentation.
 
 Main
 ----
