@@ -318,7 +318,6 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
 			     int screen_width, struct size* hero_coords,
 			     struct size screen_center)
 {
-  printf ("%d;%d\n", hero_coords->x, hero_coords->y);
   if (hero_coords->x >= screen_width / 2 && hero_coords->y >= screen_height / 2)
     {
       screen_origin->y -= (keys_state[0])? 5 : 0;
