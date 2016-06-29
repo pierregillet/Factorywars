@@ -35,3 +35,4 @@ GUI
 + Rewrite gui.cpp.
 + Delete display_blits function.
 + Blit by layers, first the ground textures then the objects.
++ Allow to zoom on the map/items in-game.
