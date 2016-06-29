@@ -13,6 +13,8 @@ content of the README.md file.
 + Follow [XDG Base Directory Specification](https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html).
 + Create a mailing list.
 + Create a website.
++ Auto saving.
++ Use Texlive for documentation.
 
 Main
 ----
@@ -30,9 +32,18 @@ Network
 
 GUI
 ---
-+ Create the player textures.
 + Replace screen_height and screen_width with a structure
 + Rewrite gui.cpp.
 + Delete display_blits function.
 + Blit by layers, first the ground textures then the objects.
 + Allow to zoom on the map/items in-game.
++ FPS counter.
++ FPS limit.
++ Display menus.
+
+Textures
+--------
++ Create the player textures.
++ Create ores’ textures.
++ Create the in-game objects textures.
++ Create menu’s textures.

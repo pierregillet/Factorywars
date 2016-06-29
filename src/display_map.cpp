@@ -55,7 +55,7 @@ display_background (SDL_Renderer** Renderer,
   struct size temp;
   struct chunk_info current_chunk_info;
 
-  for(int i(0) ; i < screen_height + screen_origin.y % chunk_width; i += chunk_width)
+  for(int i(0); i < screen_height + screen_origin.y % chunk_width; i += chunk_width)
     {
       for(int j(0); j < screen_width + screen_origin.x % chunk_width ; j += chunk_width)
 	{

@@ -122,6 +122,7 @@ void handle_network_communication (unsigned short port, int read_pipe,
 int connect_command (const char* data, unsigned int* number_of_servers,
 		     struct server_credentials* servers,
 		     struct sockaddr_storage peer_addr,
+		     unsigned short port, const char* name,
 		     int write_pipe);
 
 /**

@@ -128,8 +128,8 @@ int handle_events (SDL_Texture* textures[][10],
  * Move screen_origin and hero_coords coordinates if a key is pressed.
  */
 int move_coordinates_on_keydown (struct coordinates* screen_origin,
-				 bool* keys_state,
-				 struct size* hero_coords,
+				 bool* keys_state, int screen_height,
+				 int screen_width, struct size* hero_coords,
 				 struct size screen_center);
 
 /**

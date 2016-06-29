@@ -131,7 +131,7 @@ init (SDL_Window** main_window,
 	  
   if (*main_window == NULL) 
     {
-      printf ("Couldn’t create window : %s\n", SDL_GetError());
+      fprintf (stderr, "Couldn’t create window : %s\n", SDL_GetError());
       SDL_Quit();
     }
 	  
@@ -314,30 +314,33 @@ handle_events (SDL_Texture* textures[][10],
 
 int
 move_coordinates_on_keydown (struct coordinates* screen_origin,
-			     bool* keys_state,
-			     struct size* hero_coords,
+			     bool* keys_state, int screen_height,
+			     int screen_width, struct size* hero_coords,
 			     struct size screen_center)
 {
-  if (hero_coords -> x >= 640 && hero_coords -> y >= 370  )
+  if (hero_coords->x >= screen_width / 2 && hero_coords->y >= screen_height / 2)
     {
-      screen_origin->y += (keys_state[0])? (-5) : 0;
+      screen_origin->y -= (keys_state[0])? 5 : 0;
       screen_origin->y += (keys_state[1])? 5 : 0;
-      screen_origin->x += (keys_state[2])? (-5) : 0;
+      screen_origin->x -= (keys_state[2])? 5 : 0;
       screen_origin->x += (keys_state[3])? 5 : 0;
     }
-  if (screen_origin -> y <= 0 || screen_origin->x <= 0)
+  if (screen_origin->y <= 0 || screen_origin->x <= 0)
     {
-      hero_coords->y += (keys_state[0])? (-5) : 0;
+      hero_coords->y -= (keys_state[0])? 5 : 0;
       hero_coords->y += (keys_state[1])? 5 : 0;
-      hero_coords->x += (keys_state[2])? (-5) : 0;
+      hero_coords->x -= (keys_state[2])? 5 : 0;
       hero_coords->x += (keys_state[3])? 5 : 0;
     }
   
   hero_coords->x = (hero_coords->x < 0 )? 0 : hero_coords->x;
   hero_coords->y = (hero_coords->y < 0 )? 0 : hero_coords->y;
- 
-  hero_coords -> x = (hero_coords -> x > 680)? 680 : hero_coords -> x;
-  hero_coords -> y = (hero_coords -> y > 400)? 400 : hero_coords -> y;
+
+  if (hero_coords->x > screen_width / 2)
+    hero_coords->x = screen_width / 2;
+
+  if (hero_coords->y > screen_height / 2)
+    hero_coords->y = screen_height / 2;
  
   return 1;
 }
@@ -405,8 +408,15 @@ run_gui (int read_pipe,
 	 int write_pipe,
 	 std::vector<Player>& players)
 {
-  int screen_height = atoi (get_config_value ("height"));
-  int screen_width = atoi (get_config_value ("width"));
+  const int config_value_len = 256;
+  char config_value[config_value_len];
+
+  get_config_value ("height", config_value, config_value_len);
+  int screen_height = atoi (config_value);
+
+  get_config_value ("width", config_value, config_value_len);
+  int screen_width = atoi (config_value);
+
   struct size screen_dimensions = {.x = screen_width,
 				   .y = screen_height};
 
@@ -493,10 +503,9 @@ run_gui (int read_pipe,
 	{
 	  if (keys_state[i])
 	    {
-              move_coordinates_on_keydown (&screen_origin,
-					   keys_state,
-					   &hero_coords,
-					   screen_center);
+              move_coordinates_on_keydown (&screen_origin, keys_state,
+					   screen_height, screen_width,
+					   &hero_coords, screen_center);
 
 	      send_move_command (write_pipe,
 				 screen_origin,
@@ -576,6 +585,7 @@ run_gui (int read_pipe,
 		    25,
 		    41,
 		    current_texture);
+
 	      blit (&Renderer,
 		    toolbar_origin,
 		    toolbar_size.x,
@@ -644,14 +654,15 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 		 SDL_Renderer** renderer, SDL_Texture* player_texture,
 		 int screen_height, int screen_width)
 {
-  const char* my_name = get_config_value ("name");
+  std::string my_name = players[0].getName ();
+
   struct coordinates player_coordinates;
   struct size player_placement;
 
   // Display players
   for (Player player : players)
     {
-      if (strcmp (player.getName ().c_str (), my_name) == 0)
+      if (player.getName () == my_name)
 	continue;
 
       player_coordinates = player.getCoordinates ();

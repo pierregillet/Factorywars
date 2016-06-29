@@ -17,6 +17,8 @@ AC_ARG_ENABLE([run-in-place],
 
 AS_IF([test "$enable_run_in_place" = "yes"], [
   AC_DEFINE([RUN_IN_PLACE], [1],
+  [Define if we need to keep every file needed by the game in the current directory])], [
+  AC_DEFINE([RUN_IN_PLACE], [0],
   [Define if we need to keep every file needed by the game in the current directory])])
 
 AC_CONFIG_HEADER([config.h])

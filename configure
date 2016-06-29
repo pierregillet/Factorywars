@@ -4509,6 +4509,11 @@ if test "$enable_run_in_place" = "yes"; then :
 
 $as_echo "#define RUN_IN_PLACE 1" >>confdefs.h
 
+else
+
+
+$as_echo "#define RUN_IN_PLACE 0" >>confdefs.h
+
 fi
 
 ac_config_headers="$ac_config_headers config.h"

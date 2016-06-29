@@ -94,14 +94,19 @@ main (int argc, char *argv[])
       exit (EXIT_FAILURE);
     }
 
+  const int config_value_len = 256;
+  char config_value[config_value_len];
+
   int pipes[4];
   std::vector<Player> players (1, Player ());
-  players[0].setName (get_config_value ("name"));
+  get_config_value ("name", config_value, config_value_len);
+  players[0].setName (config_value);
   
   pipe (pipes);
   pipe (pipes + 2);
-  
-  run_network_process (atoi (get_config_value ("port")), pipes, IP, port);
+
+  get_config_value ("port", config_value, config_value_len);
+  run_network_process (atoi (config_value), pipes, IP, port);
 
   if (run_gui (pipes[2], pipes[1], players) != 0)
     {
