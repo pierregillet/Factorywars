@@ -310,6 +310,7 @@ EXTRA_DIST = \
 	README.md\
 	TODO.md\
 	src/map.proto\
+	protosave\
 	media
 
 factorywars_SOURCES = \

@@ -6,6 +6,7 @@ EXTRA_DIST = \
 	README.md\
 	TODO.md\
 	src/map.proto\
+	protosave\
 	media
 
 bin_PROGRAMS = factorywars
