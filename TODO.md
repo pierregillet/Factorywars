@@ -47,3 +47,8 @@ Textures
 + Create ores’ textures.
 + Create the in-game objects textures.
 + Create menu’s textures.
+
+Configuration
+-------------
++ Switch from XML to JSON.
++ Create functions to modify the configuration file.
