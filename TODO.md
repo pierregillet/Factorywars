@@ -15,6 +15,7 @@ content of the README.md file.
 + Create a website.
 + Auto saving.
 + Use Texlive for documentation.
++ Use GNU gettext for translation.
 
 Main
 ----
