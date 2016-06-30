@@ -4414,12 +4414,12 @@ if test -n "$SDL2ttf_CFLAGS"; then
     pkg_cv_SDL2ttf_CFLAGS="$SDL2ttf_CFLAGS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2 >= 2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "sdl2 >= 2") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"SDL2_ttf >= 2\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "SDL2_ttf >= 2") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SDL2ttf_CFLAGS=`$PKG_CONFIG --cflags "sdl2 >= 2" 2>/dev/null`
+  pkg_cv_SDL2ttf_CFLAGS=`$PKG_CONFIG --cflags "SDL2_ttf >= 2" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -4431,12 +4431,12 @@ if test -n "$SDL2ttf_LIBS"; then
     pkg_cv_SDL2ttf_LIBS="$SDL2ttf_LIBS"
  elif test -n "$PKG_CONFIG"; then
     if test -n "$PKG_CONFIG" && \
-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"sdl2 >= 2\""; } >&5
-  ($PKG_CONFIG --exists --print-errors "sdl2 >= 2") 2>&5
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"SDL2_ttf >= 2\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "SDL2_ttf >= 2") 2>&5
   ac_status=$?
   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
   test $ac_status = 0; }; then
-  pkg_cv_SDL2ttf_LIBS=`$PKG_CONFIG --libs "sdl2 >= 2" 2>/dev/null`
+  pkg_cv_SDL2ttf_LIBS=`$PKG_CONFIG --libs "SDL2_ttf >= 2" 2>/dev/null`
 		      test "x$?" != "x0" && pkg_failed=yes
 else
   pkg_failed=yes
@@ -4457,14 +4457,14 @@ else
         _pkg_short_errors_supported=no
 fi
         if test $_pkg_short_errors_supported = yes; then
-	        SDL2ttf_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "sdl2 >= 2" 2>&1`
+	        SDL2ttf_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "SDL2_ttf >= 2" 2>&1`
         else
-	        SDL2ttf_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "sdl2 >= 2" 2>&1`
+	        SDL2ttf_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "SDL2_ttf >= 2" 2>&1`
         fi
 	# Put the nasty error message in config.log where it belongs
 	echo "$SDL2ttf_PKG_ERRORS" >&5
 
-	as_fn_error $? "Package requirements (sdl2 >= 2) were not met:
+	as_fn_error $? "Package requirements (SDL2_ttf >= 2) were not met:
 
 $SDL2ttf_PKG_ERRORS
 
