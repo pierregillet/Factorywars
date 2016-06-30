@@ -39,13 +39,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
+
 #include "structures.h"
 #include "display_item.h"
 #include "player.h"
 #include "display_map.h"
 #include "display_item.h"
-#include <vector>
 #include "multiplayer.h"
+#include "game_events.h"
 
 extern "C" {
   #include "save.h"
@@ -86,43 +88,6 @@ void init (SDL_Window** main_window,
 	   const int screen_height,
 	   const int screen_width,
 	   SDL_Texture* textures[][10]);
-
-/**
- * Handle the keydown events.
- */
-int handle_keydown (SDL_Keycode event_keycode,
-		    bool *keys_state,
-		    SDL_Texture* textures[][10],
-		    SDL_Texture** current_texture);
-
-/**
- * Handle the keyup events.
- */
-int handle_keyup (SDL_Keycode event_keycode,
-		  bool *keys_state);
-
-/**
- * Handle the clickdown events.
- */
-int handle_clickdown (int button,
-		      coordinates click_coords,
-		      bool *clicks_state,
-		      struct coordinates* screen_origin,
-		      struct map_coordinates* click_map_coords);
-
-/**
- * Handle the SDL events.
- */
-int handle_events (SDL_Texture* textures[][10],
-		   SDL_Texture** CurrentTexture,
-		   /* SDL_Texture** biomes, */
-		   bool* keys_state,
-		   bool* clicks_state,
-		   int* screen_height,
-		   int* screen_width,
-		   struct coordinates* screen_origin,
-		   struct coordinates* click_map_coords,
-		   std::vector<Player>& players);
 
 /**
  * Move screen_origin and hero_coords coordinates if a key is pressed.
@@ -169,24 +134,6 @@ void quit_sdl (SDL_Window** main_window,
  * @return -1 if there is an error or 0 if there is no error.
  */
 int run_gui (int read_pipe, int write_pipe, std::vector<Player>& players);
-
-
-/**
- * Get the chunk coordinates and the square coordinates where the player 
- * clicked.
- *
- * @param click_coords is the coordinates relative to the origin of the screen
- * where the player clicked.
- * @param screen_height is screen’s height.
- * @param screen_width is screen’s width.
- * @param screen_origin is the offset in pixels from the origin of the map.
- * @return a structure map_coordinates containing the chunk and square
- * coordinates where the player clicked.
- */
-struct map_coordinates get_map_coords (coordinates click_coords,
-				       int* screen_height,
-				       int* screen_width,
-				       struct coordinates screen_origin);
 
 /**
  * Blit the players in “players” on the renderer “renderer”

@@ -11,6 +11,7 @@ EXTRA_DIST = \
 bin_PROGRAMS = factorywars
 factorywars_SOURCES = \
 	src/main.cpp\
+	src/game_events.cpp src/game_events.h\
 	src/gui.cpp src/gui.h\
 	src/save.c src/save.h\
 	src/utils.c src/utils.h\
@@ -22,7 +23,7 @@ factorywars_SOURCES = \
 	src/display_map.cpp src/display_map.h\
 	src/display_item.cpp src/display_item.h\
 	src/multiplayer.cpp src/multiplayer.h\
-	src/map.pb-c.c src/map.pb-c.h\
+	src/map.pb-c.c src/map.pb-c.h src/map.proto\
 	src/structures.h
 
 AM_CFLAGS = -std=gnu99 $(libxml2_CFLAGS)
