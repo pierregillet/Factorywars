@@ -103,12 +103,13 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_factorywars_OBJECTS = src/main.$(OBJEXT) src/gui.$(OBJEXT) \
-	src/save.$(OBJEXT) src/utils.$(OBJEXT) src/items.$(OBJEXT) \
-	src/XMLParser.$(OBJEXT) src/player.$(OBJEXT) \
-	src/config.$(OBJEXT) src/network.$(OBJEXT) \
-	src/display_map.$(OBJEXT) src/display_item.$(OBJEXT) \
-	src/multiplayer.$(OBJEXT) src/map.pb-c.$(OBJEXT)
+am_factorywars_OBJECTS = src/main.$(OBJEXT) src/game_events.$(OBJEXT) \
+	src/gui.$(OBJEXT) src/save.$(OBJEXT) src/utils.$(OBJEXT) \
+	src/items.$(OBJEXT) src/XMLParser.$(OBJEXT) \
+	src/player.$(OBJEXT) src/config.$(OBJEXT) \
+	src/network.$(OBJEXT) src/display_map.$(OBJEXT) \
+	src/display_item.$(OBJEXT) src/multiplayer.$(OBJEXT) \
+	src/map.pb-c.$(OBJEXT)
 factorywars_OBJECTS = $(am_factorywars_OBJECTS)
 factorywars_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -245,10 +246,10 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
-PROTOBUF_C_CFLAGS = @PROTOBUF_C_CFLAGS@
-PROTOBUF_C_LIBS = @PROTOBUF_C_LIBS@
-SDL2_ttf_CFLAGS = @SDL2_ttf_CFLAGS@
-SDL2_ttf_LIBS = @SDL2_ttf_LIBS@
+PROTOBUFC_CFLAGS = @PROTOBUFC_CFLAGS@
+PROTOBUFC_LIBS = @PROTOBUFC_LIBS@
+SDL2ttf_CFLAGS = @SDL2ttf_CFLAGS@
+SDL2ttf_LIBS = @SDL2ttf_LIBS@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -307,12 +308,14 @@ EXTRA_DIST = \
 	COMPILE.md\
 	factorywars.conf\
 	README.md\
-	save_format.md\
 	TODO.md\
+	src/map.proto\
+	protosave\
 	media
 
 factorywars_SOURCES = \
 	src/main.cpp\
+	src/game_events.cpp src/game_events.h\
 	src/gui.cpp src/gui.h\
 	src/save.c src/save.h\
 	src/utils.c src/utils.h\
@@ -431,6 +434,8 @@ src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
 src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/game_events.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/gui.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/save.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/utils.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
@@ -467,6 +472,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/config.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/display_item.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/display_map.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/game_events.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/gui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/items.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@

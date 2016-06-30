@@ -15,6 +15,7 @@ content of the README.md file.
 + Create a website.
 + Auto saving.
 + Use Texlive for documentation.
++ Use GNU gettext for translation.
 
 Main
 ----
@@ -47,3 +48,8 @@ Textures
 + Create ores’ textures.
 + Create the in-game objects textures.
 + Create menu’s textures.
+
+Configuration
+-------------
++ Switch from XML to JSON.
++ Create functions to modify the configuration file.

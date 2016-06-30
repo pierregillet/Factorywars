@@ -27,7 +27,7 @@
  *
  * @section DESCRIPTION
  *
- * gui.cpp contains the gui
+ * gui.cpp contains the gui’s code.
  */
 
 #include "gui.h"
@@ -40,7 +40,6 @@ loadTexture(SDL_Renderer** main_renderer, std::string path)
 
   new_texture = SDL_CreateTextureFromSurface (*main_renderer, loaded_surface);
   SDL_FreeSurface (loaded_surface);
-
   
   return new_texture;
 }
@@ -117,17 +116,17 @@ init (SDL_Window** main_window,
 {
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
-      printf ("Error: %s\n", SDL_GetError ());
+      fprintf (stderr, "Error: %s\n", SDL_GetError ());
     }
 	
   // if the SDL launched correctly
   *main_window = SDL_CreateWindow ("Factorywars",
-			      SDL_WINDOWPOS_UNDEFINED,
-			      SDL_WINDOWPOS_UNDEFINED,
-			      screen_width,
-			      screen_height,
-			      SDL_WINDOW_SHOWN
-			      /*| SDL_WINDOW_RESIZABLE*/);
+				   SDL_WINDOWPOS_UNDEFINED,
+				   SDL_WINDOWPOS_UNDEFINED,
+				   screen_width,
+				   screen_height,
+				   SDL_WINDOW_SHOWN
+				   /*| SDL_WINDOW_RESIZABLE*/);
 	  
   if (*main_window == NULL) 
     {
@@ -136,10 +135,10 @@ init (SDL_Window** main_window,
     }
 	  
   // if window has been created without errors
-  *main_renderer = SDL_CreateRenderer (*main_window,
-				  -1,
-				  SDL_RENDERER_ACCELERATED
-				  | SDL_RENDERER_PRESENTVSYNC);
+  *main_renderer = SDL_CreateRenderer (*main_window, -1,
+				       SDL_RENDERER_ACCELERATED
+				       | SDL_RENDERER_PRESENTVSYNC);
+
   // SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
 
   loadMedia (main_renderer, textures);
@@ -152,171 +151,9 @@ display_main_menu ()
 }
 
 int
-handle_keydown (SDL_Keycode event_keycode,
-		bool* keys_state,
-		SDL_Texture* textures[][10],
-		SDL_Texture** current_texture)
-{
-  bool keydown = 1;
-  switch (event_keycode)
-    {
-    case SDLK_UP:
-      keys_state[0] = keydown;
-      break;
-    case SDLK_DOWN:
-      keys_state[1] = keydown;
-      break;
-    case SDLK_LEFT:
-      keys_state[2] = keydown;
-      *current_texture = textures[0][2];
-      break;
-    case SDLK_RIGHT:
-      keys_state[3] = keydown;
-      *current_texture = textures[0][3];
-      break;
-    default:
-      break;
-    }
-  return 1;
-}
-
-int
-handle_keyup (SDL_Keycode event_keycode,
-	      bool* keys_state)
-{
-  bool keyup = 0;
-  switch (event_keycode)
-    {
-    case SDLK_UP:
-      keys_state[0] = keyup;
-      break;
-    case SDLK_DOWN:
-      keys_state[1] = keyup;
-      break;
-    case SDLK_LEFT:
-      keys_state[2] = keyup;
-      break;
-    case SDLK_RIGHT:
-      keys_state[3] = keyup;
-      break;
-    default:
-      break;
-    }
-  return 1;
-}
-
-int
-handle_clickdown (int button,
-		  coordinates click_coords,
-		  bool* clicks_state,
-		  int* screen_height,
-		  int* screen_width,
-		  struct coordinates* screen_origin,
-		  struct map_coordinates* click_map_coords)
-{
-  bool clickdown = 1;
-  *click_map_coords = get_map_coords (click_coords,
-				      screen_height,
-				      screen_width,
-				      *screen_origin);
-  switch (button)
-    {
-    case SDL_BUTTON_LEFT:
-	clicks_state[0] = clickdown;
-	break;
-    case SDL_BUTTON_MIDDLE:
-	clicks_state[1] = clickdown;
-	break;
-    case SDL_BUTTON_RIGHT:
-      clicks_state[2] = clickdown;
-      break;
-    case SDL_BUTTON_X1:
-      clicks_state[3] = clickdown;
-      break;
-    case SDL_BUTTON_X2:
-      clicks_state[4] = clickdown;
-      break;
-    default:
-      break;
-    }
-  return 1;
-}
-
-int
-handle_mousewheel (int wheel_x,
-		   int* screen_height,
-		   int* screen_width,
-		   struct coordinates* screen_origin,
-		   std::vector<Player>& players)
-{
-  players[0].changeSelectedTool (wheel_x);
-  return 1;
-}
-
-int
-handle_events (SDL_Texture* textures[][10],
-	       SDL_Texture** CurrentTexture,
-	       bool* keys_state,
-	       bool* clicks_state,
-	       int* screen_height,
-	       int* screen_width,
-	       struct coordinates screen_origin,
-	       struct map_coordinates* click_map_coords,
-	       std::vector<Player>& players)
-{
-  SDL_Event event;
-  coordinates click_coords;
-  
-  while (SDL_PollEvent (&event) != 0)
-    {
-      if (event.key.repeat != 0)
-	continue;
-      switch (event.type)
-	{
-	case SDL_QUIT:
-	  return 0;
-	  break;
-	      
-	case SDL_KEYDOWN:
-	  handle_keydown (event.key.keysym.sym, keys_state,
-			  textures, CurrentTexture);
-	  break;
-
-	case SDL_KEYUP:
-	  handle_keyup (event.key.keysym.sym, keys_state);
-	  break;
-
-	case SDL_MOUSEBUTTONDOWN:
-	  click_coords.x = event.button.x;
-	  click_coords.y = event.button.y;
-	  handle_clickdown (event.button.button, click_coords,
-			    clicks_state, screen_height,
-			    screen_width, &screen_origin,
-			    click_map_coords);
-	  break;
-
-	case SDL_MOUSEBUTTONUP:
-	  break;
-
-	case SDL_MOUSEWHEEL:
-	  handle_mousewheel (event.wheel.y, screen_height,
-			     screen_width, &screen_origin,
-			     players);
-	  break;
-	  
-	default:
-	  break;
-	}
-    }
-  
-  return 1;
-}
-
-int
 move_coordinates_on_keydown (struct coordinates* screen_origin,
 			     bool* keys_state, int screen_height,
-			     int screen_width, struct size* hero_coords,
-			     struct size screen_center)
+			     int screen_width, struct size* hero_coords)
 {
   if (hero_coords->x >= screen_width / 2 && hero_coords->y >= screen_height / 2)
     {
@@ -394,7 +231,6 @@ quit_sdl (SDL_Window** main_window,
   SDL_DestroyWindow (*main_window);
 
   SDL_Quit();
-  printf ("Goodbye !\n");
 }
 
 int 
@@ -468,9 +304,9 @@ run_gui (int read_pipe,
   blit (&Renderer, screen_center, 25, 41, current_texture);
   
   // Display HUD
-  struct size
-    toolbar_origin = {.x = (int) (screen_width / 4),
-				.y = (int) (screen_height - (screen_width / 2 * 0.11))}; 
+  struct size toolbar_origin;
+  toolbar_origin.x = (int) (screen_width / 4);
+  toolbar_origin.y = (int) (screen_height - (screen_width / 2 * 0.11)); 
   struct size
     toolbar_size = {.x = (int) (screen_width / 2),
 		    .y = (int) (screen_width / 2 * 0.11)};
@@ -480,13 +316,17 @@ run_gui (int read_pipe,
 	toolbar_size.y,
 	textures[3][0]);
 
-  SDL_RenderPresent (*Renderer);
+  SDL_RenderPresent (Renderer);
+
+  int need_to_blit;
 
   while (handle_events (textures, &current_texture, keys_state,
-			clicks_state, &screen_height,
-			&screen_width, screen_origin,
+			clicks_state, screen_height,
+			screen_width, &screen_origin,
 			&click_map_coords, players) != 0)
     {
+      need_to_blit = 0;
+
       // Keyboard handling
       for (int i = 0; i < 4; i++)
 	{
@@ -494,24 +334,25 @@ run_gui (int read_pipe,
 	    {
               move_coordinates_on_keydown (&screen_origin, keys_state,
 					   screen_height, screen_width,
-					   &hero_coords, screen_center);
+					   &hero_coords);
 
-	      send_move_command (write_pipe,
-				 screen_origin,
-				 screen_height,
+	      send_move_command (write_pipe, screen_origin, screen_height,
 				 screen_width);
 
 	      display_background (&Renderer, &map,
 				  textures, screen_origin,
 				  screen_height, screen_width);
-	      blit (&Renderer, hero_coords,
-		    25, 41, current_texture);
-	      blit (&Renderer, toolbar_origin, toolbar_size.x,
-		    toolbar_size.y, textures[3][0]);
+
+	      blit (&Renderer, hero_coords, 25, 41, current_texture);
+
+	      blit (&Renderer, toolbar_origin, toolbar_size.x, toolbar_size.y,
+		    textures[3][0]);
 
 	      display_players (players, screen_origin,
 			       &Renderer, current_texture,
 			       screen_height, screen_width);
+
+	      need_to_blit = 1;
 	      break;
 	    }
 	}
@@ -545,6 +386,8 @@ run_gui (int read_pipe,
 
 	      display_players (players, screen_origin, &Renderer, current_texture,
 			       screen_height, screen_width);
+
+	      need_to_blit = 1;
 	    }
 	    
 	  clicks_state[0] = 0;
@@ -580,6 +423,8 @@ run_gui (int read_pipe,
 	      display_players (players, screen_origin,
 			       &Renderer, current_texture,
 			       screen_height, screen_width);
+
+	      need_to_blit = 1;
 	    }
 	  clicks_state[2] = 0;
 	}
@@ -601,33 +446,18 @@ run_gui (int read_pipe,
 	  display_players (players, screen_origin,
 			   &Renderer, current_texture,
 			   screen_height, screen_width);
+	  need_to_blit = 1;
       	}
-      SDL_RenderPresent (*Renderer);
+
+      if (need_to_blit)
+	SDL_RenderPresent (Renderer);
+
       SDL_Delay (1/200);
     }
 
   quit_sdl (&Window, &Renderer, &current_texture, textures);
   
   return 0;
-}  
-
-struct map_coordinates
-get_map_coords (struct coordinates click_coords,
-		int* screen_height,
-		int* screen_width,
-		struct coordinates screen_origin)
-{
-  struct map_coordinates click_map_coords;
-
-  float x_float = screen_origin.x;
-  float y_float = screen_origin.y;
-
-  click_map_coords.chunk.x = (int) (x_float + (float) click_coords.x) / 24.0 / 16.0;
-  click_map_coords.chunk.y = (int) (y_float + (float) click_coords.y) / 24.0 / 16.0;
-  click_map_coords.square.x = (int) ((x_float + (float) click_coords.x) / 24.0) - ((float) click_map_coords.chunk.x * 16.0);
-  click_map_coords.square.y = (int) ((y_float + (float) click_coords.y) / 24.0) - ((float) click_map_coords.chunk.y * 16.0);
-
-  return click_map_coords;
 }
 
 void
@@ -669,7 +499,7 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 // WORK IN PROGRESS : just needs confirmation on how we manage the save with protobuf.
 void
 display_ground (SDL_Renderer* main_renderer,
-		SDL_Texture* texture[][10],
+		SDL_Texture* textures[][10],
 		const struct size screen_dimensions,
 		struct coordinates player_coordinates,
 		Map map)
