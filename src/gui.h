@@ -35,7 +35,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -94,8 +93,7 @@ void init (SDL_Window** main_window,
  */
 int move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 bool* keys_state, int screen_height,
-				 int screen_width, struct size* hero_coords,
-				 struct size screen_center);
+				 int screen_width, struct size* hero_coords);
 
 /**
  * Blit Textures at given coordinates x,y.

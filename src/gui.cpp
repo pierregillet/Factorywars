@@ -153,8 +153,7 @@ display_main_menu ()
 int
 move_coordinates_on_keydown (struct coordinates* screen_origin,
 			     bool* keys_state, int screen_height,
-			     int screen_width, struct size* hero_coords,
-			     struct size screen_center)
+			     int screen_width, struct size* hero_coords)
 {
   if (hero_coords->x >= screen_width / 2 && hero_coords->y >= screen_height / 2)
     {
@@ -341,20 +340,19 @@ run_gui (int read_pipe,
 	    {
               move_coordinates_on_keydown (&screen_origin, keys_state,
 					   screen_height, screen_width,
-					   &hero_coords, screen_center);
+					   &hero_coords);
 
-	      send_move_command (write_pipe,
-				 screen_origin,
-				 screen_height,
+	      send_move_command (write_pipe, screen_origin, screen_height,
 				 screen_width);
 
 	      display_background (&Renderer, &map,
 				  textures, screen_origin,
 				  screen_height, screen_width);
-	      blit (&Renderer, hero_coords,
-		    25, 41, current_texture);
-	      blit (&Renderer, toolbar_origin, toolbar_size.x,
-		    toolbar_size.y, textures[3][0]);
+
+	      blit (&Renderer, hero_coords, 25, 41, current_texture);
+
+	      blit (&Renderer, toolbar_origin, toolbar_size.x, toolbar_size.y,
+		    textures[3][0]);
 
 	      display_players (players, screen_origin,
 			       &Renderer, current_texture,
