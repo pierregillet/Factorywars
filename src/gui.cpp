@@ -364,12 +364,6 @@ blit (SDL_Renderer** main_renderer,
 }
 
 void
-display_blits(SDL_Renderer** Renderer)
-{
-  SDL_RenderPresent (*Renderer);
-}
-
-void
 quit_sdl (SDL_Window** main_window,
 	  SDL_Renderer** main_renderer,
 	  SDL_Texture** current_texture,
@@ -486,7 +480,7 @@ run_gui (int read_pipe,
 	toolbar_size.y,
 	textures[3][0]);
 
-  display_blits(&Renderer);
+  SDL_RenderPresent (*Renderer);
 
   while (handle_events (textures, &current_texture, keys_state,
 			clicks_state, &screen_height,
@@ -608,7 +602,7 @@ run_gui (int read_pipe,
 			   &Renderer, current_texture,
 			   screen_height, screen_width);
       	}
-      display_blits(&Renderer);
+      SDL_RenderPresent (*Renderer);
       SDL_Delay (1/200);
     }
 
@@ -674,11 +668,36 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 
 // WORK IN PROGRESS : just needs confirmation on how we manage the save with protobuf.
 void
-display_ground (SDL_Texture* texture[][10])
+display_ground (SDL_Renderer* main_renderer,
+		SDL_Texture* texture[][10],
+		const struct size screen_dimensions,
+		struct coordinates player_coordinates,
+		Map map)
 {
-  int SQUARE_WIDTH = 24; // In pixels
-  
-  
+  const unsigned int NUMBER_OF_SQUARES_PER_ROW = 16; // Per chunk
+  unsigned int default_square_width = 24; // In pixels
+
+  // TODO : Make square_width change in function of zoom level.
+
+  struct unsigned_size squares_to_draw = {.x = screen_dimensions.x / default_square_width,
+					  .y = screen_dimensions.y / default_square_width};
+
+  // Load the squares depending on the player position.
+  struct size square_top_left_corner = {.x = 0,
+					.y = 0};
+  unsigned int biome_texture; // Contains the square's biome's number.
+
+  for (int row = 0; row <= squares_to_draw.y; row ++)
+    {
+      for (int column = 0; column <= squares_to_draw.x; column ++)
+	{
+	  // biome_texture = ;
+	  
+	  blit (&main_renderer, square_top_left_corner,
+		default_square_width, default_square_width,
+		textures[1][biome_texture]);
+	}
+    }
 }
 
 int

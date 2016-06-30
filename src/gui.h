@@ -144,11 +144,6 @@ int blit (SDL_Renderer** Renderer,
 	  SDL_Texture* texture);
 
 /**
- * Update the screen. Need to be deleted.
- */
-void display_blits(SDL_Renderer** Renderer);
-
-/**
  * Free what needed to be freed from the SDL library.
  *
  * @param main_window is the main window.

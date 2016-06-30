@@ -43,6 +43,12 @@ struct size
   int y;
 };
 
+struct unsigned_size
+{
+  unsigned int x;
+  unsigned int y;
+};
+
 struct map_coordinates
 {
   struct coordinates chunk;
