@@ -33,9 +33,9 @@
 #include "utils.h"
 
 char*
-coordinates_to_string (struct coordinates coordinates, char *dst, size_t dst_size)
+coordinates_to_string (struct coordinates coordinates, char *dst, size_t dst_len)
 {
-  snprintf (dst, dst_size, "%ld;%ld", coordinates.x, coordinates.y);
+  snprintf (dst, dst_len, "%ld;%ld", coordinates.x, coordinates.y);
   return dst;
 }
 
@@ -62,6 +62,7 @@ insert_line_in_file (char* line, int line_size, int position, const char* file_p
   char c;
   int line_number = 0;
 
+  /* On écrit le début du fichier */
   // We write the beginning of the file
   while (line_number != position)
     {
@@ -72,6 +73,7 @@ insert_line_in_file (char* line, int line_size, int position, const char* file_p
     }
   fwrite (line, line_size, sizeof (char), file);
 
+  /* Si le remplacement est activé, on ignore la ligne suivante */
   // If replace is set to true we ignore the next line
   if (replace)
     {
@@ -92,7 +94,6 @@ insert_line_in_file (char* line, int line_size, int position, const char* file_p
   fclose (file);
   return 1;
 }
-
 
 void
 write_file_to_pipe (const char* file_path, int pipe)
@@ -122,7 +123,8 @@ write_to_pipe (int file, const char* message)
 int
 read_pipe_until_null (char* buffer, size_t buf_size, int pipe)
 {
-  /* number of bytes */
+  /* Nombre d’octets */
+  /* number of octets */
   int n = 0;
 
   int flags = fcntl (pipe, F_GETFL, 0);
