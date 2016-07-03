@@ -38,8 +38,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
-#include <regex.h>
 #include <errno.h>
+#include <dirent.h>
+
 #include "structures.h"
 
 /**
