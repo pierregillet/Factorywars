@@ -230,3 +230,101 @@ get_command_type (const char* data)
 
   return ret;
 }
+
+struct directory_list*
+list_directory (const char* dir_name)
+{
+  struct directory_list *dir_list, *head;
+  struct dirent* cur_entry;
+
+  dir_list = (struct directory_list*) malloc (sizeof (struct directory_list));
+  head = dir_list;
+
+  dir_list->dir_name = NULL;
+  dir_list->prev = NULL;
+  dir_list->next = NULL;
+
+  DIR *dir = opendir (dir_name);
+  if (dir == NULL)
+    return NULL;
+
+  errno = 0;
+  cur_entry = readdir (dir);
+  if (errno == EBADF)
+    return NULL;
+
+  while (cur_entry != NULL)
+    {
+      /* On ignore le dossier « . » */
+      if (strcmp (cur_entry->d_name, ".") == 0)
+	{
+	  cur_entry = readdir (dir);
+	  continue;
+	}
+
+      if (strcmp (cur_entry->d_name, "..") == 0)
+	{
+	  cur_entry = readdir (dir);
+	  continue;
+	}
+
+
+      if (dir_list->dir_name == NULL)
+	{
+	  dir_list->dir_name = (char*) malloc ((strlen (cur_entry->d_name) * sizeof (char)));
+	  strcpy (dir_list->dir_name, cur_entry->d_name);
+	}
+      else
+	{
+	  dir_list->next = (struct directory_list*) malloc
+	    (sizeof (struct directory_list));
+
+	  /* L’élément précédent de la nouvelle liste est l’élément actuel */
+	  dir_list->next->prev = dir_list;
+
+	  dir_list = dir_list->next;
+	  dir_list->next = NULL;
+
+	  dir_list->dir_name = (char*) malloc ((strlen (cur_entry->d_name) * sizeof (char)));
+	  strcpy (dir_list->dir_name, cur_entry->d_name);
+	}
+
+      cur_entry = readdir (dir);
+    }
+
+  closedir (dir);
+  return head;
+}
+
+void
+free_dir_list (struct directory_list* dir_list)
+{
+  struct directory_list *next_element;
+
+  /* On atteint le début de la liste */
+  while (dir_list->prev != NULL)
+    {
+      dir_list = dir_list->prev;
+    }
+
+  /* S’il n’y a qu’un seul élément, on le libère et on quitte */
+  if (dir_list->next == NULL)
+    {
+      free (dir_list->dir_name);
+      free (dir_list);
+
+      return;
+    }
+
+  while (dir_list->next != NULL)
+    {
+      next_element = dir_list->next;
+      
+      free (dir_list->dir_name);
+      free (dir_list);
+
+      dir_list = next_element;
+    }
+
+  return;
+}

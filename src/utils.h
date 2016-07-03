@@ -109,4 +109,6 @@ get_coordinates_from_string (const char* coordinates_str);
  */
 int get_command_type (const char* data);
 
+struct directory_list* list_directory (const char* dir_name);
 
+void free_dir_list (struct directory_list* dir_list);
