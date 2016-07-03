@@ -32,67 +32,67 @@
 
 #include "utils.h"
 
-char*
-find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst,
-			 size_t dst_size, const char* file_path)
-{
-  int line_number;
-  line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
-							  file_path);
-  if (line_number == -1)
-    return NULL;
+/* char* */
+/* find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, */
+/* 			 size_t dst_size, const char* file_path) */
+/* { */
+/*   int line_number; */
+/*   line_number = find_line_number_using_chunk_coordinates (chunk_coordinates, */
+/* 							  file_path); */
+/*   if (line_number == -1) */
+/*     return NULL; */
   
-  FILE *file = fopen (file_path, "r");
-  if (file == NULL)
-    return NULL;
+/*   FILE *file = fopen (file_path, "r"); */
+/*   if (file == NULL) */
+/*     return NULL; */
 
-  for (int i = 0; i <= line_number; i++)
-    {
-      fgets (dst, dst_size, file);
-    }
+/*   for (int i = 0; i <= line_number; i++) */
+/*     { */
+/*       fgets (dst, dst_size, file); */
+/*     } */
 
-  dst[strlen (dst) - 1] = '\0';
+/*   dst[strlen (dst) - 1] = '\0'; */
 
-  fclose (file);
-  return dst;
-}
+/*   fclose (file); */
+/*   return dst; */
+/* } */
 
-int
-find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, const char* file_path)
-{
-  const unsigned int LINE_SIZE = 512;
-  const unsigned int COORDINATES_STR_SIZE = 14;
+/* int */
+/* find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, const char* file_path) */
+/* { */
+/*   const unsigned int LINE_SIZE = 512; */
+/*   const unsigned int COORDINATES_STR_SIZE = 14; */
 
-  int line_number = -1;
-  int matched = 0;
-  char line[LINE_SIZE], coordinates_str[COORDINATES_STR_SIZE];
-  char tmp_line[LINE_SIZE], *token;
+/*   int line_number = -1; */
+/*   int matched = 0; */
+/*   char line[LINE_SIZE], coordinates_str[COORDINATES_STR_SIZE]; */
+/*   char tmp_line[LINE_SIZE], *token; */
 
-  coordinates_to_string (chunk_coordinates, coordinates_str, COORDINATES_STR_SIZE);
+/*   coordinates_to_string (chunk_coordinates, coordinates_str, COORDINATES_STR_SIZE); */
 
-  FILE *file = fopen (file_path, "r");
-  if (file == NULL)
-    return -1;
+/*   FILE *file = fopen (file_path, "r"); */
+/*   if (file == NULL) */
+/*     return -1; */
 
-  while (fgets (line, LINE_SIZE, file) != NULL)
-    {
-      strncpy (tmp_line, line, LINE_SIZE);
-      token = strtok (tmp_line, " ");
-      line_number++;
-      if (strncmp (token, coordinates_str, COORDINATES_STR_SIZE) == 0)
-  	{
-	  matched = 1;
-  	  break;
-  	}
-    }
-  fclose (file);
+/*   while (fgets (line, LINE_SIZE, file) != NULL) */
+/*     { */
+/*       strncpy (tmp_line, line, LINE_SIZE); */
+/*       token = strtok (tmp_line, " "); */
+/*       line_number++; */
+/*       if (strncmp (token, coordinates_str, COORDINATES_STR_SIZE) == 0) */
+/*   	{ */
+/* 	  matched = 1; */
+/*   	  break; */
+/*   	} */
+/*     } */
+/*   fclose (file); */
 
-  // We breaked only if we reached EOF or if the patern matched
-  if (!matched)
-    line_number = -1;
+/*   // We breaked only if we reached EOF or if the patern matched */
+/*   if (!matched) */
+/*     line_number = -1; */
 
-  return line_number;
-}
+/*   return line_number; */
+/* } */
 
 char*
 coordinates_to_string (struct coordinates coordinates, char *dst, size_t dst_size)
