@@ -33,83 +33,9 @@
 #include "utils.h"
 
 char*
-find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst,
-			 size_t dst_size, const char* file_path)
+coordinates_to_string (struct coordinates coordinates, char *dst, size_t dst_len)
 {
-  int line_number;
-  line_number = find_line_number_using_chunk_coordinates (chunk_coordinates,
-							  file_path);
-  if (line_number == -1)
-    return NULL;
-  
-  FILE *file = fopen (file_path, "r");
-  if (file == NULL)
-    return NULL;
-
-  for (int i = 0; i <= line_number; i++)
-    {
-      fgets (dst, dst_size, file);
-    }
-
-  dst[strlen (dst) - 1] = '\0';
-
-  fclose (file);
-  return dst;
-}
-
-int
-find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, const char* file_path)
-{
-  const unsigned int LINE_SIZE = 512;
-  const unsigned int COORDINATES_STR_SIZE = 14;
-
-  int line_number = -1;
-  int matched = 0;
-  char line[LINE_SIZE], coordinates_str[COORDINATES_STR_SIZE];
-  char tmp_line[LINE_SIZE], *token;
-
-  coordinates_to_string (chunk_coordinates, coordinates_str, COORDINATES_STR_SIZE);
-
-  FILE *file = fopen (file_path, "r");
-  if (file == NULL)
-    return -1;
-
-  while (fgets (line, LINE_SIZE, file) != NULL)
-    {
-      strncpy (tmp_line, line, LINE_SIZE);
-      token = strtok (tmp_line, " ");
-      line_number++;
-      if (strncmp (token, coordinates_str, COORDINATES_STR_SIZE) == 0)
-  	{
-	  matched = 1;
-  	  break;
-  	}
-    }
-  fclose (file);
-
-  // We breaked only if we reached EOF or if the patern matched
-  if (!matched)
-    line_number = -1;
-
-  return line_number;
-}
-
-char*
-coordinates_to_string (struct coordinates coordinates, char *dst, size_t dst_size)
-{
-  const unsigned int STR_SIZE = dst_size;
-  char str[STR_SIZE], tmp_str[STR_SIZE];
-  memset (str, 0, STR_SIZE);
-  memset (tmp_str, 0, STR_SIZE);
-
-  snprintf (tmp_str, STR_SIZE, "%ld", coordinates.x);
-  strncat (str, tmp_str, STR_SIZE);
-  strncat (str, ";", STR_SIZE);
-  memset (tmp_str, 0, STR_SIZE);
-  snprintf (tmp_str, STR_SIZE, "%ld", coordinates.y);
-  strncat (str, tmp_str, STR_SIZE);
-
-  strncpy (dst, str, dst_size);
+  snprintf (dst, dst_len, "%ld;%ld", coordinates.x, coordinates.y);
   return dst;
 }
 
@@ -136,6 +62,7 @@ insert_line_in_file (char* line, int line_size, int position, const char* file_p
   char c;
   int line_number = 0;
 
+  /* On écrit le début du fichier */
   // We write the beginning of the file
   while (line_number != position)
     {
@@ -146,6 +73,7 @@ insert_line_in_file (char* line, int line_size, int position, const char* file_p
     }
   fwrite (line, line_size, sizeof (char), file);
 
+  /* Si le remplacement est activé, on ignore la ligne suivante */
   // If replace is set to true we ignore the next line
   if (replace)
     {
@@ -166,7 +94,6 @@ insert_line_in_file (char* line, int line_size, int position, const char* file_p
   fclose (file);
   return 1;
 }
-
 
 void
 write_file_to_pipe (const char* file_path, int pipe)
@@ -196,7 +123,8 @@ write_to_pipe (int file, const char* message)
 int
 read_pipe_until_null (char* buffer, size_t buf_size, int pipe)
 {
-  /* number of bytes */
+  /* Nombre d’octets */
+  /* number of octets */
   int n = 0;
 
   int flags = fcntl (pipe, F_GETFL, 0);
@@ -283,7 +211,6 @@ get_command_type (const char* data)
     ret = -1;
   
   /* Il faut extraire la commande. */
-  /* We need to extract the command. */
   if (ret != -1)
     token = strtok (buffer, " ");
   if (token == NULL)
@@ -302,4 +229,102 @@ get_command_type (const char* data)
     ret = 6;
 
   return ret;
+}
+
+struct directory_list*
+list_directory (const char* dir_name)
+{
+  struct directory_list *dir_list, *head;
+  struct dirent* cur_entry;
+
+  dir_list = (struct directory_list*) malloc (sizeof (struct directory_list));
+  head = dir_list;
+
+  dir_list->dir_name = NULL;
+  dir_list->prev = NULL;
+  dir_list->next = NULL;
+
+  DIR *dir = opendir (dir_name);
+  if (dir == NULL)
+    return NULL;
+
+  errno = 0;
+  cur_entry = readdir (dir);
+  if (errno == EBADF)
+    return NULL;
+
+  while (cur_entry != NULL)
+    {
+      /* On ignore le dossier « . » */
+      if (strcmp (cur_entry->d_name, ".") == 0)
+	{
+	  cur_entry = readdir (dir);
+	  continue;
+	}
+
+      if (strcmp (cur_entry->d_name, "..") == 0)
+	{
+	  cur_entry = readdir (dir);
+	  continue;
+	}
+
+
+      if (dir_list->dir_name == NULL)
+	{
+	  dir_list->dir_name = (char*) malloc ((strlen (cur_entry->d_name) * sizeof (char)));
+	  strcpy (dir_list->dir_name, cur_entry->d_name);
+	}
+      else
+	{
+	  dir_list->next = (struct directory_list*) malloc
+	    (sizeof (struct directory_list));
+
+	  /* L’élément précédent de la nouvelle liste est l’élément actuel */
+	  dir_list->next->prev = dir_list;
+
+	  dir_list = dir_list->next;
+	  dir_list->next = NULL;
+
+	  dir_list->dir_name = (char*) malloc ((strlen (cur_entry->d_name) * sizeof (char)));
+	  strcpy (dir_list->dir_name, cur_entry->d_name);
+	}
+
+      cur_entry = readdir (dir);
+    }
+
+  closedir (dir);
+  return head;
+}
+
+void
+free_dir_list (struct directory_list* dir_list)
+{
+  struct directory_list *next_element;
+
+  /* On atteint le début de la liste */
+  while (dir_list->prev != NULL)
+    {
+      dir_list = dir_list->prev;
+    }
+
+  /* S’il n’y a qu’un seul élément, on le libère et on quitte */
+  if (dir_list->next == NULL)
+    {
+      free (dir_list->dir_name);
+      free (dir_list);
+
+      return;
+    }
+
+  while (dir_list->next != NULL)
+    {
+      next_element = dir_list->next;
+      
+      free (dir_list->dir_name);
+      free (dir_list);
+
+      dir_list = next_element;
+    }
+
+  return;
 }

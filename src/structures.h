@@ -60,3 +60,11 @@ struct chunk_info
   struct coordinates chunk;
   int biome_id, squares[16][16];
 };
+
+struct directory_list
+{
+  char *dir_name;
+
+  struct directory_list* prev;
+  struct directory_list* next;
+};

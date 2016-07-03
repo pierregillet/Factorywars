@@ -38,36 +38,19 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
-#include <regex.h>
 #include <errno.h>
+#include <dirent.h>
+
 #include "structures.h"
-
-/**
- * Find the line which described the given chunk in a file.
- * @param chunk_coordinates is the coordinates of the chunk.
- * @param dst is a pointer to the variable where the line will be stored.
- * @param dst_size is the size of dst.
- * @param file_path is the path of the file where we want to find the chunk line.
- * @return A pointer to the line or NULL if there is an error.
- */
-char* find_chunk_line_in_file (struct coordinates chunk_coordinates, char* dst, size_t dst_size, const char* file_path);
-
-/**
- * Find the line number of the line describing the given chunk.
- * @param chunk_coordinates is the chunk_coordinates
- * @param file_path is the path to the save file
- * @return the line number or -1 if there is an error. The line number begin at position zero for the first line.
- */
-int find_line_number_using_chunk_coordinates (struct coordinates chunk_coordinates, const char* file_path);
 
 /**
  * Translate a struct coordinates to a string.
  * @param coordinates is the struct coordinates to translate.
  * @param dst is the string where the coordinates string will be stored.
- * @param dst_size is the size of the string “dst”.
+ * @param dst_len is the length of the string “dst”.
  * @return A pointer to the coordinates string.
  */
-char* coordinates_to_string (struct coordinates coordinates, char* dst, size_t dst_size);
+char* coordinates_to_string (struct coordinates coordinates, char* dst, size_t dst_len);
 
 /**
  * Insert line in a file.
@@ -125,3 +108,7 @@ get_coordinates_from_string (const char* coordinates_str);
  * + 6 is returned if it is a new_player command.
  */
 int get_command_type (const char* data);
+
+struct directory_list* list_directory (const char* dir_name);
+
+void free_dir_list (struct directory_list* dir_list);
