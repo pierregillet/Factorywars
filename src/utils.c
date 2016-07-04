@@ -317,8 +317,6 @@ list_directory (const char* dir_name, int only_directories)
 	  strcpy (dir_list->dir_name, cur_entry->d_name);
 	}
 
-      printf ("%s\n", cur_entry->d_name); /* À supprimer */
-
       cur_entry = readdir (dir);
     }
 

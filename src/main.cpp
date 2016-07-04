@@ -31,10 +31,10 @@
  */
 
 #include <vector>
-#include "gui.h"
-#include "player.h"
 #include <getopt.h>
 #include <config.h>
+#include "gui.h"
+#include "player.h"
 
 extern "C" {
   #include "network.h"
