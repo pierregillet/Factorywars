@@ -38,6 +38,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <errno.h>
 #include <dirent.h>
 
@@ -109,6 +110,17 @@ get_coordinates_from_string (const char* coordinates_str);
  */
 int get_command_type (const char* data);
 
-struct directory_list* list_directory (const char* dir_name);
+/**
+ * List files in a directory.
+ * 
+ * @param dir_name is the directory name.
+ * @param only_directories is a boolean, if it is set to true, only directories are listed.
+ * @return a doubly linked list containing the name of each file.
+ */
+struct directory_list* list_directory (const char* dir_name, int only_directories);
 
+/**
+ * Free a dynamically allocated directory_list.
+ * @param dir_list is the list to free.
+ */
 void free_dir_list (struct directory_list* dir_list);

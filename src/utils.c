@@ -232,7 +232,7 @@ get_command_type (const char* data)
 }
 
 struct directory_list*
-list_directory (const char* dir_name)
+list_directory (const char* dir_name, int only_directories)
 {
   struct directory_list *dir_list, *head;
   struct dirent* cur_entry;
@@ -251,7 +251,14 @@ list_directory (const char* dir_name)
   errno = 0;
   cur_entry = readdir (dir);
   if (errno == EBADF)
-    return NULL;
+    {
+      closedir (dir);
+      return NULL;
+    }
+
+  /* Pour savoir si c’est un dossier */
+  struct stat file_stat;
+  char *file_path;
 
   while (cur_entry != NULL)
     {
@@ -268,6 +275,27 @@ list_directory (const char* dir_name)
 	  continue;
 	}
 
+      if (only_directories)
+	{
+	  file_path = (char*) malloc ((strlen (cur_entry->d_name)
+				       + strlen (dir_name)) * sizeof (char));
+	  if (file_path == NULL)
+	    return NULL;
+
+	  strcpy (file_path, dir_name);
+	  strcat (file_path, "/");
+	  strcat (file_path, cur_entry->d_name);
+
+	  stat (file_path, &file_stat);
+	  if (!S_ISDIR (file_stat.st_mode))
+	    {
+	      cur_entry = readdir (dir);
+	      free (file_path);
+	      continue;
+	    }
+
+	  free (file_path);
+	}
 
       if (dir_list->dir_name == NULL)
 	{
@@ -288,6 +316,8 @@ list_directory (const char* dir_name)
 	  dir_list->dir_name = (char*) malloc ((strlen (cur_entry->d_name) * sizeof (char)));
 	  strcpy (dir_list->dir_name, cur_entry->d_name);
 	}
+
+      printf ("%s\n", cur_entry->d_name); /* À supprimer */
 
       cur_entry = readdir (dir);
     }
