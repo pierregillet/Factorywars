@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="141.11111mm"
-   height="169.33333mm"
-   viewBox="0 0 500.00001 599.99998"
+   width="135.46666mm"
+   height="180.62222mm"
+   viewBox="0 0 479.99998 640"
    id="svg3444"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -29,8 +29,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="-16.276832"
-     inkscape:cy="323.4757"
+     inkscape:cx="-68.236363"
+     inkscape:cy="402.26757"
      inkscape:document-units="px"
      inkscape:current-layer="g4694"
      showgrid="false"
@@ -42,7 +42,8 @@
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-bottom="0"
+     units="mm" />
   <metadata
      id="metadata3449">
     <rdf:RDF>
@@ -59,19 +60,21 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(4.2493531e-6,-452.36218)">
+     transform="translate(-6.2822266e-5,-412.36212)">
     <g
        id="g4694"
        transform="matrix(1.0989014,0,0,1.0999968,-290.33956,72.233392)">
       <rect
          transform="scale(-1,1)"
-         y="345.57263"
-         x="-719.2088"
-         height="545.45612"
-         width="454.99988"
+         y="309.20883"
+         x="-701.00885"
+         height="581.81989"
+         width="436.79987"
          id="rect4142-3"
          style="opacity:0.75;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:10.00032425;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-         ry="20.003334" />
+         ry="21.336891"
+         inkscape:export-xdpi="90"
+         inkscape:export-ydpi="90" />
       <text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:27.28639603px;line-height:125%;font-family:sans-serif;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
