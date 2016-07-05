@@ -16,6 +16,7 @@ content of the README.md file.
 + Auto saving.
 + Use Texlive for documentation.
 + Use GNU gettext for translation.
++ In blit function, change the structure from size to coordinates.
 
 Main
 ----
