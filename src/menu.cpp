@@ -182,9 +182,11 @@ handle_menu_events (SDL_Renderer** main_renderer,
 	      click_coords.y = event.button.y;
 
 	      button = find_button (click_coords, buttons, number);
-	      if (button != 0)
+	      // if (button != 0)
+	      // 	stay = 0;
+	      if (button == 1)
 		stay = 0;
-	      if (button == 5)
+	      else if (button == 5)
 		return 1;
 	    }
 	  break;
@@ -199,10 +201,6 @@ handle_menu_events (SDL_Renderer** main_renderer,
     }
   
   // Afficher les autres menus
-
-  // En attendant de faire les autres menus
-  if (button > 1)
-    return 1;
 
   return 0;
 }
