@@ -38,4 +38,10 @@
 
 SDL_Texture* create_texture_from_text (char* text, int font_size, SDL_Renderer** main_renderer);
 
-void display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions);
+int handle_menu_events (SDL_Renderer** main_renderer,
+			 struct size screen_dimensions,
+			 SDL_Rect* buttons, int number);
+
+int display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions);
+
+int find_button (struct coordinates click_coords, SDL_Rect* buttons, int number);

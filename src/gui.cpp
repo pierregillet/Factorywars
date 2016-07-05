@@ -298,8 +298,11 @@ run_gui (int read_pipe,
   struct map_coordinates click_map_coords;
 
   // Debug menu
-  // display_main_menu (&Renderer, screen_dimensions);
-  // SDL_Delay (5000);
+  if (display_main_menu (&Renderer, screen_dimensions) == 1)
+    {
+      quit_sdl (&Window, &Renderer, &current_texture, textures);
+      return 0;
+    }
 
   // We need to display the map at the beginning
   display_background (&Renderer, &map,

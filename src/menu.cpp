@@ -61,7 +61,7 @@ create_texture_from_text (char* text, int font_size, SDL_Renderer** main_rendere
   return text_texture;
 }
 
-void
+int
 display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions)
 {
   // On remplit le fond de noir
@@ -88,13 +88,13 @@ display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions)
   if (menu_bg == NULL)
     {
       fprintf (stderr, "Error while loading the menu background\n");
-      return;
+      return -1;
     }
 
   if (button_bg == NULL)
     {
       fprintf (stderr, "Error while loading the buttons’ background\n");
-      return;
+      return -1;
     }
 
 
@@ -121,11 +121,18 @@ display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions)
 	{screen_dimensions.x / 2 - 480 / 2, screen_dimensions.y / 2 - 640 / 2},
 	480, 640, menu_bg);
 
+  // On affiche les boutons et le texte par dessus
+  SDL_Rect buttons[number_of_buttons];
   for (int i = 0; i < number_of_buttons; i++)
     {
       // Alignement
       blit_coords.x = 48 + screen_dimensions.x / 2 - 480 / 2;
       blit_coords.y = 64 + i * 112 + screen_dimensions.y / 2 - 640 / 2;
+
+      buttons[i] = {.x = blit_coords.x,
+		    .y = blit_coords.y,
+		    .w = 384,
+		    .h = 64};
 
       blit (main_renderer, blit_coords, 384, 64, button_bg);
 
@@ -149,4 +156,81 @@ display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions)
     {
       SDL_DestroyTexture (texts[i]);
     }
+
+  return handle_menu_events (main_renderer, screen_dimensions, buttons,
+			     number_of_buttons);
+}
+
+int
+handle_menu_events (SDL_Renderer** main_renderer,
+		    struct size screen_dimensions, SDL_Rect* buttons,
+		    int number)
+{
+  SDL_Event event;
+  struct coordinates click_coords;
+  int stay = 1;
+  int button;
+
+  while (SDL_PollEvent (&event) != 0 || stay)
+    {
+      switch (event.type)
+	{
+	case SDL_MOUSEBUTTONDOWN:
+	  if (event.button.button == SDL_BUTTON_LEFT)
+	    {
+	      click_coords.x = event.button.x;
+	      click_coords.y = event.button.y;
+
+	      button = find_button (click_coords, buttons, number);
+	      if (button != 0)
+		stay = 0;
+	      if (button == 5)
+		return 1;
+	    }
+	  break;
+
+	case SDL_QUIT:
+	  return 1;
+	  break;
+
+	default:
+	  break;
+	}
+    }
+  
+  // Afficher les autres menus
+
+  // En attendant de faire les autres menus
+  if (button > 1)
+    return 1;
+
+  return 0;
+}
+
+int
+find_button (struct coordinates click_coords, SDL_Rect* buttons, int number)
+{
+  int score = 0;
+
+  for (int i = 0; i < number; i++)
+    {
+      if (click_coords.x >= buttons[i].x)
+	score++;
+
+      if (click_coords.x <= buttons[i].x + buttons[i].w)
+	score++;
+
+      if (click_coords.y >= buttons[i].y)
+	score++;
+      
+      if (click_coords.y <= buttons[i].y + buttons[i].h)
+	score++;
+
+      if (score < 4)
+	score = 0;
+      else
+	return i + 1;
+    }
+
+  return 0;
 }
