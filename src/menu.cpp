@@ -456,10 +456,8 @@ handle_load_save_menu_events (SDL_Rect* buttons, int number_of_buttons,
 	      click_coords.x = event.button.x;
 	      click_coords.y = event.button.y;
 
-	      printf ("Hello\n");
 	      if (find_button (click_coords, buttons, number_of_buttons) == 1)
 		return 4;
-	      printf ("Hello2\n");
 	    }
 
 	  break;
