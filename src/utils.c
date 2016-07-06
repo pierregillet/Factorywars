@@ -260,6 +260,9 @@ list_directory (const char* dir_name, int only_directories)
   struct stat file_stat;
   char *file_path;
 
+  /* Pour le temps de dernière modification */
+  struct tm *timeinfo;
+
   while (cur_entry != NULL)
     {
       /* On ignore le dossier « . » */
@@ -269,6 +272,7 @@ list_directory (const char* dir_name, int only_directories)
 	  continue;
 	}
 
+      /* On ignore le dossier « .. » */
       if (strcmp (cur_entry->d_name, "..") == 0)
 	{
 	  cur_entry = readdir (dir);
@@ -316,6 +320,9 @@ list_directory (const char* dir_name, int only_directories)
 	  dir_list->dir_name = (char*) malloc ((strlen (cur_entry->d_name) * sizeof (char)));
 	  strcpy (dir_list->dir_name, cur_entry->d_name);
 	}
+
+      timeinfo = localtime (&file_stat.st_mtime);
+      strftime (dir_list->last_modification, 32, "%FT%X%z", timeinfo);
 
       cur_entry = readdir (dir);
     }

@@ -64,6 +64,7 @@ struct chunk_info
 struct directory_list
 {
   char *dir_name;
+  char last_modification[32];
 
   struct directory_list* prev;
   struct directory_list* next;

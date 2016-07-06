@@ -125,10 +125,10 @@ default_config_value (const char* key, char* dst, size_t dst_len)
     strncpy (dst, "1337", dst_len);
 
   else if (strcmp (key, "height") == 0)
-    strncpy (dst, "480", dst_len);
+    strncpy (dst, "640", dst_len);
 
   else if (strcmp (key, "width") == 0)
-    strncpy (dst, "640", dst_len);
+    strncpy (dst, "480", dst_len);
 
   else
     return 0;
