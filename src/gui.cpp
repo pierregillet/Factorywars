@@ -33,7 +33,7 @@
 #include "gui.h"
 
 SDL_Texture*
-loadTexture(SDL_Renderer** main_renderer, std::string path)
+loadTexture (SDL_Renderer** main_renderer, std::string path)
 {
   SDL_Texture* new_texture = NULL;
   SDL_Surface* loaded_surface = IMG_Load(path.c_str ());
@@ -145,15 +145,15 @@ init (SDL_Window** main_window,
 				       SDL_RENDERER_ACCELERATED
 				       | SDL_RENDERER_PRESENTVSYNC);
 
-  // SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
+  SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
+
+  if (!IMG_Init (IMG_INIT_PNG) & IMG_INIT_PNG)
+    fprintf (stderr, "Error while initializing SDL_image library.\n");
+
+  if (TTF_Init () == -1)
+    fprintf (stderr, "Error while initializing SDL_ttf library.\n");
 
   loadMedia (main_renderer, textures);
-}
-
-void
-display_main_menu ()
-{
-  
 }
 
 int
@@ -237,7 +237,8 @@ quit_sdl (SDL_Window** main_window,
   SDL_DestroyWindow (*main_window);
 
   TTF_Quit ();
-  SDL_Quit();
+  IMG_Quit ();
+  SDL_Quit ();
 }
 
 int 
@@ -302,6 +303,13 @@ run_gui (int read_pipe,
   bool clicks_state[5] = {0};
 
   struct map_coordinates click_map_coords;
+
+  // Debug menu
+  if (display_main_menu (&Renderer, screen_dimensions) == 1)
+    {
+      quit_sdl (&Window, &Renderer, &current_texture, textures);
+      return 0;
+    }
 
   // We need to display the map at the beginning
   display_background (&Renderer, &map,
@@ -602,4 +610,16 @@ display_fps (SDL_Renderer* main_renderer,
 			   .h = 100};
 
   SDL_RenderCopy (main_renderer, message, NULL, &message_rect);
+}
+
+SDL_Surface*
+copy_surface (SDL_Surface* src)
+{
+  SDL_Surface *dest;
+  dest = SDL_CreateRGBSurfaceFrom (src->pixels, src->w, src->h,
+			       src->format->BitsPerPixel, src->pitch,
+			       src->format->Rmask, src->format->Gmask,
+			       src->format->Bmask, src->format->Amask);
+
+  return dest;
 }

@@ -47,12 +47,12 @@
 #include "display_item.h"
 #include "multiplayer.h"
 #include "game_events.h"
+#include "menu.h"
 
 extern "C" {
   #include "save.h"
   #include "config.h"
 }
-
 
 /**
  * Store an image into a texture
@@ -161,3 +161,11 @@ void display_players (std::vector<Player>& players,
 		      SDL_Texture* player_texture,
 		      int screen_height,
 		      int screen_width);
+
+/**
+ * Copy a surface in another and return the new surface
+ *
+ * @param src is the surface to copy
+ * @return a pointer to the new surface.
+ */
+SDL_Surface* copy_surface (SDL_Surface* src);

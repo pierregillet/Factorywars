@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="112.88889mm"
-   height="14.111111mm"
-   viewBox="0 0 399.99999 49.999998"
+   width="108.37334mm"
+   height="18.062222mm"
+   viewBox="0 0 383.99996 63.999997"
    id="svg4150"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="button.svg"
+   sodipodi:docname="button1.svg"
    inkscape:export-filename="/home/corentin/programmation/factorywars/media/menus/button.png"
    inkscape:export-xdpi="90"
    inkscape:export-ydpi="90">
@@ -28,9 +28,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497475"
-     inkscape:cx="-140.213"
-     inkscape:cy="457.80484"
+     inkscape:zoom="2.8"
+     inkscape:cx="199.53483"
+     inkscape:cy="31.341487"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -39,9 +39,9 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:window-width="1920"
-     inkscape:window-height="1043"
-     inkscape:window-x="1920"
-     inkscape:window-y="0"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata4155">
@@ -59,14 +59,16 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-1.0550885,-1000.9845)">
+     transform="translate(-1.055119,-986.9845)">
     <rect
        style="opacity:0.9;fill:#4d4d4d;fill-opacity:1;stroke:none;stroke-width:10;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="rect4344-3"
-       width="400"
-       height="50"
+       width="384"
+       height="64"
        x="1.0550885"
-       y="1000.9845"
-       ry="11.343138" />
+       y="986.9845"
+       ry="14.519217"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>

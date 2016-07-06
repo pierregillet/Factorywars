@@ -109,7 +109,7 @@ am_factorywars_OBJECTS = src/main.$(OBJEXT) src/game_events.$(OBJEXT) \
 	src/player.$(OBJEXT) src/config.$(OBJEXT) \
 	src/network.$(OBJEXT) src/display_map.$(OBJEXT) \
 	src/display_item.$(OBJEXT) src/multiplayer.$(OBJEXT) \
-	src/map.pb-c.$(OBJEXT)
+	src/map.pb-c.$(OBJEXT) src/menu.$(OBJEXT)
 factorywars_OBJECTS = $(am_factorywars_OBJECTS)
 factorywars_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -328,6 +328,7 @@ factorywars_SOURCES = \
 	src/display_item.cpp src/display_item.h\
 	src/multiplayer.cpp src/multiplayer.h\
 	src/map.pb-c.c src/map.pb-c.h\
+	src/menu.cpp src/menu.h\
 	src/structures.h
 
 AM_CFLAGS = -std=gnu99 $(libxml2_CFLAGS)
@@ -456,6 +457,7 @@ src/multiplayer.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/map.pb-c.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/menu.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 
 factorywars$(EXEEXT): $(factorywars_OBJECTS) $(factorywars_DEPENDENCIES) $(EXTRA_factorywars_DEPENDENCIES) 
 	@rm -f factorywars$(EXEEXT)
@@ -477,6 +479,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/items.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/map.pb-c.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/menu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/multiplayer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/network.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/player.Po@am__quote@
