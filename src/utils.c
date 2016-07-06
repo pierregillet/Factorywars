@@ -259,6 +259,8 @@ list_directory (const char* dir_name, int only_directories)
   /* Pour savoir si c’est un dossier */
   struct stat file_stat;
   char *file_path;
+
+  /* Pour le temps de dernière modification */
   struct tm *timeinfo;
 
   while (cur_entry != NULL)
@@ -270,6 +272,7 @@ list_directory (const char* dir_name, int only_directories)
 	  continue;
 	}
 
+      /* On ignore le dossier « .. » */
       if (strcmp (cur_entry->d_name, "..") == 0)
 	{
 	  cur_entry = readdir (dir);
