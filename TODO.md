@@ -42,6 +42,7 @@ GUI
 + FPS counter.
 + FPS limit.
 + Display menus.
++ Display using a system of ticks.
 
 Textures
 --------
