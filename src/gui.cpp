@@ -118,6 +118,12 @@ init (SDL_Window** main_window,
     {
       fprintf (stderr, "Error: %s\n", SDL_GetError ());
     }
+
+  if( TTF_Init() == -1 )
+    {
+      fprintf(stderr, "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+      SDL_Quit();
+    }
 	
   // if the SDL launched correctly
   *main_window = SDL_CreateWindow ("Factorywars",
@@ -259,6 +265,7 @@ run_gui (int read_pipe,
   SDL_Renderer* Renderer = NULL;
 
   SDL_Texture* textures[4][10];
+  unsigned int start_time = SDL_GetTicks ();
 
   init (&Window, &Renderer, screen_height,
 	screen_width, textures);
@@ -300,7 +307,8 @@ run_gui (int read_pipe,
   // Debug menu
   if (display_main_menu (Renderer, screen_dimensions) == 0)
     {
-      quit_sdl (&Window, &Renderer, &current_texture, textures);
+      quit_sdl (&Window, &Renderer,
+		&current_texture, textures);
       return 0;
     }
 
@@ -310,7 +318,8 @@ run_gui (int read_pipe,
 		      screen_height, screen_width);
 
   // Display character
-  blit (&Renderer, screen_center, 25, 41, current_texture);
+  blit (&Renderer, screen_center,
+	25, 41, current_texture);
   
   // Display HUD
   struct size toolbar_origin;
@@ -319,22 +328,19 @@ run_gui (int read_pipe,
   struct size
     toolbar_size = {.x = (int) (screen_width / 2),
 		    .y = (int) (screen_width / 2 * 0.11)};
-  blit (&Renderer,
-	toolbar_origin,
-	toolbar_size.x,
-	toolbar_size.y,
+  blit (&Renderer, toolbar_origin,
+	toolbar_size.x, toolbar_size.y,
 	textures[3][0]);
 
+  display_fps (Renderer, &start_time);
   SDL_RenderPresent (Renderer);
-
-  int need_to_blit;
 
   while (handle_events (textures, &current_texture, keys_state,
 			clicks_state, screen_height,
 			screen_width, &screen_origin,
 			&click_map_coords, players) != 0)
     {
-      need_to_blit = 0;
+      start_time = SDL_GetTicks();
 
       // Keyboard handling
       for (int i = 0; i < 4; i++)
@@ -345,23 +351,8 @@ run_gui (int read_pipe,
 					   screen_height, screen_width,
 					   &hero_coords);
 
-	      send_move_command (write_pipe, screen_origin, screen_height,
-				 screen_width);
-
-	      display_background (&Renderer, &map,
-				  textures, screen_origin,
-				  screen_height, screen_width);
-
-	      blit (&Renderer, hero_coords, 25, 41, current_texture);
-
-	      blit (&Renderer, toolbar_origin, toolbar_size.x, toolbar_size.y,
-		    textures[3][0]);
-
-	      display_players (players, screen_origin,
-			       &Renderer, current_texture,
-			       screen_height, screen_width);
-
-	      need_to_blit = 1;
+	      send_move_command (write_pipe, screen_origin,
+				 screen_height, screen_width);
 	      break;
 	    }
 	}
@@ -376,27 +367,7 @@ run_gui (int read_pipe,
 	    {
 	      set_surface_item(click_map_coords.chunk,
 			       click_map_coords.square,
-			       1,
-			       &map);
-	      display_background (&Renderer, &map,
-				  textures, screen_origin,
-				  screen_height, screen_width);
-	      
-	      blit (&Renderer,
-		    hero_coords,
-		    25,
-		    41,
-		    current_texture);
-	      blit (&Renderer,
-		    toolbar_origin,
-		    toolbar_size.x,
-		    toolbar_size.y,
-		    textures[3][0]);
-
-	      display_players (players, screen_origin, &Renderer, current_texture,
-			       screen_height, screen_width);
-
-	      need_to_blit = 1;
+			       1, &map);
 	    }
 	    
 	  clicks_state[0] = 0;
@@ -412,55 +383,52 @@ run_gui (int read_pipe,
 	    {
 	      set_surface_item(click_map_coords.chunk,
 			       click_map_coords.square,
-			       -1,
-			       &map);
-	      display_background (&Renderer, &map,
-				  textures, screen_origin,
-				  screen_height, screen_width);
-	      blit (&Renderer,
-		    hero_coords,
-		    25,
-		    41,
-		    current_texture);
-
-	      blit (&Renderer,
-		    toolbar_origin,
-		    toolbar_size.x,
-		    toolbar_size.y,
-		    textures[3][0]);
-
-	      display_players (players, screen_origin,
-			       &Renderer, current_texture,
-			       screen_height, screen_width);
-
-	      need_to_blit = 1;
+			       -1, &map);
 	    }
 	  clicks_state[2] = 0;
 	}
       // End of right click handling
 
-      // Network pipe handling
-      if (handle_data_from_network_pipe (read_pipe, players) > 0)
-      	{
-	  display_background (&Renderer, &map,
-			      textures, screen_origin,
-			      screen_height, screen_width);
-	  blit (&Renderer, hero_coords, 25, 41, current_texture);
-	  blit (&Renderer,
-		toolbar_origin,
-		toolbar_size.x,
-		toolbar_size.y,
-		textures[3][0]);
+      // // Network pipe handling
+      // if (handle_data_from_network_pipe (read_pipe, players) > 0)
+      // 	{
+      // 	  display_background (&Renderer, &map,
+      // 			      textures, screen_origin,
+      // 			      screen_height, screen_width);
+      // 	  blit (&Renderer, hero_coords, 25, 41, current_texture);
+      // 	  blit (&Renderer,
+      // 		toolbar_origin,
+      // 		toolbar_size.x,
+      // 		toolbar_size.y,
+      // 		textures[3][0]);
 	      
-	  display_players (players, screen_origin,
-			   &Renderer, current_texture,
-			   screen_height, screen_width);
-	  need_to_blit = 1;
-      	}
+      // 	  display_players (players, screen_origin,
+      // 			   &Renderer, current_texture,
+      // 			   screen_height, screen_width);
+      // 	}
 
-      if (need_to_blit)
-	SDL_RenderPresent (Renderer);
+      display_background (&Renderer, &map,
+			  textures, screen_origin,
+			  screen_height, screen_width);
+      blit (&Renderer,
+	    hero_coords,
+	    25,
+	    41,
+	    current_texture);
 
+      blit (&Renderer,
+	    toolbar_origin,
+	    toolbar_size.x,
+	    toolbar_size.y,
+	    textures[3][0]);
+
+      display_players (players, screen_origin,
+		       &Renderer, current_texture,
+		       screen_height, screen_width);
+
+      display_fps (Renderer,
+		   &start_time);
+      SDL_RenderPresent (Renderer);	  
       SDL_Delay (1/200);
     }
 
@@ -530,7 +498,7 @@ display_ground (SDL_Renderer* main_renderer,
     {
       for (int column = 0; column <= squares_to_draw.x; column ++)
 	{
-	  // biome_texture = ;
+	  // biome_texture = map.;
 	  
 	  blit (&main_renderer, square_top_left_corner,
 		default_square_width, default_square_width,
@@ -546,9 +514,55 @@ get_fps (unsigned int* start_time)
   unsigned int current_time = SDL_GetTicks ();
   unsigned int delta_time = current_time - *start_time;
   *start_time = current_time;
-  if (delta_time != 0)
+  if (delta_time > 0)
     current_fps = 1000 / delta_time;
+  else if (delta_time < 0)
+    current_fps = (1000 / -delta_time);
+  else
+    current_fps = 0;
   return current_fps;
+}
+
+void
+display_fps (SDL_Renderer* main_renderer,
+	     unsigned int* start_time)
+{
+  TTF_Font* ttf_sans = TTF_OpenFont ("media/fonts/FreeSans.ttf", 18);
+  SDL_Color white = {255, 255, 255};
+
+  char fps[10];
+  unsigned int tmp_fps = get_fps (start_time);
+
+  snprintf (fps, 10, "%d fps", tmp_fps);
+
+  SDL_Surface* surface_message = TTF_RenderText_Blended (ttf_sans,
+							 fps,
+							 white);
+
+  SDL_Texture* message = SDL_CreateTextureFromSurface (main_renderer, surface_message);
+
+  struct size blit_origin = {.x = 0,
+			     .y = 0};
+  int blit_height = 0;
+  int blit_width = 0;
+  SDL_QueryTexture (message,
+		    NULL,
+		    NULL,
+		    &blit_width,
+		    &blit_height);
+
+  blit (&main_renderer,
+	blit_origin,
+	blit_width,
+	blit_height,
+	message);
+
+  SDL_Rect message_rect = {.x = 0,
+			   .y = 0,
+			   .w = 150,
+			   .h = 150};
+
+  SDL_RenderCopy (main_renderer, message, NULL, &message_rect);
 }
 
 SDL_Surface*
