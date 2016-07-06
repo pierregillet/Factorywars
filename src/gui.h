@@ -107,6 +107,23 @@ int blit (SDL_Renderer** Renderer,
 	  SDL_Texture* texture);
 
 /**
+ * Calculates the fps and reset the timer.
+ * 
+ * @param start_time is the timer to calculate the fps.
+ * @return unsigned int containing the fps. 
+ */
+int get_fps (unsigned int* start_time);
+
+/**
+ * Displays the fps after getting them.
+ * 
+ * @param main_renderer is the renderer used.
+ * @param start_time is the timer to calculate the fps.
+ */
+void display_fps (SDL_Renderer* main_renderer,
+		  unsigned int* start_time);
+
+/**
  * Free what needed to be freed from the SDL library.
  *
  * @param main_window is the main window.
