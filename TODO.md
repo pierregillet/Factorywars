@@ -35,14 +35,17 @@ Network
 GUI
 ---
 + Replace screen_height and screen_width with a structure
-+ Rewrite gui.cpp.
-+ Delete display_blits function.
++ Rewrite most of gui.cpp (it is a mess in there !).
 + Blit by layers, first the ground textures then the objects.
 + Allow to zoom on the map/items in-game.
-+ FPS counter.
 + FPS limit.
 + Display menus.
 + Display using a system of ticks.
++ Handle the case in which if there is no change in the current view, we don't draw everything again (if it is lighter than redrawing everything).
+
+Events
+------
++ Replace the clicks_state and keyboard_state arrays with structures (to make it readable when used).
 
 Textures
 --------
