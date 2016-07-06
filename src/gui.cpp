@@ -307,7 +307,8 @@ run_gui (int read_pipe,
   // Debug menu
   if (display_main_menu (&Renderer, screen_dimensions) == 1)
     {
-      quit_sdl (&Window, &Renderer, &current_texture, textures);
+      quit_sdl (&Window, &Renderer,
+		&current_texture, textures);
       return 0;
     }
 
@@ -317,7 +318,8 @@ run_gui (int read_pipe,
 		      screen_height, screen_width);
 
   // Display character
-  blit (&Renderer, screen_center, 25, 41, current_texture);
+  blit (&Renderer, screen_center,
+	25, 41, current_texture);
   
   // Display HUD
   struct size toolbar_origin;
@@ -326,17 +328,12 @@ run_gui (int read_pipe,
   struct size
     toolbar_size = {.x = (int) (screen_width / 2),
 		    .y = (int) (screen_width / 2 * 0.11)};
-  blit (&Renderer,
-	toolbar_origin,
-	toolbar_size.x,
-	toolbar_size.y,
+  blit (&Renderer, toolbar_origin,
+	toolbar_size.x, toolbar_size.y,
 	textures[3][0]);
 
-  display_fps (Renderer,
-	       &start_time);
+  display_fps (Renderer, &start_time);
   SDL_RenderPresent (Renderer);
-
-  int need_to_blit;
 
   while (handle_events (textures, &current_texture, keys_state,
 			clicks_state, screen_height,
@@ -344,8 +341,6 @@ run_gui (int read_pipe,
 			&click_map_coords, players) != 0)
     {
       start_time = SDL_GetTicks();
-
-      need_to_blit = 0;
 
       // Keyboard handling
       for (int i = 0; i < 4; i++)
@@ -356,23 +351,8 @@ run_gui (int read_pipe,
 					   screen_height, screen_width,
 					   &hero_coords);
 
-	      send_move_command (write_pipe, screen_origin, screen_height,
-				 screen_width);
-
-	      display_background (&Renderer, &map,
-				  textures, screen_origin,
-				  screen_height, screen_width);
-
-	      blit (&Renderer, hero_coords, 25, 41, current_texture);
-
-	      blit (&Renderer, toolbar_origin, toolbar_size.x, toolbar_size.y,
-		    textures[3][0]);
-
-	      display_players (players, screen_origin,
-			       &Renderer, current_texture,
-			       screen_height, screen_width);
-
-	      need_to_blit = 1;
+	      send_move_command (write_pipe, screen_origin,
+				 screen_height, screen_width);
 	      break;
 	    }
 	}
@@ -387,27 +367,7 @@ run_gui (int read_pipe,
 	    {
 	      set_surface_item(click_map_coords.chunk,
 			       click_map_coords.square,
-			       1,
-			       &map);
-	      display_background (&Renderer, &map,
-				  textures, screen_origin,
-				  screen_height, screen_width);
-	      
-	      blit (&Renderer,
-		    hero_coords,
-		    25,
-		    41,
-		    current_texture);
-	      blit (&Renderer,
-		    toolbar_origin,
-		    toolbar_size.x,
-		    toolbar_size.y,
-		    textures[3][0]);
-
-	      display_players (players, screen_origin, &Renderer, current_texture,
-			       screen_height, screen_width);
-
-	      need_to_blit = 1;
+			       1, &map);
 	    }
 	    
 	  clicks_state[0] = 0;
@@ -423,59 +383,52 @@ run_gui (int read_pipe,
 	    {
 	      set_surface_item(click_map_coords.chunk,
 			       click_map_coords.square,
-			       -1,
-			       &map);
-	      display_background (&Renderer, &map,
-				  textures, screen_origin,
-				  screen_height, screen_width);
-	      blit (&Renderer,
-		    hero_coords,
-		    25,
-		    41,
-		    current_texture);
-
-	      blit (&Renderer,
-		    toolbar_origin,
-		    toolbar_size.x,
-		    toolbar_size.y,
-		    textures[3][0]);
-
-	      display_players (players, screen_origin,
-			       &Renderer, current_texture,
-			       screen_height, screen_width);
-
-	      need_to_blit = 1;
+			       -1, &map);
 	    }
 	  clicks_state[2] = 0;
 	}
       // End of right click handling
 
-      // Network pipe handling
-      if (handle_data_from_network_pipe (read_pipe, players) > 0)
-      	{
-	  display_background (&Renderer, &map,
-			      textures, screen_origin,
-			      screen_height, screen_width);
-	  blit (&Renderer, hero_coords, 25, 41, current_texture);
-	  blit (&Renderer,
-		toolbar_origin,
-		toolbar_size.x,
-		toolbar_size.y,
-		textures[3][0]);
+      // // Network pipe handling
+      // if (handle_data_from_network_pipe (read_pipe, players) > 0)
+      // 	{
+      // 	  display_background (&Renderer, &map,
+      // 			      textures, screen_origin,
+      // 			      screen_height, screen_width);
+      // 	  blit (&Renderer, hero_coords, 25, 41, current_texture);
+      // 	  blit (&Renderer,
+      // 		toolbar_origin,
+      // 		toolbar_size.x,
+      // 		toolbar_size.y,
+      // 		textures[3][0]);
 	      
-	  display_players (players, screen_origin,
-			   &Renderer, current_texture,
-			   screen_height, screen_width);
-	  need_to_blit = 1;
-      	}
+      // 	  display_players (players, screen_origin,
+      // 			   &Renderer, current_texture,
+      // 			   screen_height, screen_width);
+      // 	}
 
-      if (need_to_blit)
-	{
-	  display_fps (Renderer,
-		       &start_time);
-	  SDL_RenderPresent (Renderer);
-	}
+      display_background (&Renderer, &map,
+			  textures, screen_origin,
+			  screen_height, screen_width);
+      blit (&Renderer,
+	    hero_coords,
+	    25,
+	    41,
+	    current_texture);
 
+      blit (&Renderer,
+	    toolbar_origin,
+	    toolbar_size.x,
+	    toolbar_size.y,
+	    textures[3][0]);
+
+      display_players (players, screen_origin,
+		       &Renderer, current_texture,
+		       screen_height, screen_width);
+
+      display_fps (Renderer,
+		   &start_time);
+      SDL_RenderPresent (Renderer);	  
       SDL_Delay (1/200);
     }
 
@@ -574,7 +527,7 @@ void
 display_fps (SDL_Renderer* main_renderer,
 	     unsigned int* start_time)
 {
-  TTF_Font* ttf_sans = TTF_OpenFont ("media/fonts/FreeSans.ttf", 24);
+  TTF_Font* ttf_sans = TTF_OpenFont ("media/fonts/FreeSans.ttf", 18);
   SDL_Color white = {255, 255, 255};
 
   char fps[10];
@@ -606,8 +559,8 @@ display_fps (SDL_Renderer* main_renderer,
 
   SDL_Rect message_rect = {.x = 0,
 			   .y = 0,
-			   .w = 100,
-			   .h = 100};
+			   .w = 150,
+			   .h = 150};
 
   SDL_RenderCopy (main_renderer, message, NULL, &message_rect);
 }
