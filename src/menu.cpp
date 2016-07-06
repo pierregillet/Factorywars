@@ -33,7 +33,7 @@
 #include "menu.h"
 
 SDL_Texture*
-create_texture_from_text (char* text, int font_size, SDL_Renderer** main_renderer)
+create_texture_from_text (char* text, int font_size, SDL_Color color, SDL_Renderer** main_renderer)
 {
   TTF_Font *font = TTF_OpenFont ("media/fonts/FreeSans.ttf", font_size);
   if (font == NULL)
@@ -42,9 +42,7 @@ create_texture_from_text (char* text, int font_size, SDL_Renderer** main_rendere
       return NULL;
     }
 
-  SDL_Color white_color = {255, 255, 255};
-  SDL_Surface* text_surface = TTF_RenderText_Blended (font, text,
-						      white_color);
+  SDL_Surface* text_surface = TTF_RenderText_Blended (font, text, color);
 
   if (text_surface == NULL)
     {
@@ -111,7 +109,8 @@ display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions)
   int font_size = 40;
   for (int i = 0; i < number_of_buttons; i++)
     {
-      texts[i] = create_texture_from_text (menu_text[i], font_size, main_renderer);
+      texts[i] = create_texture_from_text (menu_text[i], font_size,
+					   {255, 255, 255}, main_renderer);
     }
 
   // On affiche le fond du menu

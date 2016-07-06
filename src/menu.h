@@ -36,7 +36,7 @@
 
 #include "gui.h"
 
-SDL_Texture* create_texture_from_text (char* text, int font_size, SDL_Renderer** main_renderer);
+SDL_Texture* create_texture_from_text (char* text, int font_size, SDL_Color color, SDL_Renderer** main_renderer);
 
 int handle_menu_events (SDL_Renderer** main_renderer,
 			 struct size screen_dimensions,
