@@ -33,7 +33,7 @@
 #include "menu.h"
 
 SDL_Texture*
-create_texture_from_text (char* text, int font_size, SDL_Color color, SDL_Renderer** main_renderer)
+create_texture_from_text (const char* text, int font_size, SDL_Color color, SDL_Renderer* main_renderer)
 {
   TTF_Font *font = TTF_OpenFont ("media/fonts/FreeSans.ttf", font_size);
   if (font == NULL)
@@ -50,7 +50,7 @@ create_texture_from_text (char* text, int font_size, SDL_Color color, SDL_Render
       return NULL;
     }
 
-  SDL_Texture *text_texture = SDL_CreateTextureFromSurface (*main_renderer,
+  SDL_Texture *text_texture = SDL_CreateTextureFromSurface (main_renderer,
 							    text_surface);
   
   TTF_CloseFont (font);
@@ -60,15 +60,13 @@ create_texture_from_text (char* text, int font_size, SDL_Color color, SDL_Render
 }
 
 int
-display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions)
+display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions)
 {
   // On remplit le fond de noir
-  SDL_Texture* background;
-  background = SDL_CreateTexture (*main_renderer, SDL_PIXELFORMAT_RGBA8888,
-				  SDL_TEXTUREACCESS_TARGET,
-				  screen_dimensions.x, screen_dimensions.y);
-  SDL_SetTextureColorMod (background, 0, 0, 0);
-  blit (main_renderer, {0,0}, screen_dimensions.x, screen_dimensions.y, background);
+  SDL_Rect fill_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
+  SDL_RenderSetViewport (main_renderer, NULL);
+  SDL_SetRenderDrawColor (main_renderer, 0, 0, 0, 255);
+  SDL_RenderFillRect (main_renderer, &fill_rect);
 
 
   // On charge les images du menu
@@ -76,11 +74,11 @@ display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions)
   SDL_Surface *button_bg_surface = IMG_Load ("media/menus/button1.png");
 
   SDL_Texture *menu_bg;
-  menu_bg = SDL_CreateTextureFromSurface (*main_renderer, menu_bg_surface);
+  menu_bg = SDL_CreateTextureFromSurface (main_renderer, menu_bg_surface);
   SDL_FreeSurface (menu_bg_surface);
 
   SDL_Texture *button_bg;
-  button_bg = SDL_CreateTextureFromSurface (*main_renderer, button_bg_surface);
+  button_bg = SDL_CreateTextureFromSurface (main_renderer, button_bg_surface);
   SDL_FreeSurface (button_bg_surface);
   
   if (menu_bg == NULL)
@@ -113,39 +111,51 @@ display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions)
 					   {255, 255, 255}, main_renderer);
     }
 
-  // On affiche le fond du menu
-  struct size blit_coords;
-  SDL_Rect rect;
-  blit (main_renderer,
-	{screen_dimensions.x / 2 - 480 / 2, screen_dimensions.y / 2 - 640 / 2},
-	480, 640, menu_bg);
+  int stay = 1;
+  int ret;
 
-  // On affiche les boutons et le texte par dessus
-  SDL_Rect buttons[number_of_buttons];
-  for (int i = 0; i < number_of_buttons; i++)
+  while (stay)
     {
-      // Alignement
-      blit_coords.x = 48 + screen_dimensions.x / 2 - 480 / 2;
-      blit_coords.y = 64 + i * 112 + screen_dimensions.y / 2 - 640 / 2;
+      // On affiche le fond du menu
+      struct size blit_coords;
+      SDL_Rect rect;
+      blit (&main_renderer,
+	    {screen_dimensions.x / 2 - 480 / 2, screen_dimensions.y / 2 - 640 / 2},
+	    480, 640, menu_bg);
 
-      buttons[i] = {.x = blit_coords.x,
-		    .y = blit_coords.y,
-		    .w = 384,
-		    .h = 64};
+      // On affiche les boutons et le texte par dessus
+      SDL_Rect buttons[number_of_buttons];
+      for (int i = 0; i < number_of_buttons; i++)
+	{
+	  // Alignement
+	  blit_coords.x = 48 + screen_dimensions.x / 2 - 480 / 2;
+	  blit_coords.y = 64 + i * 112 + screen_dimensions.y / 2 - 640 / 2;
 
-      blit (main_renderer, blit_coords, 384, 64, button_bg);
+	  buttons[i] = {.x = blit_coords.x,
+			.y = blit_coords.y,
+			.w = 384,
+			.h = 64};
 
-      // On récupère la largeur et la hauteur du texte
-      SDL_QueryTexture (texts[i], NULL, NULL, &rect.w, &rect.h);
+	  blit (&main_renderer, blit_coords, 384, 64, button_bg);
 
-      // Alignement
-      blit_coords.x += 384 / 2 - rect.w / 2;
-      blit_coords.y += 64 / 2 - rect.h / 2;
+	  // On récupère la largeur et la hauteur du texte
+	  SDL_QueryTexture (texts[i], NULL, NULL, &rect.w, &rect.h);
 
-      blit (main_renderer, blit_coords, rect.w, rect.h, texts[i]);
+	  // Alignement
+	  blit_coords.x += 384 / 2 - rect.w / 2;
+	  blit_coords.y += 64 / 2 - rect.h / 2;
+
+	  blit (&main_renderer, blit_coords, rect.w, rect.h, texts[i]);
+	}
+
+      SDL_RenderPresent (main_renderer);
+
+      ret = handle_main_menu_events (main_renderer, screen_dimensions,
+				     buttons, number_of_buttons);
+
+      if (ret == 1 || ret == 0)
+	stay = 0;
     }
-
-  SDL_RenderPresent (*main_renderer);
   
   // On libère les textures
   SDL_DestroyTexture (button_bg);
@@ -156,22 +166,27 @@ display_main_menu (SDL_Renderer** main_renderer, struct size screen_dimensions)
       SDL_DestroyTexture (texts[i]);
     }
 
-  return handle_menu_events (main_renderer, screen_dimensions, buttons,
-			     number_of_buttons);
+  return ret;
 }
 
 int
-handle_menu_events (SDL_Renderer** main_renderer,
-		    struct size screen_dimensions, SDL_Rect* buttons,
-		    int number)
+handle_main_menu_events (SDL_Renderer* main_renderer,
+			 struct size screen_dimensions, SDL_Rect* buttons,
+			 int number)
 {
   SDL_Event event;
   struct coordinates click_coords;
   int stay = 1;
   int button;
 
-  while (SDL_PollEvent (&event) != 0 || stay)
+  char save_path[128];
+  int ret;
+
+  while (stay)
     {
+      if (SDL_PollEvent (&event) == 0)
+	continue;
+
       switch (event.type)
 	{
 	case SDL_MOUSEBUTTONDOWN:
@@ -185,13 +200,21 @@ handle_menu_events (SDL_Renderer** main_renderer,
 	      // 	stay = 0;
 	      if (button == 1)
 		stay = 0;
+	      
+	      else if (button == 2)
+		{
+		  ret = get_save_path (main_renderer, save_path, 128, screen_dimensions);
+
+		  return ret;
+		}
+
 	      else if (button == 5)
-		return 1;
+		return 0;
 	    }
 	  break;
 
 	case SDL_QUIT:
-	  return 1;
+	  return 0;
 	  break;
 
 	default:
@@ -201,7 +224,7 @@ handle_menu_events (SDL_Renderer** main_renderer,
   
   // Afficher les autres menus
 
-  return 0;
+  return 1;
 }
 
 int
@@ -230,4 +253,256 @@ find_button (struct coordinates click_coords, SDL_Rect* buttons, int number)
     }
 
   return 0;
+}
+
+int
+get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
+	       struct size screen_dimensions)
+{
+  SDL_Texture *text;
+
+  const int row_height = 20;
+
+  const char *xdg_data_home = getenv ("XDG_DATA_HOME");
+  const char *home = getenv ("HOME");
+
+  if (RUN_IN_PLACE)
+    strncpy (dst, "saves/", dst_len);
+
+  else if (xdg_data_home == NULL)
+    {
+      if (home == NULL)
+	strncpy (dst, "saves/", dst_len);
+      else
+	{
+	  // On utilise la valeur par défaut de XDG_DATA_HOME
+	  snprintf (dst, dst_len, "%s/.local/share/factorywars/saves", home);
+	}
+    }
+
+  else
+    snprintf (dst, dst_len, "%s/factorywars/saves", xdg_data_home);
+
+  struct directory_list *dir_list = list_directory (dst, 1);
+  if (dir_list == NULL)
+    return 4;
+
+  struct directory_list *head_dir_list = dir_list;
+
+  // On enregistre le nombre de sauvegardes
+  int number_of_save = number_of_files (dir_list);
+
+
+  // On charge le fond du bouton
+  SDL_Surface *button_bg_surface = IMG_Load ("media/menus/button1.png");
+  SDL_Texture *button_bg;
+  button_bg = SDL_CreateTextureFromSurface (main_renderer, button_bg_surface);
+  SDL_FreeSurface (button_bg_surface);
+
+  if (button_bg == NULL)
+    fprintf (stderr, "Error while loading button1.png.");
+
+  // On crée la texture du texte du bouton
+  SDL_Texture *button_text;
+  button_text = create_texture_from_text ("Return to the main menu", 30,
+					  {255, 255, 255}, main_renderer);
+
+
+  SDL_Rect fill_rect, button, button_text_rect;
+
+  SDL_QueryTexture (button_bg, NULL, NULL, &button.w, &button.h);
+  button = {.x = screen_dimensions.x / 2 - button.w / 2,
+	    .y = screen_dimensions.y - button.h - 1,
+	    .w = button.w, .h = button.h};
+
+  SDL_QueryTexture (button_text, NULL, NULL, &button_text_rect.w, &button_text_rect.h);
+  button_text_rect.x = button.x + button.w / 2 - button_text_rect.w / 2;
+  button_text_rect.y = button.y + button.h / 2 - button_text_rect.h / 2;
+
+  
+  int rows = (screen_dimensions.y - 66) / row_height;
+  struct size blit_origin = {.x = 10, .y = 0};
+
+  int highlighted_line = 0;
+  int event_type = 0;
+  int choice = 0;
+  int first_displayed_save = 0;
+
+  do
+    {
+      // On affiche un fond noir
+      fill_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
+      SDL_RenderSetViewport (main_renderer, NULL);
+      SDL_SetRenderDrawColor (main_renderer, 0, 0, 0, 255);
+      SDL_RenderFillRect (main_renderer, &fill_rect);
+
+
+      // On affiche le bouton pour retourner au menu principal
+      blit_origin = {.x = button.x, .y = button.y};
+      blit (&main_renderer, blit_origin, button.w, button.h, button_bg);
+
+      blit_origin = {.x = button_text_rect.x, .y = button_text_rect.y};
+      blit (&main_renderer, blit_origin, button_text_rect.w, button_text_rect.h, button_text);
+
+
+      // La touche entrée a été pressée
+      if (event_type == 1)
+	{
+	  choice = highlighted_line + first_displayed_save;
+	  break;
+	}
+
+
+      // On passe i éléments si on veut afficher plus de sauvegardes
+      // qu’il n’y a de lignes.
+      for (int i = 0; i < first_displayed_save; i++)
+	dir_list = dir_list->next;
+
+      for (int i = 0; i < rows; i++)
+	{
+	  if (i == highlighted_line)
+	    {
+	      fill_rect.x = 0;
+	      fill_rect.y = i * row_height;
+	      fill_rect.w = screen_dimensions.x;
+	      fill_rect.h = row_height;
+
+	      SDL_RenderSetViewport (main_renderer, NULL);
+	      SDL_SetRenderDrawColor (main_renderer, 0xFF, 0, 0, 0xFF);
+	      SDL_RenderFillRect (main_renderer, &fill_rect);
+	    }
+
+
+	  // On affiche le nom de la sauvegarde
+	  text = create_texture_from_text (dir_list->dir_name, 16, {255, 255, 255},
+					   main_renderer);
+	  SDL_QueryTexture (text, NULL, NULL, &fill_rect.w, &fill_rect.h);
+
+	  blit_origin.x = 10;
+	  blit_origin.y = i * row_height;
+	  blit (&main_renderer, blit_origin, fill_rect.w, fill_rect.h, text);
+	  SDL_DestroyTexture (text);
+
+
+	  // On affiche la date de dernière modification
+	  text = create_texture_from_text (dir_list->last_modification, 16,
+					   {255, 255, 255}, main_renderer);
+	  SDL_QueryTexture (text, NULL, NULL, &fill_rect.w, &fill_rect.h);
+
+	  blit_origin.x = screen_dimensions.x - fill_rect.w - 10;
+	  blit_origin.y = i * row_height;
+	  blit (&main_renderer, blit_origin, fill_rect.w, fill_rect.h, text);
+	  SDL_DestroyTexture (text);
+
+	  dir_list = dir_list->next;
+
+	  // S’il n’y a plus rien à afficher
+	  if (dir_list == NULL)
+	    break;
+	}
+
+      dir_list = head_dir_list;
+
+      SDL_RenderPresent (main_renderer);
+
+      event_type = handle_load_save_menu_events (&button, 1, &highlighted_line,
+						 &first_displayed_save, rows,
+						 number_of_save);
+    } while (event_type > 1 && event_type != 4);
+
+  
+  free_dir_list (dir_list);
+  SDL_DestroyTexture (button_bg);
+  SDL_DestroyTexture (button_text);
+
+  if (event_type == 0)
+    return 0;
+  else if (event_type == 4)
+    return 4;
+
+  return 1;
+}
+
+int
+handle_load_save_menu_events (SDL_Rect* buttons, int number_of_buttons,
+			      int* highlighted_line,
+			      int* first_displayed_save,
+			      int number_of_rows, int number_of_save)
+{
+  SDL_Event event;
+  int stay = 1;
+  int event_type = 2;
+
+  struct coordinates click_coords;
+
+  while (stay)
+    {
+      if (SDL_PollEvent (&event) == 0)
+	continue;
+
+      // if (event.key.repeat != 0)
+      // 	continue;
+
+      switch (event.type)
+	{
+	case SDL_QUIT:
+	  stay = 0;
+	  event_type = 0;
+	  break;
+
+	case SDL_MOUSEBUTTONDOWN:
+	  if (event.button.button == SDL_BUTTON_LEFT)
+	    {
+	      click_coords.x = event.button.x;
+	      click_coords.y = event.button.y;
+
+	      printf ("Hello\n");
+	      if (find_button (click_coords, buttons, number_of_buttons) == 1)
+		return 4;
+	      printf ("Hello2\n");
+	    }
+
+	  break;
+
+	case SDL_KEYDOWN:
+	  switch (event.key.keysym.sym)
+	    {
+	    case SDLK_UP:
+	      if (*highlighted_line > 0)
+		{
+		  if (*first_displayed_save > 0)
+		    (*first_displayed_save)--;
+
+		  else
+		    (*highlighted_line)--;
+
+		  stay = 0;
+		  event_type = 2;
+		}
+	      break;
+
+	    case SDLK_DOWN:
+	      if (*highlighted_line < number_of_rows - 1)
+		(*highlighted_line)++;
+	      else if (*first_displayed_save + *highlighted_line < number_of_save - 1)
+		(*first_displayed_save)++;
+
+	      stay = 0;
+	      event_type = 3;
+
+	      break;
+
+	    case SDLK_RETURN:
+	      stay = 0;
+	      event_type = 1;
+	      break;
+	    }
+	  break;
+
+	default:
+	  break;
+	}
+    }
+
+  return event_type;
 }

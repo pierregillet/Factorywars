@@ -256,6 +256,8 @@ list_directory (const char* dir_name, int only_directories)
       return NULL;
     }
 
+  int empty = 1;
+
   /* Pour savoir si c’est un dossier */
   struct stat file_stat;
   char *file_path;
@@ -273,11 +275,13 @@ list_directory (const char* dir_name, int only_directories)
 	}
 
       /* On ignore le dossier « .. » */
-      if (strcmp (cur_entry->d_name, "..") == 0)
+      else if (strcmp (cur_entry->d_name, "..") == 0)
 	{
 	  cur_entry = readdir (dir);
 	  continue;
 	}
+      else
+	empty = 0;
 
       if (only_directories)
 	{
@@ -327,6 +331,12 @@ list_directory (const char* dir_name, int only_directories)
       cur_entry = readdir (dir);
     }
 
+  if (empty)
+    {
+      free (dir_list);
+      return NULL;
+    }
+
   closedir (dir);
   return head;
 }
@@ -362,4 +372,27 @@ free_dir_list (struct directory_list* dir_list)
     }
 
   return;
+}
+
+int
+number_of_files (struct directory_list* dir_list)
+{
+  int number = 1;
+
+  /* On vérifie s’il y a au moins un élément */
+  if (dir_list == NULL)
+    return 0;
+
+  /* On pacourt la liste jusqu’au premier élément */
+  while (dir_list->prev != NULL)
+    dir_list = dir_list->prev;
+
+  /* On la parcourt ensuite jusqu’au dernier */
+  while (dir_list->next != NULL)
+    {
+      dir_list = dir_list->next;
+      number++;
+    }
+
+  return number;
 }

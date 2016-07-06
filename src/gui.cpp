@@ -298,7 +298,7 @@ run_gui (int read_pipe,
   struct map_coordinates click_map_coords;
 
   // Debug menu
-  if (display_main_menu (&Renderer, screen_dimensions) == 1)
+  if (display_main_menu (Renderer, screen_dimensions) == 0)
     {
       quit_sdl (&Window, &Renderer, &current_texture, textures);
       return 0;

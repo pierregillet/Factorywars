@@ -55,10 +55,9 @@ get_config_value (const char* key, char* dst, size_t dst_len)
 	strncpy (path, filename, path_len);
       else
 	{
-	  /* We need to use the default value of XDG_CONFIG_HOME */
+	  /* We have to use the default value of XDG_CONFIG_HOME */
 	  strncpy (conf_dir, home, path_len);
-	  strncat (conf_dir, "/", path_len);
-	  strncat (conf_dir, ".config/factorywars", path_len);
+	  strncat (conf_dir, "/.config/factorywars", path_len);
 
 	  strncpy (path, conf_dir, path_len);
 	  strncat (path, "/", path_len);

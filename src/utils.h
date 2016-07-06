@@ -125,3 +125,11 @@ struct directory_list* list_directory (const char* dir_name, int only_directorie
  * @param dir_list is the list to free.
  */
 void free_dir_list (struct directory_list* dir_list);
+
+/**
+ * Return the number of files in a directory list.
+ *
+ * @param dir_list is the directory list.
+ * @return the number of files.
+ */
+int number_of_files (struct directory_list* dir_list);
