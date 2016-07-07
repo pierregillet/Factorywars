@@ -62,13 +62,6 @@ create_texture_from_text (const char* text, int font_size, SDL_Color color, SDL_
 int
 display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions)
 {
-  // On remplit le fond de noir
-  SDL_Rect fill_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
-  SDL_RenderSetViewport (main_renderer, NULL);
-  SDL_SetRenderDrawColor (main_renderer, 0, 0, 0, 255);
-  SDL_RenderFillRect (main_renderer, &fill_rect);
-
-
   // On charge les images du menu
   SDL_Surface *menu_bg_surface = IMG_Load ("media/menus/main_menu.png");
   SDL_Surface *button_bg_surface = IMG_Load ("media/menus/button1.png");
@@ -114,8 +107,14 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions)
   int stay = 1;
   int ret;
 
+  // The background rectangle
+  SDL_Rect bg_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
+
   while (stay)
     {
+      // On remplit le fond de noir
+      blit_rect (main_renderer, {0, 0, 0, 255}, bg_rect);
+
       // On affiche le fond du menu
       struct size blit_coords;
       SDL_Rect rect;
@@ -304,7 +303,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 
   // On crée la texture du texte du bouton
   SDL_Texture *button_text;
-  button_text = create_texture_from_text ("Return to the main menu", 30,
+  button_text = create_texture_from_text ("Main menu", 30,
 					  {255, 255, 255}, main_renderer);
 
 
@@ -332,9 +331,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
     {
       // On affiche un fond noir
       fill_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
-      SDL_RenderSetViewport (main_renderer, NULL);
-      SDL_SetRenderDrawColor (main_renderer, 0, 0, 0, 255);
-      SDL_RenderFillRect (main_renderer, &fill_rect);
+      blit_rect (main_renderer, {0, 0, 0, 255}, fill_rect);
 
 
       // On affiche le bouton pour retourner au menu principal
@@ -362,14 +359,8 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 	{
 	  if (i == highlighted_line)
 	    {
-	      fill_rect.x = 0;
-	      fill_rect.y = i * row_height;
-	      fill_rect.w = screen_dimensions.x;
-	      fill_rect.h = row_height;
-
-	      SDL_RenderSetViewport (main_renderer, NULL);
-	      SDL_SetRenderDrawColor (main_renderer, 0xFF, 0, 0, 0xFF);
-	      SDL_RenderFillRect (main_renderer, &fill_rect);
+	      fill_rect = {0, i * row_height, screen_dimensions.x, row_height};
+	      blit_rect (main_renderer, {255, 0, 0, 255}, fill_rect);
 	    }
 
 

@@ -169,3 +169,13 @@ void display_players (std::vector<Player>& players,
  * @return a pointer to the new surface.
  */
 SDL_Surface* copy_surface (SDL_Surface* src);
+
+/**
+ * Display a rectangle.
+ *
+ * @param renderer is the renderer used to display the rectangle.
+ * @param color is the rectangle’s color.
+ * @param rectangle is the position of the rectangle.
+ */
+void
+blit_rect (SDL_Renderer* renderer, SDL_Color color, SDL_Rect rectangle);

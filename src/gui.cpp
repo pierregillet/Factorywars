@@ -576,3 +576,11 @@ copy_surface (SDL_Surface* src)
 
   return dest;
 }
+
+void
+blit_rect (SDL_Renderer* renderer, SDL_Color color, SDL_Rect rectangle)
+{
+  SDL_RenderSetViewport (renderer, NULL);
+  SDL_SetRenderDrawColor (renderer, color.r, color.g, color.b, color.a);
+  SDL_RenderFillRect (renderer, &rectangle);
+}
