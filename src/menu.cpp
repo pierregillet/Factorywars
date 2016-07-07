@@ -119,7 +119,7 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
       // On affiche le fond du menu
       struct size blit_coords;
       SDL_Rect rect;
-      blit (&main_renderer,
+      blit (main_renderer,
 	    {screen_dimensions.x / 2 - 480 / 2, screen_dimensions.y / 2 - 640 / 2},
 	    480, 640, menu_bg);
 
@@ -136,7 +136,7 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
 			.w = 384,
 			.h = 64};
 
-	  blit (&main_renderer, blit_coords, 384, 64, button_bg);
+	  blit (main_renderer, blit_coords, 384, 64, button_bg);
 
 	  // On récupère la largeur et la hauteur du texte
 	  SDL_QueryTexture (texts[i], NULL, NULL, &rect.w, &rect.h);
@@ -145,7 +145,7 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
 	  blit_coords.x += 384 / 2 - rect.w / 2;
 	  blit_coords.y += 64 / 2 - rect.h / 2;
 
-	  blit (&main_renderer, blit_coords, rect.w, rect.h, texts[i]);
+	  blit (main_renderer, blit_coords, rect.w, rect.h, texts[i]);
 	}
 
       SDL_RenderPresent (main_renderer);
@@ -342,10 +342,10 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 
       // On affiche le bouton pour retourner au menu principal
       blit_origin = {.x = button.x, .y = button.y};
-      blit (&main_renderer, blit_origin, button.w, button.h, button_bg);
+      blit (main_renderer, blit_origin, button.w, button.h, button_bg);
 
       blit_origin = {.x = button_text_rect.x, .y = button_text_rect.y};
-      blit (&main_renderer, blit_origin, button_text_rect.w, button_text_rect.h, button_text);
+      blit (main_renderer, blit_origin, button_text_rect.w, button_text_rect.h, button_text);
 
 
       // On passe i éléments si on veut afficher plus de sauvegardes
@@ -369,7 +369,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 
 	  blit_origin.x = 10;
 	  blit_origin.y = i * row_height;
-	  blit (&main_renderer, blit_origin, fill_rect.w, fill_rect.h, text);
+	  blit (main_renderer, blit_origin, fill_rect.w, fill_rect.h, text);
 	  SDL_DestroyTexture (text);
 
 
@@ -380,7 +380,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 
 	  blit_origin.x = screen_dimensions.x - fill_rect.w - 10;
 	  blit_origin.y = i * row_height;
-	  blit (&main_renderer, blit_origin, fill_rect.w, fill_rect.h, text);
+	  blit (main_renderer, blit_origin, fill_rect.w, fill_rect.h, text);
 	  SDL_DestroyTexture (text);
 
 	  dir_list = dir_list->next;

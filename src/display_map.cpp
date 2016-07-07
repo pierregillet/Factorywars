@@ -75,7 +75,7 @@ display_background (SDL_Renderer** Renderer,
 		  .y = (int) (i - screen_origin.y % chunk_width)};
 	  
 
-	  blit (Renderer, temp, chunk_width,
+	  blit (*Renderer, temp, chunk_width,
 		chunk_width, display_id);
 	  
 	  current_chunk_info = get_chunk_info (coords, map);

@@ -100,7 +100,7 @@ int move_coordinates_on_keydown (struct coordinates* screen_origin,
  *
  * @return int true if there is no error
  */
-int blit (SDL_Renderer** Renderer,
+int blit (SDL_Renderer* Renderer,
 	  struct size blit_origin,
 	  int width,
 	  int height,

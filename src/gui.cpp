@@ -189,7 +189,7 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
 }
 
 int
-blit (SDL_Renderer** main_renderer,
+blit (SDL_Renderer* main_renderer,
       struct size blit_origin,
       int width,
       int height,
@@ -200,8 +200,8 @@ blit (SDL_Renderer** main_renderer,
 			.w = width,
 			.h = height};
   
-  SDL_RenderSetViewport (*main_renderer, &rectangle);
-  SDL_RenderCopy (*main_renderer, texture, NULL, NULL);
+  SDL_RenderSetViewport (main_renderer, &rectangle);
+  SDL_RenderCopy (main_renderer, texture, NULL, NULL);
 
   return 1;
 }
@@ -329,7 +329,7 @@ run_gui (int read_pipe,
 		      screen_height, screen_width);
 
   // Display character
-  blit (&Renderer, screen_center,
+  blit (Renderer, screen_center,
 	25, 41, current_texture);
   
   // Display HUD
@@ -339,7 +339,7 @@ run_gui (int read_pipe,
   struct size
     toolbar_size = {.x = (int) (screen_width / 2),
 		    .y = (int) (screen_width / 2 * 0.11)};
-  blit (&Renderer, toolbar_origin,
+  blit (Renderer, toolbar_origin,
 	toolbar_size.x, toolbar_size.y,
 	textures[3][0]);
 
@@ -406,8 +406,8 @@ run_gui (int read_pipe,
       // 	  display_background (&Renderer, &map,
       // 			      textures, screen_origin,
       // 			      screen_height, screen_width);
-      // 	  blit (&Renderer, hero_coords, 25, 41, current_texture);
-      // 	  blit (&Renderer,
+      // 	  blit (Renderer, hero_coords, 25, 41, current_texture);
+      // 	  blit (Renderer,
       // 		toolbar_origin,
       // 		toolbar_size.x,
       // 		toolbar_size.y,
@@ -421,13 +421,13 @@ run_gui (int read_pipe,
       display_background (&Renderer, &map,
 			  textures, screen_origin,
 			  screen_height, screen_width);
-      blit (&Renderer,
+      blit (Renderer,
 	    hero_coords,
 	    25,
 	    41,
 	    current_texture);
 
-      blit (&Renderer,
+      blit (Renderer,
 	    toolbar_origin,
 	    toolbar_size.x,
 	    toolbar_size.y,
@@ -478,7 +478,7 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 
 	      player_placement = {.x = (int) player_coordinates.x,
 				  .y = (int) player_coordinates.y};
-	      blit (renderer, player_placement, 25, 41,
+	      blit (*renderer, player_placement, 25, 41,
 		    player_texture);
 	    }
 	}
@@ -512,7 +512,7 @@ display_ground (SDL_Renderer* main_renderer,
 	{
 	  // biome_texture = map.;
 	  
-	  blit (&main_renderer, square_top_left_corner,
+	  blit (main_renderer, square_top_left_corner,
 		default_square_width, default_square_width,
 		textures[1][biome_texture]);
 	}
@@ -560,7 +560,7 @@ display_fps (SDL_Renderer* main_renderer,
   SDL_QueryTexture (message, NULL, NULL,
 		    &blit_width, &blit_height);
 
-  blit (&main_renderer,	blit_origin, blit_width,
+  blit (main_renderer, blit_origin, blit_width,
 	blit_height, message);
 
   SDL_Rect message_rect = {.x = 0,
