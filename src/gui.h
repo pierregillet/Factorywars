@@ -107,23 +107,6 @@ int blit (SDL_Renderer** Renderer,
 	  SDL_Texture* texture);
 
 /**
- * Calculates the fps and reset the timer.
- * 
- * @param start_time is the timer to calculate the fps.
- * @return unsigned int containing the fps. 
- */
-int get_fps (unsigned int* start_time);
-
-/**
- * Displays the fps after getting them.
- * 
- * @param main_renderer is the renderer used.
- * @param start_time is the timer to calculate the fps.
- */
-void display_fps (SDL_Renderer* main_renderer,
-		  unsigned int* start_time);
-
-/**
  * Free what needed to be freed from the SDL library.
  *
  * @param main_window is the main window.
@@ -161,6 +144,28 @@ void display_players (std::vector<Player>& players,
 		      SDL_Texture* player_texture,
 		      int screen_height,
 		      int screen_width);
+
+/**
+ * Calculates the fps using start_time and resets it.
+ * 
+ * @param start_time contains the time in milliseconds elapsed since the SDL was initialized.
+ * 
+ * @return The number of fps.
+ */
+int
+get_fps (unsigned int* start_time);
+
+/**
+ * Gets and displays the fps in the top-right corner.
+ * 
+ * @param main_renderer is the renderer used.
+ * @param start_time contains the time in milliseconds elapsed since the SDL was initialized.
+ * @param
+ */
+void
+display_fps (SDL_Renderer* main_renderer,
+	     unsigned int* start_time,
+	     TTF_Font* ttf_freesans);
 
 /**
  * Copy a surface in another and return the new surface

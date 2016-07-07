@@ -301,6 +301,8 @@ run_gui (int read_pipe,
 
   struct map_coordinates click_map_coords;
 
+  TTF_Font* ttf_freesans = TTF_OpenFont ("media/fonts/FreeSans.ttf", 18);
+
   const int save_path_len = 256;
   char save_path[save_path_len], map_path[save_path_len];
   int ret = display_main_menu (Renderer, screen_dimensions, save_path,
@@ -341,7 +343,7 @@ run_gui (int read_pipe,
 	toolbar_size.x, toolbar_size.y,
 	textures[3][0]);
 
-  display_fps (Renderer, &start_time);
+  display_fps (Renderer, &start_time, ttf_freesans);
   SDL_RenderPresent (Renderer);
 
   while (handle_events (textures, &current_texture, keys_state,
@@ -436,7 +438,8 @@ run_gui (int read_pipe,
 		       screen_height, screen_width);
 
       display_fps (Renderer,
-		   &start_time);
+		   &start_time,
+		   ttf_freesans);
       SDL_RenderPresent (Renderer);	  
       SDL_Delay (1/200);
     }
@@ -534,9 +537,9 @@ get_fps (unsigned int* start_time)
 
 void
 display_fps (SDL_Renderer* main_renderer,
-	     unsigned int* start_time)
+	     unsigned int* start_time,
+	     TTF_Font* ttf_freesans)
 {
-  TTF_Font* ttf_sans = TTF_OpenFont ("media/fonts/FreeSans.ttf", 18);
   SDL_Color white = {255, 255, 255};
 
   char fps[10];
@@ -544,7 +547,7 @@ display_fps (SDL_Renderer* main_renderer,
 
   snprintf (fps, 10, "%d fps", tmp_fps);
 
-  SDL_Surface* surface_message = TTF_RenderText_Blended (ttf_sans,
+  SDL_Surface* surface_message = TTF_RenderText_Blended (ttf_freesans,
 							 fps,
 							 white);
 
@@ -554,17 +557,11 @@ display_fps (SDL_Renderer* main_renderer,
 			     .y = 0};
   int blit_height = 0;
   int blit_width = 0;
-  SDL_QueryTexture (message,
-		    NULL,
-		    NULL,
-		    &blit_width,
-		    &blit_height);
+  SDL_QueryTexture (message, NULL, NULL,
+		    &blit_width, &blit_height);
 
-  blit (&main_renderer,
-	blit_origin,
-	blit_width,
-	blit_height,
-	message);
+  blit (&main_renderer,	blit_origin, blit_width,
+	blit_height, message);
 
   SDL_Rect message_rect = {.x = 0,
 			   .y = 0,
