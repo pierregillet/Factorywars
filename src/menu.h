@@ -46,7 +46,8 @@ int handle_main_menu_events (SDL_Renderer* main_renderer,
 			     SDL_Rect* buttons, int number);
 
 int display_main_menu (SDL_Renderer* main_renderer,
-		       struct size screen_dimensions);
+		       struct size screen_dimensions, char* dst,
+		       size_t dst_len);
 
 int get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 		   struct size screen_dimensions);

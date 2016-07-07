@@ -155,6 +155,8 @@ read_save_file (Map* map, const char* save_file_path)
   int n = 0;
 
   int save_file = open (save_file_path, O_RDONLY);
+  if (save_file == -1)
+    return 0;
 
   while (read (save_file, &c, sizeof (char)) > 0)
     {
@@ -166,15 +168,16 @@ read_save_file (Map* map, const char* save_file_path)
 	{
 	  fprintf (stderr, "Error while reading save file.\n");
 	  fprintf (stderr, "It is not possible to reallocate memory for the buffer.\n");
+	  free (buffer);
 	  return 0;
 	}
     }
   
   tmp_map = map__unpack (NULL, n, buffer);
-
   if (tmp_map == NULL)
     {
       fprintf (stderr, "Error while reading the file\n");
+      free (buffer);
       return 0;
     }
 

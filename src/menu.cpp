@@ -60,7 +60,8 @@ create_texture_from_text (const char* text, int font_size, SDL_Color color, SDL_
 }
 
 int
-display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions)
+display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
+		   char* dst, size_t dst_len)
 {
   // On charge les images du menu
   SDL_Surface *menu_bg_surface = IMG_Load ("media/menus/main_menu.png");
@@ -152,7 +153,17 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions)
       ret = handle_main_menu_events (main_renderer, screen_dimensions,
 				     buttons, number_of_buttons);
 
-      if (ret == 1 || ret == 0)
+      if (ret == 2)
+	{
+	  ret = get_save_path (main_renderer, dst, dst_len, screen_dimensions);
+	  if (ret == 1)
+	    {
+	      stay = 0;
+	      ret = 2;
+	    }
+	}
+
+      if (ret <= 1)
 	stay = 0;
     }
   
@@ -178,7 +189,6 @@ handle_main_menu_events (SDL_Renderer* main_renderer,
   int stay = 1;
   int button;
 
-  char save_path[128];
   int ret;
 
   while (stay)
@@ -201,11 +211,7 @@ handle_main_menu_events (SDL_Renderer* main_renderer,
 		stay = 0;
 	      
 	      else if (button == 2)
-		{
-		  ret = get_save_path (main_renderer, save_path, 128, screen_dimensions);
-
 		  return ret;
-		}
 
 	      else if (button == 5)
 		return 0;
@@ -275,12 +281,12 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
       else
 	{
 	  // On utilise la valeur par défaut de XDG_DATA_HOME
-	  snprintf (dst, dst_len, "%s/.local/share/factorywars/saves", home);
+	  snprintf (dst, dst_len, "%s/.local/share/factorywars/saves/", home);
 	}
     }
 
   else
-    snprintf (dst, dst_len, "%s/factorywars/saves", xdg_data_home);
+    snprintf (dst, dst_len, "%s/factorywars/saves/", xdg_data_home);
 
   struct directory_list *dir_list = list_directory (dst, 1);
   if (dir_list == NULL)
@@ -342,14 +348,6 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
       blit (&main_renderer, blit_origin, button_text_rect.w, button_text_rect.h, button_text);
 
 
-      // La touche entrée a été pressée
-      if (event_type == 1)
-	{
-	  choice = highlighted_line + first_displayed_save;
-	  break;
-	}
-
-
       // On passe i éléments si on veut afficher plus de sauvegardes
       // qu’il n’y a de lignes.
       for (int i = 0; i < first_displayed_save; i++)
@@ -402,16 +400,25 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
     } while (event_type > 1 && event_type != 4);
 
   
-  free_dir_list (dir_list);
   SDL_DestroyTexture (button_bg);
   SDL_DestroyTexture (button_text);
 
-  if (event_type == 0)
-    return 0;
-  else if (event_type == 4)
-    return 4;
+  if (event_type == 0 || event_type == 4)
+    return event_type;
 
-  return 1;
+  
+  // La touche entrée a été pressée
+  // On parcourt la liste des sauvegardes jusqu’à la sauvegarde choisie
+  choice = highlighted_line + first_displayed_save;
+  for (int i = 0; i < choice; i++)
+    dir_list = dir_list->next;
+
+  // On l’ajoute à la chaine
+  strncat (dst, dir_list->dir_name, dst_len);
+
+  free_dir_list (dir_list);  
+
+  return event_type;
 }
 
 int

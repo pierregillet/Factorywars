@@ -258,9 +258,6 @@ run_gui (int read_pipe,
   struct size screen_dimensions = {.x = screen_width,
 				   .y = screen_height};
 
-  Map map = MAP__INIT;
-  read_save_file (&map, "protosave");
-
   SDL_Window *Window = NULL;
   SDL_Renderer* Renderer = NULL;
 
@@ -304,13 +301,25 @@ run_gui (int read_pipe,
 
   struct map_coordinates click_map_coords;
 
-  // Debug menu
-  if (display_main_menu (Renderer, screen_dimensions) == 0)
+  const int save_path_len = 256;
+  char save_path[save_path_len], map_path[save_path_len];
+  int ret = display_main_menu (Renderer, screen_dimensions, save_path,
+			       save_path_len);
+  if (ret == 0)
     {
       quit_sdl (&Window, &Renderer,
 		&current_texture, textures);
       return 0;
     }
+
+  else if (ret == 2)
+    snprintf (map_path, save_path_len, "%s/%s", save_path, "map");
+  else
+    strncpy (map_path, "protosave", save_path_len);
+
+  Map map = MAP__INIT;
+  read_save_file (&map, map_path);
+
 
   // We need to display the map at the beginning
   display_background (&Renderer, &map,
