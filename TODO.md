@@ -16,7 +16,6 @@ content of the README.md file.
 + Auto saving.
 + Use Texlive for documentation.
 + Use GNU gettext for translation.
-+ In blit function, change the structure from size to coordinates.
 
 Main
 ----
@@ -42,6 +41,7 @@ GUI
 + Display menus.
 + Display using a system of ticks.
 + Handle the case in which if there is no change in the current view, we don't draw everything again (if it is lighter than redrawing everything).
++ In blit function, change the structure from size to coordinates.
 
 Events
 ------
