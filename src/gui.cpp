@@ -163,17 +163,17 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
 {
   if (hero_coords->x >= screen_width / 2 && hero_coords->y >= screen_height / 2)
     {
-      screen_origin->y -= (keys_state[0])? 5 : 0;
-      screen_origin->y += (keys_state[1])? 5 : 0;
-      screen_origin->x -= (keys_state[2])? 5 : 0;
-      screen_origin->x += (keys_state[3])? 5 : 0;
+      screen_origin->y -= (keys_state[key_up])? 5 : 0;
+      screen_origin->y += (keys_state[key_down])? 5 : 0;
+      screen_origin->x -= (keys_state[key_left])? 5 : 0;
+      screen_origin->x += (keys_state[key_right])? 5 : 0;
     }
   if (screen_origin->y <= 0 || screen_origin->x <= 0)
     {
-      hero_coords->y -= (keys_state[0])? 5 : 0;
-      hero_coords->y += (keys_state[1])? 5 : 0;
-      hero_coords->x -= (keys_state[2])? 5 : 0;
-      hero_coords->x += (keys_state[3])? 5 : 0;
+      hero_coords->y -= (keys_state[key_up])? 5 : 0;
+      hero_coords->y += (keys_state[key_down])? 5 : 0;
+      hero_coords->x -= (keys_state[key_left])? 5 : 0;
+      hero_coords->x += (keys_state[key_right])? 5 : 0;
     }
   
   hero_coords->x = (hero_coords->x < 0 )? 0 : hero_coords->x;
@@ -287,6 +287,8 @@ run_gui (int read_pipe,
    * keys_state[1] -> SDLK_DOWN
    * keys_state[2] -> SDLK_LEFT
    * keys_state[3] -> SDLK_RIGHT
+   * 
+   * Use the enumeration KEYBOARD_BUTTONS.
    */
   bool keys_state[4] = {0};
 
@@ -296,6 +298,8 @@ run_gui (int read_pipe,
    * clicks_state[2] -> SDL_BUTTON_RIGHT
    * clicks_state[3] -> SDL_BUTTON_X1
    * clicks_state[4] -> SDL_BUTTON_X2
+   * 
+   * Use the enumeration MOUSE_BUTTONS.
    */
   bool clicks_state[5] = {0};
 
@@ -576,9 +580,12 @@ copy_surface (SDL_Surface* src)
 {
   SDL_Surface *dest;
   dest = SDL_CreateRGBSurfaceFrom (src->pixels, src->w, src->h,
-			       src->format->BitsPerPixel, src->pitch,
-			       src->format->Rmask, src->format->Gmask,
-			       src->format->Bmask, src->format->Amask);
+				   src->format->BitsPerPixel,
+				   src->pitch,
+				   src->format->Rmask,
+				   src->format->Gmask,
+				   src->format->Bmask,
+				   src->format->Amask);
 
   return dest;
 }

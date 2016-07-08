@@ -54,6 +54,25 @@ extern "C" {
   #include "config.h"
 }
 
+// Enumeration to use with keys_state
+enum KEYBOARD_BUTTONS
+  {
+    key_up,
+    key_down,
+    key_left,
+    key_right
+  };
+
+// Enumeration to use with clicks_state
+enum MOUSE_BUTTONS
+  {
+    click_left,
+    click_middle,
+    click_right,
+    click_x1,
+    click_x2
+  };
+
 /**
  * Store an image into a texture
  *
@@ -92,8 +111,10 @@ void init (SDL_Window** main_window,
  * Move screen_origin and hero_coords coordinates if a key is pressed.
  */
 int move_coordinates_on_keydown (struct coordinates* screen_origin,
-				 bool* keys_state, int screen_height,
-				 int screen_width, struct size* hero_coords);
+				 struct keys_state keys_state,
+				 int screen_height,
+				 int screen_width,
+				 struct size* hero_coords);
 
 /**
  * Blit Textures at given coordinates x,y.
@@ -126,7 +147,8 @@ void quit_sdl (SDL_Window** main_window,
  * @param players is a vector containing every players connected.
  * @return -1 if there is an error or 0 if there is no error.
  */
-int run_gui (int read_pipe, int write_pipe, std::vector<Player>& players);
+int run_gui (int read_pipe, int write_pipe,
+	     std::vector<Player>& players);
 
 /**
  * Blit the players in “players” on the renderer “renderer”
@@ -176,11 +198,12 @@ display_fps (SDL_Renderer* main_renderer,
 SDL_Surface* copy_surface (SDL_Surface* src);
 
 /**
- * Display a rectangle.
+ * Display a rectangle of a specific color.
  *
  * @param renderer is the renderer used to display the rectangle.
  * @param color is the rectangle’s color.
  * @param rectangle is the position of the rectangle.
  */
 void
-blit_rect (SDL_Renderer* renderer, SDL_Color color, SDL_Rect rectangle);
+blit_rect (SDL_Renderer* renderer, SDL_Color color,
+	   SDL_Rect rectangle);
