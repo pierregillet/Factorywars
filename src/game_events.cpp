@@ -42,17 +42,17 @@ handle_keydown (SDL_Keycode event_keycode,
   switch (event_keycode)
     {
     case SDLK_UP:
-      keys_state[0] = keydown;
+      keys_state[key_up] = keydown;
       break;
     case SDLK_DOWN:
-      keys_state[1] = keydown;
+      keys_state[key_down] = keydown;
       break;
     case SDLK_LEFT:
-      keys_state[2] = keydown;
+      keys_state[key_left] = keydown;
       *current_texture = textures[0][2];
       break;
     case SDLK_RIGHT:
-      keys_state[3] = keydown;
+      keys_state[key_right] = keydown;
       *current_texture = textures[0][3];
       break;
     default:
@@ -69,16 +69,16 @@ handle_keyup (SDL_Keycode event_keycode,
   switch (event_keycode)
     {
     case SDLK_UP:
-      keys_state[0] = keyup;
+      keys_state[key_up] = keyup;
       break;
     case SDLK_DOWN:
-      keys_state[1] = keyup;
+      keys_state[key_down] = keyup;
       break;
     case SDLK_LEFT:
-      keys_state[2] = keyup;
+      keys_state[key_left] = keyup;
       break;
     case SDLK_RIGHT:
-      keys_state[3] = keyup;
+      keys_state[key_right] = keyup;
       break;
     default:
       break;
@@ -98,19 +98,19 @@ handle_clickdown (int button,
   switch (button)
     {
     case SDL_BUTTON_LEFT:
-	clicks_state[0] = clickdown;
+	clicks_state[click_left] = clickdown;
 	break;
     case SDL_BUTTON_MIDDLE:
-	clicks_state[1] = clickdown;
+	clicks_state[click_middle] = clickdown;
 	break;
     case SDL_BUTTON_RIGHT:
-      clicks_state[2] = clickdown;
+      clicks_state[click_right] = clickdown;
       break;
     case SDL_BUTTON_X1:
-      clicks_state[3] = clickdown;
+      clicks_state[click_x1] = clickdown;
       break;
     case SDL_BUTTON_X2:
-      clicks_state[4] = clickdown;
+      clicks_state[click_x2] = clickdown;
       break;
     default:
       break;
