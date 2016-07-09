@@ -207,11 +207,9 @@ blit (SDL_Renderer* main_renderer,
 }
 
 void
-quit_sdl (SDL_Window** main_window,
-	  SDL_Renderer** main_renderer,
-	  SDL_Texture** current_texture,
-	  SDL_Texture* textures[][10])
-{  
+free_textures (SDL_Texture* textures[][10],
+	       SDL_Texture** current_texture)
+{
   for (int i = 0 ; i < 4 ; i++)
     {
       SDL_DestroyTexture (textures[0][i]);
@@ -233,6 +231,12 @@ quit_sdl (SDL_Window** main_window,
     }
 
   SDL_DestroyTexture (*current_texture);
+}
+
+void
+quit_sdl (SDL_Window** main_window,
+	  SDL_Renderer** main_renderer)
+{  
   SDL_DestroyRenderer (*main_renderer);
   SDL_DestroyWindow (*main_window);
 
@@ -309,12 +313,11 @@ run_gui (int read_pipe,
 
   const int save_path_len = 256;
   char save_path[save_path_len], map_path[save_path_len];
-  int ret = display_main_menu (Renderer, screen_dimensions, save_path,
-			       save_path_len);
+  int ret = display_main_menu (Renderer, screen_dimensions,
+			       save_path, save_path_len);
   if (ret == 0)
     {
-      quit_sdl (&Window, &Renderer,
-		&current_texture, textures);
+      quit_sdl (&Window, &Renderer);
       return 0;
     }
 
@@ -448,7 +451,8 @@ run_gui (int read_pipe,
       SDL_Delay (1/200);
     }
 
-  quit_sdl (&Window, &Renderer, &current_texture, textures);
+  free_textures (textures, &current_texture);
+  quit_sdl (&Window, &Renderer);
   
   return 0;
 }

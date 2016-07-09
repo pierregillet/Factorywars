@@ -128,16 +128,22 @@ int blit (SDL_Renderer* Renderer,
 	  SDL_Texture* texture);
 
 /**
- * Free what needed to be freed from the SDL library.
+ * Free the textures
+ * 
+ * @param current_texture is the player’s texture.
+ * @param textures is the array containing all the textures.
+ */
+void free_textures (SDL_Texture* textures[][10],
+		    SDL_Texture** current_texture);
+
+/**
+ * Quits the SDL and TTF.
  *
  * @param main_window is the main window.
  * @param main_renderer is the main renderer.
- * @param current_texture is the player’s texture.
  */
 void quit_sdl (SDL_Window** main_window,
-	       SDL_Renderer** main_renderer,
-	       SDL_Texture** current_texture,
-	       SDL_Texture* textures[][10]);
+	       SDL_Renderer** main_renderer);
 
 /**
  * Run the gui
