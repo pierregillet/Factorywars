@@ -35,13 +35,30 @@
 #include "gui.h"
 #include <string>
 
+/**
+ * Load the game textures.
+ */
 void load_game_textures (SDL_Renderer* main_renderer,
 			 SDL_Texture* textures[][10]);
 
+/**
+ * Run a game.
+ *
+ * @param main_renderer is the renderer of the window.
+ * @param save_path is the path to the save’s directory we want to load.
+ * @param network_read_pipe is the read end pipe to the network fork. (Need to delete)
+ * @param network_write_pipe is the write end pipe to the network fork. (Need to delete)
+ * @param screen_dimensions is the dimensions of the screen.
+ * @param players is a vector containing Player object. (Need to delete)
+ * @return 0 if we need to quit or 1 if we need to display the main menu again.
+ */
 int run_game (SDL_Renderer* main_renderer, const char* save_path,
 	      int network_read_pipe, int network_write_pipe,
 	      struct size screen_dimensions, std::vector<Player>& players);
 
+/**
+ * Destroy the game’s textures.
+ */
 void destroy_game_textures (SDL_Texture* player_texture, SDL_Texture* textures[][10]);
 
 /**
