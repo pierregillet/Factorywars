@@ -45,7 +45,7 @@ GUI
 
 Events
 ------
-+ Replace the clicks_state and keyboard_state arrays with structures (to make it readable when used).
+
 
 Textures
 --------
