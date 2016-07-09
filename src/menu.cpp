@@ -33,7 +33,7 @@
 #include "menu.h"
 
 SDL_Texture*
-create_texture_from_text (const char* text, int font_size, SDL_Color color, SDL_Renderer* main_renderer)
+create_texture_from_text (const char* text, int font_size, SDL_Color color, SDL_Renderer* renderer)
 {
   TTF_Font *font = TTF_OpenFont ("media/fonts/FreeSans.ttf", font_size);
   if (font == NULL)
@@ -50,7 +50,7 @@ create_texture_from_text (const char* text, int font_size, SDL_Color color, SDL_
       return NULL;
     }
 
-  SDL_Texture *text_texture = SDL_CreateTextureFromSurface (main_renderer,
+  SDL_Texture *text_texture = SDL_CreateTextureFromSurface (renderer,
 							    text_surface);
   
   TTF_CloseFont (font);
@@ -189,8 +189,6 @@ handle_main_menu_events (SDL_Renderer* main_renderer,
   int stay = 1;
   int button;
 
-  int ret;
-
   while (stay)
     {
       if (SDL_PollEvent (&event) == 0)
@@ -211,7 +209,7 @@ handle_main_menu_events (SDL_Renderer* main_renderer,
 		stay = 0;
 	      
 	      else if (button == 2)
-		  return ret;
+		  return button;
 
 	      else if (button == 5)
 		return 0;
