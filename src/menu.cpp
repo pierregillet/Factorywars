@@ -416,7 +416,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 
   free_dir_list (dir_list);  
 
-  return event_type;
+  return 1;
 }
 
 int
