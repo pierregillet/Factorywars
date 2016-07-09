@@ -123,3 +123,31 @@ int handle_load_save_menu_events (SDL_Rect* buttons, int number_of_buttons,
 				  int* highlighted_line,
 				  int* first_displayed_save,
 				  int number_of_rows, int number_of_save);
+
+/**
+ * Display the in-game menu.
+ *
+ * @param main_renderer is the renderer of the window.
+ * @param screen_dimensions is the dimensions of the screen.
+ * @return + 0 if we need to quit.
+ * + 1 if we need to save the game.
+ * + 2 if we need to save and quit the game.
+ * + 3 if we need to print the settings menu.
+ * + 4 if we need to return to the main menu.
+ * + 5 if we have nothing to do.
+ */
+int display_in_game_menu (SDL_Renderer* main_renderer,
+			  struct size screen_dimensions);
+
+/**
+ * Handle the in-game menu events.
+ *
+ * @param buttons is the buttons’ hitboxes.
+ * @param number_of_buttons is the number of buttons.
+ * @return + 0 if the quit button was pressed.
+ * + 1 if the save button was pressed.
+ * + 2 if the save and quit button was pressed.
+ * + 3 if the settings button was pressed.
+ * + 4 if the main menu button was pressed.
+ */
+int handle_in_game_menu_events (SDL_Rect* buttons, int number_of_buttons);

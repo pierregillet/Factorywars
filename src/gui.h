@@ -61,7 +61,8 @@ enum KEYBOARD_BUTTONS
     key_up,
     key_down,
     key_left,
-    key_right
+    key_right,
+    key_escape
   };
 
 // Enumeration to use with clicks_state

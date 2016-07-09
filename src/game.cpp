@@ -101,6 +101,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 	  struct size screen_dimensions,
 	  std::vector<Player>& players)
 {
+  int ret;
   SDL_Texture* textures[4][10];
   load_game_textures (main_renderer, textures);
 
@@ -129,7 +130,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
    * 
    * Use the enumeration KEYBOARD_BUTTONS.
    */
-  bool keys_state[4] = {0};
+  bool keys_state[5] = {0};
 
   /* 
    * clicks_state[0] -> SDL_BUTTON_LEFT
@@ -161,20 +162,18 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 		      screen_dimensions.y, screen_dimensions.x);
 
   // Display character
-  blit (main_renderer, screen_center,
-	25, 41, player_texture);
+  blit (main_renderer, screen_center, 25, 41, player_texture);
   
   // Display HUD
   struct size toolbar_origin;
   toolbar_origin.x = (int) (screen_dimensions.x / 4);
-  toolbar_origin.y = (int) (screen_dimensions.y - (screen_dimensions.x / 2 * 0.11)); 
+  toolbar_origin.y = (int) (screen_dimensions.y - (screen_dimensions.x / 2 * 0.11));
 
   struct size
     toolbar_size = {.x = (int) (screen_dimensions.x / 2),
 		    .y = (int) (screen_dimensions.x / 2 * 0.11)};
 
-  blit (main_renderer, toolbar_origin,
-	toolbar_size.x, toolbar_size.y,
+  blit (main_renderer, toolbar_origin, toolbar_size.x, toolbar_size.y,
 	textures[3][0]);
 
   display_fps (main_renderer, &start_time, ttf_freesans);
@@ -200,6 +199,27 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 				 screen_dimensions.y, screen_dimensions.x);
 	      break;
 	    }
+	}
+
+      if (keys_state[key_escape])
+	{
+	  ret = display_in_game_menu (main_renderer, screen_dimensions);
+	  keys_state[key_escape] = 0;
+
+	  if (ret == 0)
+	    break;
+
+	  else if (ret == 1)
+	    save_to_file (&map, map_path);
+
+	  else if (ret == 2)
+	    {
+	      save_to_file (&map, map_path);
+	      break;
+	    }
+
+	  else if (ret == 4)
+	    break;
 	}
       // End of keyboard handling
 
@@ -279,6 +299,10 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
     }
 
   destroy_game_textures (player_texture, textures);
+
+  if (ret == 4)
+    return 1;
+
   return 0;
 }
 

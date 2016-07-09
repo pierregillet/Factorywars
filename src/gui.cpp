@@ -147,24 +147,29 @@ run_gui (int read_pipe,
   char save_path[save_path_len], map_path[save_path_len];
   int ret;
 
-  // int stay = 1;
+  int stay = 1;
 
-  // while (stay)
-  ret = display_main_menu (Renderer, screen_dimensions, save_path,
-  			       save_path_len);
-  if (ret == 0)
+  while (stay)
     {
-      quit_sdl (&Window, &Renderer);
-      return 0;
+      ret = display_main_menu (Renderer, screen_dimensions, save_path,
+  			       save_path_len);
+      if (ret == 0)
+	{
+	  quit_sdl (&Window, &Renderer);
+	  return 0;
+	}
+
+      // else if (ret == 2)
+      //   snprintf (map_path, save_path_len, "%s/%s", save_path, "map");
+      // else
+      //   strncpy (map_path, "protosave", save_path_len);
+
+      ret = run_game (Renderer, save_path, read_pipe, write_pipe,
+		      screen_dimensions, players);
+
+      if (ret == 0)
+	stay = 0;
     }
-
-  // else if (ret == 2)
-  //   snprintf (map_path, save_path_len, "%s/%s", save_path, "map");
-  // else
-  //   strncpy (map_path, "protosave", save_path_len);
-
-  ret = run_game (Renderer, save_path, read_pipe, write_pipe,
-		  screen_dimensions, players);
 
   quit_sdl (&Window, &Renderer);
   
