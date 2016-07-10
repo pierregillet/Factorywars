@@ -55,6 +55,9 @@ handle_keydown (SDL_Keycode event_keycode,
       keys_state[key_right] = keydown;
       *current_texture = textures[0][3];
       break;
+    case SDLK_ESCAPE:
+      keys_state[key_escape] = keydown;
+      break;
     default:
       break;
     }
@@ -79,6 +82,9 @@ handle_keyup (SDL_Keycode event_keycode,
       break;
     case SDLK_RIGHT:
       keys_state[key_right] = keyup;
+      break;
+    case SDLK_ESCAPE:
+      keys_state[key_escape] = keyup;
       break;
     default:
       break;
@@ -173,7 +179,7 @@ handle_events (SDL_Texture* textures[][10],
 	case SDL_MOUSEWHEEL:
 	  handle_mousewheel (event.wheel.y, players);
 	  break;
-	  
+
 	default:
 	  break;
 	}

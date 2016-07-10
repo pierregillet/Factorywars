@@ -48,6 +48,7 @@
 #include "multiplayer.h"
 #include "game_events.h"
 #include "menu.h"
+#include "game.h"
 
 extern "C" {
   #include "save.h"
@@ -60,7 +61,8 @@ enum KEYBOARD_BUTTONS
     key_up,
     key_down,
     key_left,
-    key_right
+    key_right,
+    key_escape
   };
 
 // Enumeration to use with clicks_state
@@ -84,15 +86,6 @@ SDL_Texture* loadTexture (SDL_Renderer** Renderer,
 			  std::string path);
 
 /**
- * Loads the textures.
- *
- * @param Renderer is the renderer.
- * @param textures is an array of arrays containing the textures.
- */
-void loadMedia (SDL_Renderer** Renderer,
-		SDL_Texture* textures[][10]);
-
-/**
  * Initiates the SDL basics, like the window and the renderer.
  *
  * @param main_window is the main window.
@@ -104,17 +97,7 @@ void loadMedia (SDL_Renderer** Renderer,
 void init (SDL_Window** main_window,
 	   SDL_Renderer** main_renderer,
 	   const int screen_height,
-	   const int screen_width,
-	   SDL_Texture* textures[][10]);
-
-/**
- * Move screen_origin and hero_coords coordinates if a key is pressed.
- */
-int move_coordinates_on_keydown (struct coordinates* screen_origin,
-				 struct keys_state keys_state,
-				 int screen_height,
-				 int screen_width,
-				 struct size* hero_coords);
+	   const int screen_width);
 
 /**
  * Blit Textures at given coordinates x,y.
@@ -155,23 +138,6 @@ void quit_sdl (SDL_Window** main_window,
  */
 int run_gui (int read_pipe, int write_pipe,
 	     std::vector<Player>& players);
-
-/**
- * Blit the players in “players” on the renderer “renderer”
- *
- * @param players is the vector containing every players.
- * @param screen_origin is the offset in pixels from the origin of the map.
- * @param renderer is the renderer where we blit the players.
- * @param player_texture is the texture to blit.
- * @param screen_height is the screen’s height.
- * @param screen_width is the screen’s width.
- */
-void display_players (std::vector<Player>& players,
-		      struct coordinates screen_origin,
-		      SDL_Renderer** renderer,
-		      SDL_Texture* player_texture,
-		      int screen_height,
-		      int screen_width);
 
 /**
  * Calculates the fps using start_time and resets it.
