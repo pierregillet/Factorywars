@@ -436,9 +436,6 @@ handle_load_save_menu_events (SDL_Rect* buttons, int number_of_buttons,
       if (SDL_PollEvent (&event) == 0)
 	continue;
 
-      // if (event.key.repeat != 0)
-      // 	continue;
-
       switch (event.type)
 	{
 	case SDL_QUIT:
@@ -476,7 +473,8 @@ handle_load_save_menu_events (SDL_Rect* buttons, int number_of_buttons,
 	      break;
 
 	    case SDLK_DOWN:
-	      if (*highlighted_line < number_of_rows - 1)
+	      if (*highlighted_line < number_of_rows - 1
+		  && *highlighted_line < number_of_save - 1)
 		(*highlighted_line)++;
 	      else if (*first_displayed_save + *highlighted_line < number_of_save - 1)
 		(*first_displayed_save)++;
