@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# This file is put in the public domain.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: factorywars 0.1\n"
+"Report-Msgid-Bugs-To: 0x539+bug@nybble.fr\n"
+"POT-Creation-Date: 2016-07-10 12:36+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/menu.cpp:95
+msgid "New game"
+msgstr ""
+
+#: src/menu.cpp:96
+msgid "Load game"
+msgstr ""
+
+#: src/menu.cpp:97 src/menu.cpp:539
+msgid "Settings"
+msgstr ""
+
+#: src/menu.cpp:98
+msgid "About"
+msgstr ""
+
+#: src/menu.cpp:99 src/menu.cpp:541
+msgid "Quit"
+msgstr ""
+
+#: src/menu.cpp:312
+msgid "Main menu"
+msgstr ""
+
+#: src/menu.cpp:537
+msgid "Save"
+msgstr ""
+
+#: src/menu.cpp:538
+msgid "Save and quit"
+msgstr ""
+
+#: src/menu.cpp:540
+msgid "Main Menu"
+msgstr ""

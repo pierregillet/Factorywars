@@ -1,0 +1,53 @@
+# French translations for factorywars package.
+# This file is put in the public domain.
+#  <0x539@nybble.fr>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: factorywars 0.1\n"
+"Report-Msgid-Bugs-To: 0x539+bug@nybble.fr\n"
+"POT-Creation-Date: 2016-07-10 12:36+0200\n"
+"PO-Revision-Date: 2016-07-10 08:42+0200\n"
+"Last-Translator:  <0x539@nybble.fr>\n"
+"Language-Team: French <0x539@nybble.fr>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: src/menu.cpp:95
+msgid "New game"
+msgstr "Nouvelle partie"
+
+#: src/menu.cpp:96
+msgid "Load game"
+msgstr "Charger une partie"
+
+#: src/menu.cpp:97 src/menu.cpp:539
+msgid "Settings"
+msgstr "Paramètres"
+
+#: src/menu.cpp:98
+msgid "About"
+msgstr "À propos"
+
+#: src/menu.cpp:99 src/menu.cpp:541
+msgid "Quit"
+msgstr "Quitter"
+
+#: src/menu.cpp:312
+msgid "Main menu"
+msgstr "Menu principal"
+
+#: src/menu.cpp:537
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: src/menu.cpp:538
+msgid "Save and quit"
+msgstr "Sauvegarder et quitter"
+
+#: src/menu.cpp:540
+msgid "Main Menu"
+msgstr "Menu principal"

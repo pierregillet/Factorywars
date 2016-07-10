@@ -92,11 +92,13 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
   const int number_of_buttons = 5;
   SDL_Texture *texts[number_of_buttons];
 
-  char* menu_text[] = {"New game",
-		       "Load game",
-		       "Settings",
-		       "About",
-		       "Quit"};
+  char* menu_text[] = {_("New game"),
+		       _("Load game"),
+		       _("Settings"),
+		       _("About"),
+		       _("Quit")};
+
+  printf ("%s\n", LOCALEDIR);
 
   int font_size = 40;
   for (int i = 0; i < number_of_buttons; i++)
@@ -307,7 +309,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 
   // On crée la texture du texte du bouton
   SDL_Texture *button_text;
-  button_text = create_texture_from_text ("Main menu", 30,
+  button_text = create_texture_from_text (_("Main menu"), 30,
 					  {255, 255, 255}, main_renderer);
 
 
@@ -532,11 +534,11 @@ display_in_game_menu (SDL_Renderer* main_renderer,
   const int number_of_buttons = 5;
   SDL_Texture *texts[number_of_buttons];
 
-  char* menu_text[] = {"Save",
-		       "Save and quit",
-		       "Settings",
-		       "Main Menu",
-		       "Quit"};
+  char* menu_text[] = {_("Save"),
+		       _("Save and quit"),
+		       _("Settings"),
+		       _("Main Menu"),
+		       _("Quit")};
 
   int font_size = 40;
   for (int i = 0; i < number_of_buttons; i++)

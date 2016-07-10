@@ -31,10 +31,16 @@
 
 #pragma once
 
-struct coordinates
+struct coordinates_l
 {
   long x;
   long y;
+};
+
+struct coordinates
+{
+  int x;
+  int y;
 };
 
 struct size

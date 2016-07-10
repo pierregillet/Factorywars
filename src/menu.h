@@ -36,6 +36,9 @@
 #include <config.h>
 
 #include "gui.h"
+#include "gettext.h"
+
+#define _(string) gettext (string)
 
 /**
  * Create a texture from a text.

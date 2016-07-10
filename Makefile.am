@@ -1,6 +1,8 @@
+AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
+
 DISTCLEANFILES = *~
 
-EXTRA_DIST = \
+EXTRA_DIST = config.rpath  \
 	COMPILE.md\
 	factorywars.conf\
 	README.md\
@@ -27,7 +29,14 @@ factorywars_SOURCES = \
 	src/map.pb-c.c src/map.pb-c.h\
 	src/menu.cpp src/menu.h\
 	src/game.cpp src/game.h\
+	src/gettext.h\
 	src/structures.h
+
+factorywars_LDADD = $(LIBINTL)
 
 AM_CFLAGS = -std=gnu99 $(libxml2_CFLAGS)
 AM_CXXFLAGS = -std=gnu++11 $(libxml2_CFLAGS)
+
+SUBDIRS = po
+
+ACLOCAL_AMFLAGS = -I m4

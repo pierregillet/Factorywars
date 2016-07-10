@@ -1,5 +1,7 @@
 AC_INIT([factorywars], [0.1], [0x539+bug@nybble.fr])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
+AM_GNU_GETTEXT_VERSION([0.19.7])
+AM_GNU_GETTEXT([external])
 
 AC_PROG_CC
 AC_PROG_CXX
@@ -22,5 +24,5 @@ AS_IF([test "$enable_run_in_place" = "yes"], [
   [Define if we need to keep every file needed by the game in the current directory])])
 
 AC_CONFIG_HEADER([config.h])
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile po/Makefile.in])
 AC_OUTPUT

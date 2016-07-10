@@ -34,7 +34,7 @@ Network
 GUI
 ---
 + Replace screen_height and screen_width with a structure
-+ Rewrite most of gui.cpp (it is a mess in there !).
++ Rewrite most of gui.cpp (it is a mess in there!).
 + Blit by layers, first the ground textures then the objects.
 + Allow to zoom on the map/items in-game.
 + FPS limit.
