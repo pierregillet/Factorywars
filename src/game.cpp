@@ -99,12 +99,12 @@ int
 run_game (SDL_Renderer* main_renderer, const char* save_path,
 	  int network_read_pipe, int network_write_pipe,
 	  struct size screen_dimensions,
-	  std::vector<Player>& players)
+	  std::vector<Player>& players,
+	  SDL_Texture* textures[][10],
+	  SDL_Texture** player_texture)
 {
   int ret;
-  SDL_Texture* textures[4][10];
-  load_game_textures (main_renderer, textures);
-
+  
   unsigned int start_time = SDL_GetTicks ();
 
   struct size screen_center; 
@@ -117,9 +117,6 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   struct size hero_coords = {.x = screen_center.x,
 			     .y = screen_center.y};
   
-  SDL_Texture *player_texture = NULL;
-  player_texture = textures[0][1];
-
     /* 
    * keys_state contains only 4 elements
    * because we only use 4 keys as of now
@@ -162,7 +159,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 		      screen_dimensions.y, screen_dimensions.x);
 
   // Display character
-  blit (main_renderer, screen_center, 25, 41, player_texture);
+  blit (main_renderer, screen_center, 25, 41, *player_texture);
   
   // Display HUD
   struct size toolbar_origin;
@@ -179,7 +176,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   display_fps (main_renderer, &start_time, ttf_freesans);
   SDL_RenderPresent (main_renderer);
 
-  while (handle_events (textures, &player_texture, keys_state,
+  while (handle_events (textures, player_texture, keys_state,
 			clicks_state, screen_dimensions.y,
 			screen_dimensions.x, &screen_origin,
 			&click_map_coords, players) != 0)
@@ -279,7 +276,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 	    hero_coords,
 	    25,
 	    41,
-	    player_texture);
+	    *player_texture);
 
       blit (main_renderer,
 	    toolbar_origin,
@@ -288,7 +285,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 	    textures[3][0]);
 
       display_players (players, screen_origin,
-		       main_renderer, player_texture,
+		       main_renderer, *player_texture,
 		       screen_dimensions);
 
       display_fps (main_renderer,
@@ -298,7 +295,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
       SDL_Delay (1/200);
     }
 
-  destroy_game_textures (player_texture, textures);
+  destroy_game_textures (*player_texture, textures);
 
   if (ret == 4)
     return 1;

@@ -54,7 +54,10 @@ void load_game_textures (SDL_Renderer* main_renderer,
  */
 int run_game (SDL_Renderer* main_renderer, const char* save_path,
 	      int network_read_pipe, int network_write_pipe,
-	      struct size screen_dimensions, std::vector<Player>& players);
+	      struct size screen_dimensions,
+	      std::vector<Player>& players,
+	      SDL_Texture* textures[][10],
+	      SDL_Texture** player_texture);
 
 /**
  * Destroy the game’s textures.

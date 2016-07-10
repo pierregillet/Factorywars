@@ -68,7 +68,7 @@ init (SDL_Window** main_window,
 				   screen_width,
 				   screen_height,
 				   SDL_WINDOW_SHOWN
-				   /*| SDL_WINDOW_RESIZABLE*/);
+				   | SDL_WINDOW_RESIZABLE);
 	  
   if (*main_window == NULL) 
     {
@@ -109,6 +109,33 @@ blit (SDL_Renderer* main_renderer,
 }
 
 void
+free_textures (SDL_Texture* textures[][10],
+	       SDL_Texture** current_texture)
+{
+  for (int i = 0 ; i < 4 ; i++)
+    {
+      SDL_DestroyTexture (textures[0][i]);
+    }
+
+  for (int i = 0 ; i < 5 ; i++)
+    {
+      SDL_DestroyTexture (textures[1][i]);
+    }
+
+  for (int i = 0 ; i < 4 ; i++)
+    {
+      SDL_DestroyTexture (textures[2][i]);
+    }
+
+  for (int i = 0 ; i < 1 ; i++)
+    {
+      SDL_DestroyTexture (textures[3][i]);
+    }
+
+  SDL_DestroyTexture (*current_texture);
+}
+
+void
 quit_sdl (SDL_Window** main_window,
 	  SDL_Renderer** main_renderer)
 {  
@@ -142,6 +169,12 @@ run_gui (int read_pipe,
 
   init (&Window, &Renderer, screen_height,
 	screen_width);
+  
+  SDL_Texture* textures[4][10];
+  load_game_textures (Renderer, textures);
+
+  SDL_Texture *player_texture = NULL;
+  player_texture = textures[0][1];
 
   const int save_path_len = 256;
   char save_path[save_path_len], map_path[save_path_len];
@@ -164,13 +197,15 @@ run_gui (int read_pipe,
       // else
       //   strncpy (map_path, "protosave", save_path_len);
 
-      ret = run_game (Renderer, save_path, read_pipe, write_pipe,
-		      screen_dimensions, players);
+      ret = run_game (Renderer, save_path, read_pipe,
+		      write_pipe, screen_dimensions,
+		      players, textures, &player_texture);
 
       if (ret == 0)
 	stay = 0;
     }
 
+  free_textures (textures, &player_texture);
   quit_sdl (&Window, &Renderer);
   
   return 0;
