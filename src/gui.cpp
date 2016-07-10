@@ -68,7 +68,7 @@ init (SDL_Window** main_window,
 				   screen_width,
 				   screen_height,
 				   SDL_WINDOW_SHOWN
-				   /*| SDL_WINDOW_RESIZABLE*/);
+				   | SDL_WINDOW_RESIZABLE);
 	  
   if (*main_window == NULL) 
     {
