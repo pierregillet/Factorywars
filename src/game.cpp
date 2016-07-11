@@ -36,23 +36,27 @@ void
 load_game_textures (SDL_Renderer* main_renderer,
 		    SDL_Texture* textures[][10])
 {
-  const char* player_textures_paths[] = {"media/textures/LEFT.png",
-				   "media/textures/RIGHT.png",
-				   "media/textures/LEFT.png",
-				   "media/textures/RIGHT.png"};
+  const char*
+    player_textures_paths[] = {"media/textures/LEFT.png",
+			       "media/textures/RIGHT.png",
+			       "media/textures/LEFT.png",
+			       "media/textures/RIGHT.png"};
 
-  const char* biomes_textures_paths[] = {"media/textures/biome1.png",
-				   "media/textures/biome1.png",
-				   "media/textures/biome2.png",
-				   "media/textures/biome1.png",
-				   "media/textures/biome1.png"};
+  const char*
+    biomes_textures_paths[] = {"media/textures/biome1.png",
+			       "media/textures/biome1.png",
+			       "media/textures/biome2.png",
+			       "media/textures/biome1.png",
+			       "media/textures/biome1.png"};
 
-  const char* objects_textures_paths[] = {"media/textures/arbre.png",
-				    "media/textures/pierre1.png",
-				    "media/textures/pierre2.png",
-				    "media/textures/pierre3.png"};
+  const char*
+    objects_textures_paths[] = {"media/textures/arbre.png",
+				"media/textures/pierre1.png",
+				"media/textures/pierre2.png",
+				"media/textures/pierre3.png"};
 
-  const char* hud_textures_paths[] = {"media/hud/toolbar.png"};
+  const char*
+    hud_textures_paths[] = {"media/hud/toolbar.png"};
 
   int i = 0;
   
