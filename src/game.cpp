@@ -36,31 +36,27 @@ void
 load_game_textures (SDL_Renderer* main_renderer,
 		    SDL_Texture* textures[][10])
 {
-    std::string
-    player_textures_paths[] = {"media/textures/LEFT.png",
-			       "media/textures/RIGHT.png",
-			       "media/textures/LEFT.png",
-			       "media/textures/RIGHT.png"};
+  const char* player_textures_paths[] = {"media/textures/LEFT.png",
+				   "media/textures/RIGHT.png",
+				   "media/textures/LEFT.png",
+				   "media/textures/RIGHT.png"};
 
-  std::string
-    biomes_textures_paths[] = {"media/textures/biome1.png",
-			       "media/textures/biome1.png",
-			       "media/textures/biome2.png",
-			       "media/textures/biome1.png",
-			       "media/textures/biome1.png"};
+  const char* biomes_textures_paths[] = {"media/textures/biome1.png",
+				   "media/textures/biome1.png",
+				   "media/textures/biome2.png",
+				   "media/textures/biome1.png",
+				   "media/textures/biome1.png"};
 
-  std::string
-    objects_textures_paths[] = {"media/textures/arbre.png",
-				"media/textures/pierre1.png",
-				"media/textures/pierre2.png",
-				"media/textures/pierre3.png"};
+  const char* objects_textures_paths[] = {"media/textures/arbre.png",
+				    "media/textures/pierre1.png",
+				    "media/textures/pierre2.png",
+				    "media/textures/pierre3.png"};
 
-  std::string
-    hud_textures_paths[] = {"media/hud/toolbar.png"};
+  const char* hud_textures_paths[] = {"media/hud/toolbar.png"};
 
   int i = 0;
   
-  for (std::string path : player_textures_paths)
+  for (const char* path : player_textures_paths)
     {
       textures[0][i] = load_texture (main_renderer,
 				     path);
@@ -69,7 +65,7 @@ load_game_textures (SDL_Renderer* main_renderer,
 
   i = 0;
   
-  for (std::string path : biomes_textures_paths)
+  for (const char* path : biomes_textures_paths)
     {
       textures[1][i] = load_texture (main_renderer,
 				     path);
@@ -78,7 +74,7 @@ load_game_textures (SDL_Renderer* main_renderer,
 
   i = 0;
 
-  for (std::string path : objects_textures_paths)
+  for (const char* path : objects_textures_paths)
     {
       textures[2][i] = load_texture (main_renderer,
 				     path);
@@ -87,7 +83,7 @@ load_game_textures (SDL_Renderer* main_renderer,
 
   i = 0;
   
-  for (std::string path : hud_textures_paths)
+  for (const char* path : hud_textures_paths)
     {
       textures[3][i] = load_texture (main_renderer,
 				     path);

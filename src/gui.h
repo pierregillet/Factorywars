@@ -83,7 +83,7 @@ enum MOUSE_BUTTONS
  * @return a pointer to the texture.
  */
 SDL_Texture* load_texture (SDL_Renderer* Renderer,
-			   std::string path);
+			   const char* path);
 
 /**
  * Initiates the SDL basics, like the window and the renderer.
