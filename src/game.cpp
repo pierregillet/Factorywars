@@ -62,8 +62,8 @@ load_game_textures (SDL_Renderer* main_renderer,
   
   for (std::string path : player_textures_paths)
     {
-      textures[0][i] = loadTexture (&main_renderer,
-				    path);
+      textures[0][i] = load_texture (main_renderer,
+				     path);
       i++;
     }
 
@@ -71,8 +71,8 @@ load_game_textures (SDL_Renderer* main_renderer,
   
   for (std::string path : biomes_textures_paths)
     {
-      textures[1][i] = loadTexture (&main_renderer,
-				    path);
+      textures[1][i] = load_texture (main_renderer,
+				     path);
       i++;
     }
 
@@ -80,8 +80,8 @@ load_game_textures (SDL_Renderer* main_renderer,
 
   for (std::string path : objects_textures_paths)
     {
-      textures[2][i] = loadTexture (&main_renderer,
-				    path);
+      textures[2][i] = load_texture (main_renderer,
+				     path);
       i++;
     }
 
@@ -89,8 +89,8 @@ load_game_textures (SDL_Renderer* main_renderer,
   
   for (std::string path : hud_textures_paths)
     {
-      textures[3][i] = loadTexture (&main_renderer,
-				    path);
+      textures[3][i] = load_texture (main_renderer,
+				     path);
       i++;
     }
 }

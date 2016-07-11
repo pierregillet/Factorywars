@@ -68,10 +68,10 @@ display_main_menu (SDL_Renderer* main_renderer,
   SDL_Texture *menu_bg;
   SDL_Texture *button_bg;
   
-  menu_bg = load_texture (&main_renderer,
+  menu_bg = load_texture (main_renderer,
 			  "media/menus/main_menu.png");
   
-  button_bg = load_texture (&main_renderer,
+  button_bg = load_texture (main_renderer,
 			    "media/menus/button1.png");
 
   if (menu_bg == NULL)

@@ -33,12 +33,12 @@
 #include "gui.h"
 
 SDL_Texture*
-loadTexture (SDL_Renderer** main_renderer, std::string path)
+load_texture (SDL_Renderer* main_renderer, std::string path)
 {
   SDL_Texture* new_texture = NULL;
   SDL_Surface* loaded_surface = IMG_Load(path.c_str ());
 
-  new_texture = SDL_CreateTextureFromSurface (*main_renderer, loaded_surface);
+  new_texture = SDL_CreateTextureFromSurface (main_renderer, loaded_surface);
   SDL_FreeSurface (loaded_surface);
   
   return new_texture;
@@ -184,8 +184,8 @@ run_gui (int read_pipe,
 
   while (stay)
     {
-      ret = display_main_menu (Renderer, screen_dimensions, save_path,
-  			       save_path_len);
+      ret = display_main_menu (Renderer, screen_dimensions,
+			       save_path, save_path_len);
       if (ret == 0)
 	{
 	  quit_sdl (&Window, &Renderer);
