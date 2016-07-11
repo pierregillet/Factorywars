@@ -91,11 +91,11 @@ display_main_menu (SDL_Renderer* main_renderer,
   const int number_of_buttons = 5;
   SDL_Texture *texts[number_of_buttons];
 
-  char* menu_text[] = {"New game",
-		       "Load game",
-		       "Settings",
-		       "About",
-		       "Quit"};
+  const char* menu_text[] = {"New game",
+			     "Load game",
+			     "Settings",
+			     "About",
+			     "Quit"};
 
   int font_size = 40;
   for (int i = 0; i < number_of_buttons; i++)
@@ -537,11 +537,11 @@ display_in_game_menu (SDL_Renderer* main_renderer,
   const int number_of_buttons = 5;
   SDL_Texture *texts[number_of_buttons];
 
-  char* menu_text[] = {"Save",
-		       "Save and quit",
-		       "Settings",
-		       "Main Menu",
-		       "Quit"};
+  const char* menu_text[] = {"Save",
+			     "Save and quit",
+			     "Settings",
+			     "Main Menu",
+			     "Quit"};
 
   int font_size = 40;
   for (int i = 0; i < number_of_buttons; i++)
