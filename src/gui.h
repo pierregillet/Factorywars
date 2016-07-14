@@ -85,7 +85,8 @@ enum MOUSE_BUTTONS
  * @param path is the path to the image.
  * @return a pointer to the texture.
  */
-SDL_Texture* loadTexture (SDL_Renderer** Renderer, std::string path);
+SDL_Texture* load_texture (SDL_Renderer* Renderer,
+			   const char* path);
 
 /**
  * Initiates the SDL basics, like the window and the renderer.

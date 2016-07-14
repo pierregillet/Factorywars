@@ -62,21 +62,20 @@ create_texture_from_text (const char* text, int font_size, SDL_Color color,
 }
 
 int
-display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
+display_main_menu (SDL_Renderer* main_renderer,
+		   struct size screen_dimensions,
 		   char* dst, size_t dst_len)
 {
   // On charge les images du menu
-  SDL_Surface *menu_bg_surface = IMG_Load ("media/menus/main_menu.png");
-  SDL_Surface *button_bg_surface = IMG_Load ("media/menus/button1.png");
-
   SDL_Texture *menu_bg;
-  menu_bg = SDL_CreateTextureFromSurface (main_renderer, menu_bg_surface);
-  SDL_FreeSurface (menu_bg_surface);
-
   SDL_Texture *button_bg;
-  button_bg = SDL_CreateTextureFromSurface (main_renderer, button_bg_surface);
-  SDL_FreeSurface (button_bg_surface);
   
+  menu_bg = load_texture (main_renderer,
+			  "media/menus/main_menu.png");
+  
+  button_bg = load_texture (main_renderer,
+			    "media/menus/button1.png");
+
   if (menu_bg == NULL)
     {
       fprintf (stderr, "Error while loading the menu background\n");
@@ -94,7 +93,7 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
   const int number_of_buttons = 5;
   SDL_Texture *texts[number_of_buttons];
 
-  char* menu_text[] = {_("New game"),
+  const char* menu_text[] = {_("New game"),
 		       _("Load game"),
 		       _("Settings"),
 		       _("About"),
@@ -103,8 +102,10 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
   int font_size = 40;
   for (int i = 0; i < number_of_buttons; i++)
     {
-      texts[i] = create_texture_from_text (menu_text[i], font_size,
-					   {255, 255, 255}, main_renderer);
+      texts[i] = create_texture_from_text (menu_text[i],
+					   font_size,
+					   {255, 255, 255},
+					   main_renderer);
     }
 
   int stay = 1;
@@ -152,12 +153,14 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
 
       SDL_RenderPresent (main_renderer);
 
-      ret = handle_main_menu_events (main_renderer, screen_dimensions,
+      ret = handle_main_menu_events (main_renderer,
+				     screen_dimensions,
 				     buttons, number_of_buttons);
 
       if (ret == 2)
 	{
-	  ret = get_save_path (main_renderer, dst, dst_len, screen_dimensions);
+	  ret = get_save_path (main_renderer, dst, dst_len,
+			       screen_dimensions);
 	  if (ret == 1)
 	    {
 	      stay = 0;
@@ -189,7 +192,8 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
 
 int
 handle_main_menu_events (SDL_Renderer* main_renderer,
-			 struct size screen_dimensions, SDL_Rect* buttons,
+			 struct size screen_dimensions,
+			 SDL_Rect* buttons,
 			 int number)
 {
   SDL_Event event;
@@ -210,7 +214,8 @@ handle_main_menu_events (SDL_Renderer* main_renderer,
 	      click_coords.x = event.button.x;
 	      click_coords.y = event.button.y;
 
-	      button = find_button (click_coords, buttons, number);
+	      button = find_button (click_coords, buttons,
+				    number);
 	      // if (button != 0)
 	      // 	stay = 0;
 	      if (button == 1)
@@ -540,7 +545,7 @@ display_in_game_menu (SDL_Renderer* main_renderer,
   const int number_of_buttons = 5;
   SDL_Texture *texts[number_of_buttons];
 
-  char* menu_text[] = {_("Save"),
+  const char* menu_text[] = {_("Save"),
 		       _("Save and quit"),
 		       _("Settings"),
 		       _("Main Menu"),
