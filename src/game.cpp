@@ -37,26 +37,26 @@ load_game_textures (SDL_Renderer* main_renderer,
 		    SDL_Texture* textures[][10])
 {
   const char*
-    player_textures_paths[] = {"media/textures/LEFT.png",
-			       "media/textures/RIGHT.png",
-			       "media/textures/LEFT.png",
-			       "media/textures/RIGHT.png"};
+    player_textures_paths[] = {TEXTURESDIR"/LEFT.png",
+			       TEXTURESDIR"/RIGHT.png",
+			       TEXTURESDIR"/LEFT.png",
+			       TEXTURESDIR"/RIGHT.png"};
 
   const char*
-    biomes_textures_paths[] = {"media/textures/biome1.png",
-			       "media/textures/biome1.png",
-			       "media/textures/biome2.png",
-			       "media/textures/biome1.png",
-			       "media/textures/biome1.png"};
+    biomes_textures_paths[] = {TEXTURESDIR"/biome1.png",
+			       TEXTURESDIR"/biome1.png",
+			       TEXTURESDIR"/biome2.png",
+			       TEXTURESDIR"/biome1.png",
+			       TEXTURESDIR"/biome1.png"};
 
   const char*
-    objects_textures_paths[] = {"media/textures/arbre.png",
-				"media/textures/pierre1.png",
-				"media/textures/pierre2.png",
-				"media/textures/pierre3.png"};
+    objects_textures_paths[] = {TEXTURESDIR"/arbre.png",
+				TEXTURESDIR"/pierre1.png",
+				TEXTURESDIR"/pierre2.png",
+				TEXTURESDIR"/pierre3.png"};
 
   const char*
-    hud_textures_paths[] = {"media/hud/toolbar.png"};
+    hud_textures_paths[] = {TEXTURESDIR"/toolbar.png"};
 
   int i = 0;
   
@@ -146,7 +146,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 
   struct map_coordinates click_map_coords;
 
-  TTF_Font* ttf_freesans = TTF_OpenFont ("media/fonts/FreeSans.ttf", 18);
+  TTF_Font* ttf_freesans = TTF_OpenFont (FONTSDIR"/FreeSans.ttf", 18);
 
   const int map_path_len = 256;
   char map_path[map_path_len];

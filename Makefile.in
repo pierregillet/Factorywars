@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -100,14 +101,16 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(top_srcdir)/configure \
-	$(am__configure_deps) $(am__DIST_COMMON)
+	$(am__configure_deps) $(dist_fonts_DATA) $(dist_textures_DATA) \
+	$(am__DIST_COMMON)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__installdirs = "$(DESTDIR)$(bindir)"
+am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(fontsdir)" \
+	"$(DESTDIR)$(texturesdir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_factorywars_OBJECTS = src/main.$(OBJEXT) src/game_events.$(OBJEXT) \
@@ -176,6 +179,34 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+am__vpath_adj = case $$p in \
+    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+    *) f=$$p;; \
+  esac;
+am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
+am__install_max = 40
+am__nobase_strip_setup = \
+  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
+am__nobase_strip = \
+  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
+am__nobase_list = $(am__nobase_strip_setup); \
+  for p in $$list; do echo "$$p $$p"; done | \
+  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
+  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
+    if (++n[$$2] == $(am__install_max)) \
+      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
+    END { for (dir in files) print dir, files[dir] }'
+am__base_list = \
+  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
+  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
+am__uninstall_files_from_dir = { \
+  test -z "$$files" \
+    || { test ! -d "$$dir" && test ! -f "$$dir" && test ! -r "$$dir"; } \
+    || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
+         $(am__cd) "$$dir" && rm -f $$files; }; \
+  }
+DATA = $(dist_fonts_DATA) $(dist_textures_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 am__recursive_targets = \
@@ -382,7 +413,6 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 DISTCLEANFILES = *~
 EXTRA_DIST = config.rpath  \
 	COMPILE.md\
@@ -390,8 +420,7 @@ EXTRA_DIST = config.rpath  \
 	README.md\
 	TODO.md\
 	src/map.proto\
-	protosave\
-	media
+	protosave
 
 factorywars_SOURCES = \
 	src/main.cpp\
@@ -414,9 +443,24 @@ factorywars_SOURCES = \
 	src/structures.h
 
 factorywars_LDADD = $(LIBINTL)
-installdirs = media/
+texturesdir = $(pkgdatadir)/textures
+dist_textures_DATA = \
+	media/fonts/FreeSans.ttf media/hud/toolbar.png\
+	media/menus/button1.png media/menus/main_menu.png\
+	media/textures/arbre.png media/textures/biome1.png\
+	media/textures/biome2.png media/textures/LEFT.png\
+	media/textures/RIGHT.png media/textures/pierre1.png\
+	media/textures/pierre2.png media/textures/pierre3.png
+
+fontsdir = $(pkgdatadir)/fonts
+dist_fonts_DATA = media/fonts/FreeSans.ttf
 AM_CFLAGS = -std=gnu99 $(libxml2_CFLAGS)
 AM_CXXFLAGS = -std=gnu++11 $(libxml2_CFLAGS)
+AM_CPPFLAGS = \
+	-DLOCALEDIR=\"$(localedir)\"\
+	-DFONTSDIR=\"$(fontsdir)\"\
+	-DTEXTURESDIR=\"$(texturesdir)\"
+
 SUBDIRS = po
 ACLOCAL_AMFLAGS = -I m4
 all: config.h
@@ -605,6 +649,48 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+install-dist_fontsDATA: $(dist_fonts_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_fonts_DATA)'; test -n "$(fontsdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(fontsdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(fontsdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(fontsdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(fontsdir)" || exit $$?; \
+	done
+
+uninstall-dist_fontsDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_fonts_DATA)'; test -n "$(fontsdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(fontsdir)'; $(am__uninstall_files_from_dir)
+install-dist_texturesDATA: $(dist_textures_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_textures_DATA)'; test -n "$(texturesdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(texturesdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(texturesdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(texturesdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(texturesdir)" || exit $$?; \
+	done
+
+uninstall-dist_texturesDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_textures_DATA)'; test -n "$(texturesdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(texturesdir)'; $(am__uninstall_files_from_dir)
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run 'make' without going through this Makefile.
@@ -902,10 +988,10 @@ distcleancheck: distclean
 	       exit 1; } >&2
 check-am: all-am
 check: check-recursive
-all-am: Makefile $(PROGRAMS) config.h
+all-am: Makefile $(PROGRAMS) $(DATA) config.h
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(bindir)"; do \
+	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(fontsdir)" "$(DESTDIR)$(texturesdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -964,7 +1050,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am:
+install-data-am: install-dist_fontsDATA install-dist_texturesDATA
 
 install-dvi: install-dvi-recursive
 
@@ -1011,7 +1097,8 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-binPROGRAMS
+uninstall-am: uninstall-binPROGRAMS uninstall-dist_fontsDATA \
+	uninstall-dist_texturesDATA
 
 .MAKE: $(am__recursive_targets) all install-am install-strip
 
@@ -1023,7 +1110,8 @@ uninstall-am: uninstall-binPROGRAMS
 	distclean-compile distclean-generic distclean-hdr \
 	distclean-tags distcleancheck distdir distuninstallcheck dvi \
 	dvi-am html html-am info info-am install install-am \
-	install-binPROGRAMS install-data install-data-am install-dvi \
+	install-binPROGRAMS install-data install-data-am \
+	install-dist_fontsDATA install-dist_texturesDATA install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
@@ -1031,7 +1119,8 @@ uninstall-am: uninstall-binPROGRAMS
 	installdirs-am maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-compile mostlyclean-generic pdf pdf-am \
 	ps ps-am tags tags-am uninstall uninstall-am \
-	uninstall-binPROGRAMS
+	uninstall-binPROGRAMS uninstall-dist_fontsDATA \
+	uninstall-dist_texturesDATA
 
 .PRECIOUS: Makefile
 

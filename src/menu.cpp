@@ -36,7 +36,7 @@ SDL_Texture*
 create_texture_from_text (const char* text, int font_size, SDL_Color color,
 			  SDL_Renderer* renderer)
 {
-  TTF_Font *font = TTF_OpenFont ("media/fonts/FreeSans.ttf", font_size);
+  TTF_Font *font = TTF_OpenFont (FONTSDIR"/FreeSans.ttf", font_size);
   if (font == NULL)
     {
       fprintf (stderr, "Error while loading FreeSans.ttf\n");
@@ -71,14 +71,14 @@ display_main_menu (SDL_Renderer* main_renderer,
   SDL_Texture *button_bg;
   
   menu_bg = load_texture (main_renderer,
-			  "media/menus/main_menu.png");
+			  TEXTURESDIR"/main_menu.png");
   
   button_bg = load_texture (main_renderer,
-			    "media/menus/button1.png");
+			    TEXTURESDIR"/button1.png");
 
   if (menu_bg == NULL)
     {
-      fprintf (stderr, "Error while loading the menu background\n");
+      fprintf (stderr, "Error while loading the menu’s background.\n");
       return -1;
     }
 
@@ -310,7 +310,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 
 
   // On charge le fond du bouton
-  SDL_Surface *button_bg_surface = IMG_Load ("media/menus/button1.png");
+  SDL_Surface *button_bg_surface = IMG_Load (TEXTURESDIR"/button1.png");
   SDL_Texture *button_bg;
   button_bg = SDL_CreateTextureFromSurface (main_renderer, button_bg_surface);
   SDL_FreeSurface (button_bg_surface);
@@ -517,8 +517,8 @@ display_in_game_menu (SDL_Renderer* main_renderer,
 		      struct size screen_dimensions)
 {
   // On charge les images du menu
-  SDL_Surface *menu_bg_surface = IMG_Load ("media/menus/main_menu.png");
-  SDL_Surface *button_bg_surface = IMG_Load ("media/menus/button1.png");
+  SDL_Surface *menu_bg_surface = IMG_Load (TEXTURESDIR"/main_menu.png");
+  SDL_Surface *button_bg_surface = IMG_Load (TEXTURESDIR"/button1.png");
 
   SDL_Texture *menu_bg;
   menu_bg = SDL_CreateTextureFromSurface (main_renderer, menu_bg_surface);
@@ -666,7 +666,7 @@ about (SDL_Renderer* main_renderer, struct size screen_dimensions)
   SDL_Texture *text;
 
   // On charge le fond du bouton
-  SDL_Surface *button_bg_surface = IMG_Load ("media/menus/button1.png");
+  SDL_Surface *button_bg_surface = IMG_Load (TEXTURESDIR"/button1.png");
   SDL_Texture *button_bg;
   button_bg = SDL_CreateTextureFromSurface (main_renderer, button_bg_surface);
   SDL_FreeSurface (button_bg_surface);

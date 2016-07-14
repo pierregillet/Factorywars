@@ -1,5 +1,3 @@
-AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
-
 DISTCLEANFILES = *~
 
 EXTRA_DIST = config.rpath  \
@@ -8,8 +6,7 @@ EXTRA_DIST = config.rpath  \
 	README.md\
 	TODO.md\
 	src/map.proto\
-	protosave\
-	media
+	protosave
 
 bin_PROGRAMS = factorywars
 factorywars_SOURCES = \
@@ -34,10 +31,24 @@ factorywars_SOURCES = \
 
 factorywars_LDADD = $(LIBINTL)
 
-installdirs = media/
+texturesdir = $(pkgdatadir)/textures
+dist_textures_DATA = \
+	media/fonts/FreeSans.ttf media/hud/toolbar.png\
+	media/menus/button1.png media/menus/main_menu.png\
+	media/textures/arbre.png media/textures/biome1.png\
+	media/textures/biome2.png media/textures/LEFT.png\
+	media/textures/RIGHT.png media/textures/pierre1.png\
+	media/textures/pierre2.png media/textures/pierre3.png
+
+fontsdir = $(pkgdatadir)/fonts
+dist_fonts_DATA = media/fonts/FreeSans.ttf
 
 AM_CFLAGS = -std=gnu99 $(libxml2_CFLAGS)
 AM_CXXFLAGS = -std=gnu++11 $(libxml2_CFLAGS)
+AM_CPPFLAGS = \
+	-DLOCALEDIR=\"$(localedir)\"\
+	-DFONTSDIR=\"$(fontsdir)\"\
+	-DTEXTURESDIR=\"$(texturesdir)\"
 
 SUBDIRS = po
 
