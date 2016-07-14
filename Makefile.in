@@ -420,7 +420,7 @@ EXTRA_DIST = config.rpath  \
 	README.md\
 	TODO.md\
 	src/map.proto\
-	protosave
+	saves
 
 factorywars_SOURCES = \
 	src/main.cpp\

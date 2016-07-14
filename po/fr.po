@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: factorywars 0.1\n"
 "Report-Msgid-Bugs-To: 0x539+bug@nybble.fr\n"
-"POT-Creation-Date: 2016-07-14 14:50+0200\n"
+"POT-Creation-Date: 2016-07-14 18:40+0200\n"
 "PO-Revision-Date: 2016-07-14 15:02+0200\n"
 "Last-Translator:  <0x539@nybble.fr>\n"
 "Language-Team: French <0x539@nybble.fr>\n"
@@ -20,38 +20,38 @@ msgstr ""
 msgid "fps"
 msgstr "ips"
 
-#: src/menu.cpp:97
+#: src/menu.cpp:96
 msgid "New game"
 msgstr "Nouvelle partie"
 
-#: src/menu.cpp:98
+#: src/menu.cpp:97
 msgid "Load game"
 msgstr "Charger une partie"
 
-#: src/menu.cpp:99 src/menu.cpp:545
+#: src/menu.cpp:98 src/menu.cpp:550
 msgid "Settings"
 msgstr "Paramètres"
 
-#: src/menu.cpp:100
+#: src/menu.cpp:99
 msgid "About"
 msgstr "À propos"
 
-#: src/menu.cpp:101 src/menu.cpp:547
+#: src/menu.cpp:100 src/menu.cpp:552
 msgid "Quit"
 msgstr "Quitter"
 
-#: src/menu.cpp:318 src/menu.cpp:674
+#: src/menu.cpp:323 src/menu.cpp:679
 msgid "Main menu"
 msgstr "Menu principal"
 
-#: src/menu.cpp:543
+#: src/menu.cpp:548
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: src/menu.cpp:544
+#: src/menu.cpp:549
 msgid "Save and quit"
 msgstr "Sauvegarder et quitter"
 
-#: src/menu.cpp:546
+#: src/menu.cpp:551
 msgid "Main Menu"
 msgstr "Menu principal"

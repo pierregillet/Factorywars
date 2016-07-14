@@ -6,7 +6,7 @@ EXTRA_DIST = config.rpath  \
 	README.md\
 	TODO.md\
 	src/map.proto\
-	protosave
+	saves
 
 bin_PROGRAMS = factorywars
 factorywars_SOURCES = \
