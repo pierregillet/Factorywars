@@ -49,6 +49,9 @@
 #include "game_events.h"
 #include "menu.h"
 #include "game.h"
+#include "gettext.h"
+
+#define _(string) gettext (string)
 
 extern "C" {
   #include "save.h"

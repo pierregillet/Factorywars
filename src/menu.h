@@ -34,6 +34,7 @@
 
 #include <SDL2/SDL_ttf.h>
 #include <config.h>
+#include <wchar.h>
 
 #include "gui.h"
 #include "gettext.h"
@@ -154,3 +155,21 @@ int display_in_game_menu (SDL_Renderer* main_renderer,
  * + 4 if the main menu button was pressed.
  */
 int handle_in_game_menu_events (SDL_Rect* buttons, int number_of_buttons);
+
+/**
+ * Print the about menu.
+ *
+ * @param main_renderer is the renderer of the window.
+ * @param screen_dimensons is the dimensions of the screen.
+ * @return 0 if we have to quit or 1 to display the main menu again.
+ */
+int about (SDL_Renderer* main_renderer, struct size screen_dimensions);
+
+/**
+ * Handle the about menu’s events.
+ *
+ * @param buttons is an array containing the buttons.
+ * @param number_of_buttons is the number of buttons in the array buttons.
+ * @return the clicked button or 0 if we have to quit.
+ */
+int handle_about_menu_events (SDL_Rect* buttons, int number_of_buttons);

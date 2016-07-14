@@ -165,17 +165,11 @@ run_gui (int read_pipe,
 				   .y = screen_height};
 
   SDL_Window *Window = NULL;
-  SDL_Renderer* Renderer = NULL;
+  SDL_Renderer *Renderer = NULL;
 
   init (&Window, &Renderer, screen_height,
 	screen_width);
   
-  SDL_Texture* textures[4][10];
-  load_game_textures (Renderer, textures);
-
-  SDL_Texture *player_texture = NULL;
-  player_texture = textures[0][1];
-
   const int save_path_len = 256;
   char save_path[save_path_len], map_path[save_path_len];
   int ret;
@@ -199,13 +193,12 @@ run_gui (int read_pipe,
 
       ret = run_game (Renderer, save_path, read_pipe,
 		      write_pipe, screen_dimensions,
-		      players, textures, &player_texture);
+		      players);
 
       if (ret == 0)
 	stay = 0;
     }
 
-  free_textures (textures, &player_texture);
   quit_sdl (&Window, &Renderer);
   
   return 0;
@@ -271,7 +264,7 @@ display_fps (SDL_Renderer* main_renderer,
   char fps[10];
   unsigned int tmp_fps = get_fps (start_time);
 
-  snprintf (fps, 10, "%d fps", tmp_fps);
+  snprintf (fps, 10, "%d %s", tmp_fps, _("fps"));
 
   SDL_Surface* surface_message = TTF_RenderText_Blended (ttf_freesans,
 							 fps,

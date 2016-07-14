@@ -33,7 +33,8 @@
 #include "menu.h"
 
 SDL_Texture*
-create_texture_from_text (const char* text, int font_size, SDL_Color color, SDL_Renderer* renderer)
+create_texture_from_text (const char* text, int font_size, SDL_Color color,
+			  SDL_Renderer* renderer)
 {
   TTF_Font *font = TTF_OpenFont ("media/fonts/FreeSans.ttf", font_size);
   if (font == NULL)
@@ -42,7 +43,8 @@ create_texture_from_text (const char* text, int font_size, SDL_Color color, SDL_
       return NULL;
     }
 
-  SDL_Surface* text_surface = TTF_RenderText_Blended (font, text, color);
+  // SDL_Surface* text_surface = TTF_RenderUNICODE_Blended (font, text, color);
+  SDL_Surface* text_surface = TTF_RenderUTF8_Blended (font, text, color);
 
   if (text_surface == NULL)
     {
@@ -97,8 +99,6 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
 		       _("Settings"),
 		       _("About"),
 		       _("Quit")};
-
-  printf ("%s\n", LOCALEDIR);
 
   int font_size = 40;
   for (int i = 0; i < number_of_buttons; i++)
@@ -161,8 +161,14 @@ display_main_menu (SDL_Renderer* main_renderer, struct size screen_dimensions,
 	  if (ret == 1)
 	    {
 	      stay = 0;
-	      ret = 2;
+	      continue;
 	    }
+	}
+      else if (ret == 4)
+	{
+	  ret = about (main_renderer, screen_dimensions);
+	  if (ret != 0)
+	    continue;
 	}
 
       if (ret <= 1)
@@ -208,10 +214,10 @@ handle_main_menu_events (SDL_Renderer* main_renderer,
 	      // if (button != 0)
 	      // 	stay = 0;
 	      if (button == 1)
-		stay = 0;
+	      	stay = 0;
 	      
-	      else if (button == 2)
-		  return button;
+	      else if (button == 2 || button == 4)
+	      	  return button;
 
 	      else if (button == 5)
 		return 0;
@@ -647,4 +653,101 @@ handle_in_game_menu_events (SDL_Rect* buttons, int number_of_buttons)
   // Afficher les autres menus
 
   return button;
+}
+
+int
+about (SDL_Renderer* main_renderer, struct size screen_dimensions)
+{
+  SDL_Texture *text;
+
+  // On charge le fond du bouton
+  SDL_Surface *button_bg_surface = IMG_Load ("media/menus/button1.png");
+  SDL_Texture *button_bg;
+  button_bg = SDL_CreateTextureFromSurface (main_renderer, button_bg_surface);
+  SDL_FreeSurface (button_bg_surface);
+
+  if (button_bg == NULL)
+    fprintf (stderr, "Error while loading button1.png.");
+
+  // On crée la texture du texte du bouton
+  SDL_Texture *button_text;
+  button_text = create_texture_from_text (_("Main menu"), 30,
+					  {255, 255, 255}, main_renderer);
+
+
+  SDL_Rect fill_rect, button, button_text_rect;
+
+  SDL_QueryTexture (button_bg, NULL, NULL, &button.w, &button.h);
+  button = {.x = screen_dimensions.x / 2 - button.w / 2,
+	    .y = screen_dimensions.y - button.h - 1,
+	    .w = button.w, .h = button.h};
+
+  SDL_QueryTexture (button_text, NULL, NULL, &button_text_rect.w, &button_text_rect.h);
+  button_text_rect.x = button.x + button.w / 2 - button_text_rect.w / 2;
+  button_text_rect.y = button.y + button.h / 2 - button_text_rect.h / 2;
+
+  
+  struct size blit_origin = {.x = 10, .y = 0};
+
+  // On affiche un fond noir
+  fill_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
+  blit_rect (main_renderer, {0, 0, 0, 255}, fill_rect);
+
+
+  // On affiche le bouton pour retourner au menu principal
+  blit_origin = {.x = button.x, .y = button.y};
+  blit (main_renderer, blit_origin, button.w, button.h, button_bg);
+
+  blit_origin = {.x = button_text_rect.x, .y = button_text_rect.y};
+  blit (main_renderer, blit_origin, button_text_rect.w, button_text_rect.h, button_text);
+
+  SDL_RenderPresent (main_renderer);
+
+  SDL_DestroyTexture (button_bg);
+  SDL_DestroyTexture (button_text);
+
+  if (handle_about_menu_events (&button, 1) == 0)
+    return 0;
+  else
+    return 1;
+
+}
+
+int
+handle_about_menu_events (SDL_Rect* buttons, int number_of_buttons)
+{
+  SDL_Event event;
+  struct coordinates click_coords;
+  int stay = 1;
+  int button;
+
+  while (stay)
+    {
+      if (SDL_PollEvent (&event) == 0)
+	continue;
+
+      switch (event.type)
+	{
+	case SDL_MOUSEBUTTONDOWN:
+	  if (event.button.button == SDL_BUTTON_LEFT)
+	    {
+	      click_coords.x = event.button.x;
+	      click_coords.y = event.button.y;
+
+	      button = find_button (click_coords, buttons, number_of_buttons);
+
+	      if (button != 0)
+		return button;
+
+	    }
+	  break;
+
+	case SDL_QUIT:
+	  return 0;
+	  break;
+
+	default:
+	  break;
+	}
+    }
 }

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: factorywars 0.1\n"
 "Report-Msgid-Bugs-To: 0x539+bug@nybble.fr\n"
-"POT-Creation-Date: 2016-07-10 12:36+0200\n"
+"POT-Creation-Date: 2016-07-14 14:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,38 +16,42 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/menu.cpp:95
+#: src/gui.cpp:267
+msgid "fps"
+msgstr ""
+
+#: src/menu.cpp:97
 msgid "New game"
 msgstr ""
 
-#: src/menu.cpp:96
+#: src/menu.cpp:98
 msgid "Load game"
 msgstr ""
 
-#: src/menu.cpp:97 src/menu.cpp:539
+#: src/menu.cpp:99 src/menu.cpp:545
 msgid "Settings"
 msgstr ""
 
-#: src/menu.cpp:98
+#: src/menu.cpp:100
 msgid "About"
 msgstr ""
 
-#: src/menu.cpp:99 src/menu.cpp:541
+#: src/menu.cpp:101 src/menu.cpp:547
 msgid "Quit"
 msgstr ""
 
-#: src/menu.cpp:312
+#: src/menu.cpp:318 src/menu.cpp:674
 msgid "Main menu"
 msgstr ""
 
-#: src/menu.cpp:537
+#: src/menu.cpp:543
 msgid "Save"
 msgstr ""
 
-#: src/menu.cpp:538
+#: src/menu.cpp:544
 msgid "Save and quit"
 msgstr ""
 
-#: src/menu.cpp:540
+#: src/menu.cpp:546
 msgid "Main Menu"
 msgstr ""

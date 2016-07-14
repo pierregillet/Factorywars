@@ -60,8 +60,11 @@ int
 main (int argc, char *argv[])
 {
   setlocale (LC_ALL, "");
+
+#if ENABLE_NLS
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+#endif
   
   int optc;
   int lose = 0;

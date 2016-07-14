@@ -34,6 +34,8 @@ factorywars_SOURCES = \
 
 factorywars_LDADD = $(LIBINTL)
 
+installdirs = media/
+
 AM_CFLAGS = -std=gnu99 $(libxml2_CFLAGS)
 AM_CXXFLAGS = -std=gnu++11 $(libxml2_CFLAGS)
 
