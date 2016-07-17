@@ -11,11 +11,9 @@ content of the README.md file.
 + Translate the documentation in esperanto.
 + Translate the user’s side of the game in french and esperanto.
 + Follow [XDG Base Directory Specification](https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html).
-+ Create a mailing list.
 + Create a website.
 + Auto saving.
 + Use Texlive for documentation.
-+ Use GNU gettext for translation.
 + In blit function, change the structure from size to coordinates.
 
 Main
