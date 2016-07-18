@@ -48,15 +48,14 @@ La présentation pour le Baccalauréat étant passée, nous acceptons et
 encourageons toute contribution.
 Nous n’avons pas beaucoup d’expériences ni de connaissances en programmation
 avancée ou en algorithmique mais nous sommes motivés et nous essayons de
-trouver des solutions à tout les problèmes que nous rencontrons en apprenant
+trouver des solutions à tous les problèmes que nous rencontrons en apprenant
 comment les choses fonctionnent.
 
 # Nous contacter #
 
-Vous pouvez nous contacter pour n’importe quelle question par courriel :
+Pour les questions en rapport avec le développement du jeu : 
+[factorywars-devel@gnufr.xyz](http://lists.gnufr.xyz/listinfo/factorywars-devel)
+.
 
-Corentin Bocquillon (0x539) :
-0x539+factorywars@nybble.fr
-
-Pierre Gillet :
-pierre.gillet+factorywars@linuxw.info
+Pour discutter d’un bogue ou en soumettre un nouveau : 
+[factorywars-bugs@gnufr.xyz](http://lists.gnufr.xyz/listinfo/factorywars-bugs).
