@@ -20,13 +20,12 @@ try to figure out every one of the issues, by learning how things works.
 
 # Contact #
 
-You can contact us for any questions via our emails :
+For discussions about the game development: 
+[factorywars-devel@gnufr.xyz](http://lists.gnufr.xyz/listinfo/factorywars-devel)
+.
 
-Corentin Bocquillon (0x539):
-0x539+factorywars@nybble.fr
-
-Pierre Gillet:
-pierre.gillet+factorywars@linuxw.info
+To report and discuss bugs in Factorywars: 
+[factorywars-bugs@gnufr.xyz](http://lists.gnufr.xyz/listinfo/factorywars-bugs).
 
 # Factorywars (Français) #
 
