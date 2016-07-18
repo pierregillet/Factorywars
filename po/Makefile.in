@@ -11,7 +11,7 @@ GETTEXT_MACRO_VERSION = 0.19
 
 PACKAGE = factorywars
 VERSION = 0.1
-PACKAGE_BUGREPORT = 0x539+bug@nybble.fr
+PACKAGE_BUGREPORT = factorywars-bugs@gnufr.xyz
 
 SED = /usr/bin/sed
 SHELL = /bin/sh

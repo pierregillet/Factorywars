@@ -1,4 +1,4 @@
-AC_INIT([factorywars], [0.1], [0x539+bug@nybble.fr])
+AC_INIT([factorywars], [0.1], [factorywars-bugs@gnufr.xyz])
 AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
 AM_GNU_GETTEXT_VERSION([0.19.7])
 AM_GNU_GETTEXT([external])
