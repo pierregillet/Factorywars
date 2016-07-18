@@ -48,11 +48,35 @@
 #include "multiplayer.h"
 #include "game_events.h"
 #include "menu.h"
+#include "game.h"
+#include "gettext.h"
+
+#define _(string) gettext (string)
 
 extern "C" {
   #include "save.h"
   #include "config.h"
 }
+
+// Enumeration to use with keys_state
+enum KEYBOARD_BUTTONS
+  {
+    key_up,
+    key_down,
+    key_left,
+    key_right,
+    key_escape
+  };
+
+// Enumeration to use with clicks_state
+enum MOUSE_BUTTONS
+  {
+    click_left,
+    click_middle,
+    click_right,
+    click_x1,
+    click_x2
+  };
 
 /**
  * Store an image into a texture
@@ -61,17 +85,8 @@ extern "C" {
  * @param path is the path to the image.
  * @return a pointer to the texture.
  */
-SDL_Texture* loadTexture (SDL_Renderer** Renderer,
-			  std::string path);
-
-/**
- * Loads the textures.
- *
- * @param Renderer is the renderer.
- * @param textures is an array of arrays containing the textures.
- */
-void loadMedia (SDL_Renderer** Renderer,
-		SDL_Texture* textures[][10]);
+SDL_Texture* load_texture (SDL_Renderer* Renderer,
+			   const char* path);
 
 /**
  * Initiates the SDL basics, like the window and the renderer.
@@ -85,55 +100,36 @@ void loadMedia (SDL_Renderer** Renderer,
 void init (SDL_Window** main_window,
 	   SDL_Renderer** main_renderer,
 	   const int screen_height,
-	   const int screen_width,
-	   SDL_Texture* textures[][10]);
-
-/**
- * Move screen_origin and hero_coords coordinates if a key is pressed.
- */
-int move_coordinates_on_keydown (struct coordinates* screen_origin,
-				 bool* keys_state, int screen_height,
-				 int screen_width, struct size* hero_coords);
+	   const int screen_width);
 
 /**
  * Blit Textures at given coordinates x,y.
  *
  * @return int true if there is no error
  */
-int blit (SDL_Renderer** Renderer,
+int blit (SDL_Renderer* Renderer,
 	  struct size blit_origin,
 	  int width,
 	  int height,
 	  SDL_Texture* texture);
 
 /**
- * Calculates the fps and reset the timer.
+ * Free the textures
  * 
- * @param start_time is the timer to calculate the fps.
- * @return unsigned int containing the fps. 
+ * @param current_texture is the player’s texture.
+ * @param textures is the array containing all the textures.
  */
-int get_fps (unsigned int* start_time);
+void free_textures (SDL_Texture* textures[][10],
+		    SDL_Texture** current_texture);
 
 /**
- * Displays the fps after getting them.
- * 
- * @param main_renderer is the renderer used.
- * @param start_time is the timer to calculate the fps.
- */
-void display_fps (SDL_Renderer* main_renderer,
-		  unsigned int* start_time);
-
-/**
- * Free what needed to be freed from the SDL library.
+ * Quits the SDL and TTF.
  *
  * @param main_window is the main window.
  * @param main_renderer is the main renderer.
- * @param current_texture is the player’s texture.
  */
 void quit_sdl (SDL_Window** main_window,
-	       SDL_Renderer** main_renderer,
-	       SDL_Texture** current_texture,
-	       SDL_Texture* textures[][10]);
+	       SDL_Renderer** main_renderer);
 
 /**
  * Run the gui
@@ -143,24 +139,30 @@ void quit_sdl (SDL_Window** main_window,
  * @param players is a vector containing every players connected.
  * @return -1 if there is an error or 0 if there is no error.
  */
-int run_gui (int read_pipe, int write_pipe, std::vector<Player>& players);
+int run_gui (int read_pipe, int write_pipe,
+	     std::vector<Player>& players);
 
 /**
- * Blit the players in “players” on the renderer “renderer”
- *
- * @param players is the vector containing every players.
- * @param screen_origin is the offset in pixels from the origin of the map.
- * @param renderer is the renderer where we blit the players.
- * @param player_texture is the texture to blit.
- * @param screen_height is the screen’s height.
- * @param screen_width is the screen’s width.
+ * Calculates the fps using start_time and resets it.
+ * 
+ * @param start_time contains the time in milliseconds elapsed since the SDL was initialized.
+ * 
+ * @return The number of fps.
  */
-void display_players (std::vector<Player>& players,
-		      struct coordinates screen_origin,
-		      SDL_Renderer** renderer,
-		      SDL_Texture* player_texture,
-		      int screen_height,
-		      int screen_width);
+int
+get_fps (unsigned int* start_time);
+
+/**
+ * Gets and displays the fps in the top-right corner.
+ * 
+ * @param main_renderer is the renderer used.
+ * @param start_time contains the time in milliseconds elapsed since the SDL was initialized.
+ * @param
+ */
+void
+display_fps (SDL_Renderer* main_renderer,
+	     unsigned int* start_time,
+	     TTF_Font* ttf_freesans);
 
 /**
  * Copy a surface in another and return the new surface
@@ -171,11 +173,12 @@ void display_players (std::vector<Player>& players,
 SDL_Surface* copy_surface (SDL_Surface* src);
 
 /**
- * Display a rectangle.
+ * Display a rectangle of a specific color.
  *
  * @param renderer is the renderer used to display the rectangle.
  * @param color is the rectangle’s color.
  * @param rectangle is the position of the rectangle.
  */
 void
-blit_rect (SDL_Renderer* renderer, SDL_Color color, SDL_Rect rectangle);
+blit_rect (SDL_Renderer* renderer, SDL_Color color,
+	   SDL_Rect rectangle);

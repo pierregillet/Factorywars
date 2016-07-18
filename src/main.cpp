@@ -33,8 +33,11 @@
 #include <vector>
 #include <getopt.h>
 #include <config.h>
+#include <locale.h>
+
 #include "gui.h"
 #include "player.h"
+#include "gettext.h"
 
 extern "C" {
   #include "network.h"
@@ -56,6 +59,13 @@ const char *program_name = NULL;
 int
 main (int argc, char *argv[])
 {
+  setlocale (LC_ALL, "");
+
+#if ENABLE_NLS
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+#endif
+  
   int optc;
   int lose = 0;
   char *IP = NULL;

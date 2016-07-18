@@ -1,13 +1,12 @@
 DISTCLEANFILES = *~
 
-EXTRA_DIST = \
+EXTRA_DIST = config.rpath  \
 	COMPILE.md\
 	factorywars.conf\
 	README.md\
 	TODO.md\
 	src/map.proto\
-	protosave\
-	media
+	saves
 
 bin_PROGRAMS = factorywars
 factorywars_SOURCES = \
@@ -26,7 +25,31 @@ factorywars_SOURCES = \
 	src/multiplayer.cpp src/multiplayer.h\
 	src/map.pb-c.c src/map.pb-c.h\
 	src/menu.cpp src/menu.h\
+	src/game.cpp src/game.h\
+	src/gettext.h\
 	src/structures.h
+
+factorywars_LDADD = $(LIBINTL)
+
+texturesdir = $(pkgdatadir)/textures
+dist_textures_DATA = \
+	media/fonts/FreeSans.ttf media/hud/toolbar.png\
+	media/menus/button1.png media/menus/main_menu.png\
+	media/textures/arbre.png media/textures/biome1.png\
+	media/textures/biome2.png media/textures/LEFT.png\
+	media/textures/RIGHT.png media/textures/pierre1.png\
+	media/textures/pierre2.png media/textures/pierre3.png
+
+fontsdir = $(pkgdatadir)/fonts
+dist_fonts_DATA = media/fonts/FreeSans.ttf
 
 AM_CFLAGS = -std=gnu99 $(libxml2_CFLAGS)
 AM_CXXFLAGS = -std=gnu++11 $(libxml2_CFLAGS)
+AM_CPPFLAGS = \
+	-DLOCALEDIR=\"$(localedir)\"\
+	-DFONTSDIR=\"$(fontsdir)\"\
+	-DTEXTURESDIR=\"$(texturesdir)\"
+
+SUBDIRS = po
+
+ACLOCAL_AMFLAGS = -I m4
