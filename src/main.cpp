@@ -39,6 +39,8 @@
 #include "player.h"
 #include "gettext.h"
 
+#define _(string) gettext (string)
+
 extern "C" {
   #include "network.h"
 }
@@ -131,16 +133,18 @@ main (int argc, char *argv[])
 static void
 print_help (void)
 {
-  printf ("Usage: %s [OPTION]…\n", program_name);
-  printf ("The best game in the world!\n");
+  printf (_("Usage: %s [OPTION]..."), program_name);
   printf ("\n");
+  printf (_("The best game in the world!"));
+  printf ("\n\n");
 
-  printf ("-h, --help display this help and exit.\n");
-  printf ("\n");
+  printf (_("-h, --help display this help and exit."));
+  printf ("\n\n");
 
-  printf ("-s, --server <IP> specify the ip of the server you want to join.\n");
-  printf ("-p, --server-port <port> specify the port of the server you want to join (default: 4284).\n");
+  printf (_("-s, --server <IP> specify the ip of the server you want to join."));
   printf ("\n");
+  printf (_("-p, --server-port <port> specify the port of the server you want to join (default: 4284)."));
+  printf ("\n\n");
 }
 
 static void

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: factorywars 0.1\n"
-"Report-Msgid-Bugs-To: 0x539+bug@nybble.fr\n"
-"POT-Creation-Date: 2016-07-14 18:40+0200\n"
+"Report-Msgid-Bugs-To: factorywars-bugs@gnufr.xyz\n"
+"POT-Creation-Date: 2016-07-21 16:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,4 +54,31 @@ msgstr ""
 
 #: src/menu.cpp:551
 msgid "Main Menu"
+msgstr ""
+
+#: src/main.cpp:136
+#, c-format
+msgid "Usage: %s [OPTION]..."
+msgstr ""
+
+#: src/main.cpp:138
+#, c-format
+msgid "The best game in the world!"
+msgstr ""
+
+#: src/main.cpp:141
+#, c-format
+msgid "-h, --help display this help and exit."
+msgstr ""
+
+#: src/main.cpp:144
+#, c-format
+msgid "-s, --server <IP> specify the ip of the server you want to join."
+msgstr ""
+
+#: src/main.cpp:146
+#, c-format
+msgid ""
+"-p, --server-port <port> specify the port of the server you want to join "
+"(default: 4284)."
 msgstr ""

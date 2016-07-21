@@ -81,7 +81,14 @@ Player
    */
   std::string getName () const;
 
+  /**
+   * Set the player’s name
+   */
   void setName (const char* name);
+
+  /**
+   * Set the player’s name
+   */
   void setName (std::string name);
 
   /**
@@ -103,7 +110,6 @@ Player
 
   /**
    * Returns the selected tool.
-   * @param The direction we scroll : -1 for previous tool, 1 for next tool.
    */
   unsigned short getSelectedTool ();
 
