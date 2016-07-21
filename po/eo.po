@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: factorywars 0.1\n"
 "Report-Msgid-Bugs-To: factorywars-bugs@gnufr.xyz\n"
-"POT-Creation-Date: 2016-07-21 16:10+0200\n"
+"POT-Creation-Date: 2016-07-21 16:22+0200\n"
 "PO-Revision-Date: 2016-07-14 15:44+0200\n"
 "Last-Translator:  <0x539@nybble.fr>\n"
 "Language-Team: Esperanto\n"
@@ -81,4 +81,20 @@ msgstr ""
 msgid ""
 "-p, --server-port <port> specify the port of the server you want to join "
 "(default: 4284)."
+msgstr ""
+
+#: src/main.cpp:161
+#, c-format
+msgid ""
+"License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>"
+msgstr ""
+
+#: src/main.cpp:163
+#, c-format
+msgid "This is free software: you are free to change and destribute it."
+msgstr ""
+
+#: src/main.cpp:165
+#, c-format
+msgid "There is NO WARRANTY, to the extent permitted by law."
 msgstr ""
