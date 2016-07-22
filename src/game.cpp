@@ -148,6 +148,12 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 
   TTF_Font* ttf_freesans = TTF_OpenFont (FONTSDIR"/FreeSans.ttf", 18);
 
+  if (ttf_freesans == NULL)
+    {
+      fprintf (stderr, "Error while loading FreeSans.ttf\n");
+      return 0;
+    }
+
   const int map_path_len = 256;
   char map_path[map_path_len];
 
