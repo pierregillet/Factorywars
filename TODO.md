@@ -15,7 +15,7 @@ content of the README.md file.
 + Create a website.
 + Auto saving.
 + Use Texlive for documentation.
-+ Use GNU gettext for translation.
++ Update the list of dependencies in COMPILE.md
 
 Main
 ----
