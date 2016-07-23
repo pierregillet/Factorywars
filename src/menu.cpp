@@ -113,6 +113,7 @@ display_main_menu (SDL_Renderer* main_renderer,
 
   // The background rectangle
   SDL_Rect bg_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
+  struct coordinates blit_coords;
 
   while (stay)
     {
@@ -120,7 +121,6 @@ display_main_menu (SDL_Renderer* main_renderer,
       blit_rect (main_renderer, {0, 0, 0, 255}, bg_rect);
 
       // On affiche le fond du menu
-      struct size blit_coords;
       SDL_Rect rect;
       blit (main_renderer,
 	    {screen_dimensions.x / 2 - 480 / 2, screen_dimensions.y / 2 - 640 / 2},
@@ -337,7 +337,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 
   
   int rows = (screen_dimensions.y - 66) / row_height;
-  struct size blit_origin = {.x = 10, .y = 0};
+  struct coordinates blit_origin = {.x = 10, .y = 0};
 
   int highlighted_line = 0;
   int event_type = 0;
@@ -564,7 +564,7 @@ display_in_game_menu (SDL_Renderer* main_renderer,
   SDL_Rect bg_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
 
   // On affiche le fond du menu
-  struct size blit_coords;
+  struct coordinates blit_coords;
   SDL_Rect rect;
   blit (main_renderer,
 	{screen_dimensions.x / 2 - 480 / 2, screen_dimensions.y / 2 - 640 / 2},
@@ -692,7 +692,7 @@ about (SDL_Renderer* main_renderer, struct size screen_dimensions)
   button_text_rect.y = button.y + button.h / 2 - button_text_rect.h / 2;
 
   
-  struct size blit_origin = {.x = 10, .y = 0};
+  struct coordinates blit_origin = {.x = 10, .y = 0};
 
   // On affiche un fond noir
   fill_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};

@@ -109,7 +109,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   
   unsigned int start_time = SDL_GetTicks ();
 
-  struct size screen_center; 
+  struct coordinates screen_center; 
   screen_center.x = screen_dimensions.x / 2;
   screen_center.y = screen_dimensions.y / 2;
   
@@ -122,10 +122,6 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   std::vector<Player> players (1, Player ());
   get_config_value ("name", config_value, config_value_len);
   players[0].setName (config_value);
-
-  struct size hero_coords = {.x = screen_center.x,
-			     .y = screen_center.y};
-
   players[0].setCoordinates ({screen_center.x, screen_center.y});
   
   /* 
@@ -179,7 +175,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   blit (main_renderer, screen_center, 25, 41, player_texture);
   
   // Display HUD
-  struct size toolbar_origin;
+  struct coordinates toolbar_origin;
   toolbar_origin.x = (int) (screen_dimensions.x / 4);
   toolbar_origin.y = (int) (screen_dimensions.y - (screen_dimensions.x / 2 * 0.11));
 
@@ -290,7 +286,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 			  textures, screen_origin,
 			  screen_dimensions.y, screen_dimensions.x);
       blit (main_renderer,
-	    hero_coords,
+	    players[0].getCoordinates (),
 	    25,
 	    41,
 	    player_texture);
@@ -376,7 +372,7 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
 
   if (hero_coords.y > screen_height / 2)
     hero_coords.y = screen_height / 2;
-  
+
   me.setCoordinates (hero_coords);
  
   return 1;
@@ -390,7 +386,6 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
   std::string my_name = players[0].getName ();
 
   struct coordinates player_coordinates;
-  struct size player_placement;
 
   // Display players
   for (Player player : players)
@@ -409,9 +404,7 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 	      player_coordinates.x -= screen_origin.x;
 	      player_coordinates.y -= screen_origin.y;
 
-	      player_placement = {.x = (int) player_coordinates.x,
-				  .y = (int) player_coordinates.y};
-	      blit (renderer, player_placement, 25, 41,
+	      blit (renderer, player_coordinates, 25, 41,
 		    player_texture);
 	    }
 	}

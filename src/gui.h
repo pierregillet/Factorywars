@@ -107,7 +107,7 @@ void init (SDL_Window** main_window,
  * @return int true if there is no error
  */
 int blit (SDL_Renderer* Renderer,
-	  struct size blit_origin,
+	  struct coordinates blit_origin,
 	  int width,
 	  int height,
 	  SDL_Texture* texture);
