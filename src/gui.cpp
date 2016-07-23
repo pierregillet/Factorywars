@@ -148,9 +148,7 @@ quit_sdl (SDL_Window** main_window,
 }
 
 int 
-run_gui (int read_pipe,
-	 int write_pipe,
-	 std::vector<Player>& players)
+run_gui (std::vector<Player>& players)
 {
   const int config_value_len = 256;
   char config_value[config_value_len];
@@ -191,9 +189,7 @@ run_gui (int read_pipe,
       // else
       //   strncpy (map_path, "protosave", save_path_len);
 
-      ret = run_game (Renderer, save_path, read_pipe,
-		      write_pipe, screen_dimensions,
-		      players);
+      ret = run_game (Renderer, save_path, screen_dimensions, players);
 
       if (ret == 0)
 	stay = 0;

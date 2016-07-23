@@ -53,7 +53,6 @@ void load_game_textures (SDL_Renderer* main_renderer,
  * @return 0 if we need to quit or 1 if we need to display the main menu again.
  */
 int run_game (SDL_Renderer* main_renderer, const char* save_path,
-	      int network_read_pipe, int network_write_pipe,
 	      struct size screen_dimensions,
 	      std::vector<Player>& players);
 

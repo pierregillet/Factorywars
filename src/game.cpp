@@ -97,7 +97,6 @@ load_game_textures (SDL_Renderer* main_renderer,
 
 int
 run_game (SDL_Renderer* main_renderer, const char* save_path,
-	  int network_read_pipe, int network_write_pipe,
 	  struct size screen_dimensions,
 	  std::vector<Player>& players)
 {
@@ -196,8 +195,8 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 					   screen_dimensions.y, screen_dimensions.x,
 					   &hero_coords);
 
-	      send_move_command (network_write_pipe, screen_origin,
-				 screen_dimensions.y, screen_dimensions.x);
+	      // send_move_command (network_write_pipe, screen_origin,
+	      // 			 screen_dimensions.y, screen_dimensions.x);
 	      break;
 	    }
 	}
