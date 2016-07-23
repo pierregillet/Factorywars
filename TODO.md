@@ -15,6 +15,7 @@ content of the README.md file.
 + Auto saving.
 + Use Texlive for documentation.
 + In blit function, change the structure from size to coordinates.
++ Update the list of dependencies in COMPILE.md
 
 Main
 ----

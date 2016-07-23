@@ -97,9 +97,7 @@ load_game_textures (SDL_Renderer* main_renderer,
 
 int
 run_game (SDL_Renderer* main_renderer, const char* save_path,
-	  int network_read_pipe, int network_write_pipe,
-	  struct size screen_dimensions,
-	  std::vector<Player>& players)
+	  struct size screen_dimensions)
 {
   SDL_Texture* textures[4][10];
   load_game_textures (main_renderer, textures);
@@ -118,10 +116,19 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   struct coordinates screen_origin = {.x = 0,
 				      .y = 0};
 
+  const int config_value_len = 256;
+  char config_value[config_value_len];
+
+  std::vector<Player> players (1, Player ());
+  get_config_value ("name", config_value, config_value_len);
+  players[0].setName (config_value);
+
   struct size hero_coords = {.x = screen_center.x,
 			     .y = screen_center.y};
+
+  players[0].setCoordinates ({screen_center.x, screen_center.y});
   
-    /* 
+  /* 
    * keys_state contains only 4 elements
    * because we only use 4 keys as of now
    * keys_state[0] -> SDLK_UP
@@ -147,6 +154,12 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   struct map_coordinates click_map_coords;
 
   TTF_Font* ttf_freesans = TTF_OpenFont (FONTSDIR"/FreeSans.ttf", 18);
+
+  if (ttf_freesans == NULL)
+    {
+      fprintf (stderr, "Error while loading FreeSans.ttf\n");
+      return 0;
+    }
 
   const int map_path_len = 256;
   char map_path[map_path_len];
@@ -194,10 +207,10 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 	    {
               move_coordinates_on_keydown (&screen_origin, keys_state,
 					   screen_dimensions.y, screen_dimensions.x,
-					   &hero_coords);
+					   players[0]);
 
-	      send_move_command (network_write_pipe, screen_origin,
-				 screen_dimensions.y, screen_dimensions.x);
+	      // send_move_command (network_write_pipe, screen_origin,
+	      // 		    screen_dimensions.y, screen_dimensions.x);
 	      break;
 	    }
 	}
@@ -336,9 +349,11 @@ destroy_game_textures (SDL_Texture* player_texture, SDL_Texture* textures[][10])
 int
 move_coordinates_on_keydown (struct coordinates* screen_origin,
 			     bool* keys_state, int screen_height,
-			     int screen_width, struct size* hero_coords)
+			     int screen_width, Player& me)
 {
-  if (hero_coords->x >= screen_width / 2 && hero_coords->y >= screen_height / 2)
+  struct coordinates hero_coords = me.getCoordinates ();
+
+  if (hero_coords.x >= screen_width / 2 && hero_coords.y >= screen_height / 2)
     {
       screen_origin->y -= (keys_state[key_up])? 5 : 0;
       screen_origin->y += (keys_state[key_down])? 5 : 0;
@@ -347,20 +362,22 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
     }
   if (screen_origin->y <= 0 || screen_origin->x <= 0)
     {
-      hero_coords->y -= (keys_state[key_up])? 5 : 0;
-      hero_coords->y += (keys_state[key_down])? 5 : 0;
-      hero_coords->x -= (keys_state[key_left])? 5 : 0;
-      hero_coords->x += (keys_state[key_right])? 5 : 0;
+      hero_coords.y -= (keys_state[key_up])? 5 : 0;
+      hero_coords.y += (keys_state[key_down])? 5 : 0;
+      hero_coords.x -= (keys_state[key_left])? 5 : 0;
+      hero_coords.x += (keys_state[key_right])? 5 : 0;
     }
   
-  hero_coords->x = (hero_coords->x < 0 )? 0 : hero_coords->x;
-  hero_coords->y = (hero_coords->y < 0 )? 0 : hero_coords->y;
+  hero_coords.x = (hero_coords.x < 0 )? 0 : hero_coords.x;
+  hero_coords.y = (hero_coords.y < 0 )? 0 : hero_coords.y;
 
-  if (hero_coords->x > screen_width / 2)
-    hero_coords->x = screen_width / 2;
+  if (hero_coords.x > screen_width / 2)
+    hero_coords.x = screen_width / 2;
 
-  if (hero_coords->y > screen_height / 2)
-    hero_coords->y = screen_height / 2;
+  if (hero_coords.y > screen_height / 2)
+    hero_coords.y = screen_height / 2;
+  
+  me.setCoordinates (hero_coords);
  
   return 1;
 }

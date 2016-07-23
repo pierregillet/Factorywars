@@ -11,9 +11,9 @@ SDL2_Image | >= 2.0  | PNG images.
 
 ### Compile ###
 
-Just type ``make`` at the root of the project!
+Just type ``./configure ; make ; sudo make install`` at the root of the project!
 
-# French #
+# Français #
 
 # Comment compiler #
 
@@ -27,5 +27,4 @@ SDL2_Image      | >= 2.0  | Charger les images PNG.
 
 ## Compiler ##
 
-Tapez juste ``make`` à la racine du projet !
-
+Tapez juste ``./configure ; make ; sudo make install`` à la racine du projet !

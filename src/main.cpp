@@ -36,8 +36,9 @@
 #include <locale.h>
 
 #include "gui.h"
-#include "player.h"
 #include "gettext.h"
+
+#define _(string) gettext (string)
 
 extern "C" {
   #include "network.h"
@@ -104,43 +105,29 @@ main (int argc, char *argv[])
       exit (EXIT_FAILURE);
     }
 
-  const int config_value_len = 256;
-  char config_value[config_value_len];
-
-  int pipes[4];
-  std::vector<Player> players (1, Player ());
-  get_config_value ("name", config_value, config_value_len);
-  players[0].setName (config_value);
-  
-  pipe (pipes);
-  pipe (pipes + 2);
-
-  get_config_value ("port", config_value, config_value_len);
-  run_network_process (atoi (config_value), pipes, IP, port);
-
-  if (run_gui (pipes[2], pipes[1], players) != 0)
+  if (run_gui () != 0)
     {
-      shutdown_network_process (pipes[0]);
       return 1;
     }
 
-  shutdown_network_process (pipes[1]);
   return 0;
 }
 
 static void
 print_help (void)
 {
-  printf ("Usage: %s [OPTION]…\n", program_name);
-  printf ("The best game in the world!\n");
+  printf (_("Usage: %s [OPTION]..."), program_name);
   printf ("\n");
+  printf (_("The best game in the world!"));
+  printf ("\n\n");
 
-  printf ("-h, --help display this help and exit.\n");
-  printf ("\n");
+  printf (_("-h, --help display this help and exit."));
+  printf ("\n\n");
 
-  printf ("-s, --server <IP> specify the ip of the server you want to join.\n");
-  printf ("-p, --server-port <port> specify the port of the server you want to join (default: 4284).\n");
+  printf (_("-s, --server <IP> specify the ip of the server you want to join."));
   printf ("\n");
+  printf (_("-p, --server-port <port> specify the port of the server you want to join (default: 4284)."));
+  printf ("\n\n");
 }
 
 static void
@@ -152,8 +139,12 @@ print_version (void)
   printf ("\
 Copyright (C) 2016 Corentin Bocquillon.\n\
 Copyright (C) 2016 Loup Fourment.\n\
-Copyright (C) 2016 Pierre Gillet.\n\
-License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html\n\
-This is free software: you are free to change and destribute it.\n\
-There is NO WARRANTY, to the extent permitted by law.\n");
+Copyright (C) 2016 Pierre Gillet.\n");
+
+  printf (_("License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>"));
+  printf ("\n");
+  printf (_("This is free software: you are free to change and destribute it."));
+  printf ("\n");
+  printf (_("There is NO WARRANTY, to the extent permitted by law."));
+  printf ("\n");
 }
