@@ -42,7 +42,6 @@
 
 #include "structures.h"
 #include "display_item.h"
-#include "player.h"
 #include "display_map.h"
 #include "display_item.h"
 #include "multiplayer.h"
@@ -139,7 +138,7 @@ void quit_sdl (SDL_Window** main_window,
  * @param players is a vector containing every players connected.
  * @return -1 if there is an error or 0 if there is no error.
  */
-int run_gui (std::vector<Player>& players);
+int run_gui ();
 
 /**
  * Calculates the fps using start_time and resets it.

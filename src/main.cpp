@@ -36,7 +36,6 @@
 #include <locale.h>
 
 #include "gui.h"
-#include "player.h"
 #include "gettext.h"
 
 #define _(string) gettext (string)
@@ -106,14 +105,7 @@ main (int argc, char *argv[])
       exit (EXIT_FAILURE);
     }
 
-  const int config_value_len = 256;
-  char config_value[config_value_len];
-
-  std::vector<Player> players (1, Player ());
-  get_config_value ("name", config_value, config_value_len);
-  players[0].setName (config_value);
-  
-  if (run_gui (players) != 0)
+  if (run_gui () != 0)
     {
       return 1;
     }

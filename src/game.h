@@ -32,8 +32,10 @@
 
 #pragma once
 
-#include "gui.h"
 #include <string>
+
+#include "gui.h"
+#include "player.h"
 
 /**
  * Load the game textures.
@@ -53,8 +55,7 @@ void load_game_textures (SDL_Renderer* main_renderer,
  * @return 0 if we need to quit or 1 if we need to display the main menu again.
  */
 int run_game (SDL_Renderer* main_renderer, const char* save_path,
-	      struct size screen_dimensions,
-	      std::vector<Player>& players);
+	      struct size screen_dimensions);
 
 /**
  * Destroy the game’s textures.
@@ -68,7 +69,7 @@ int move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 bool* keys_state,
 				 int screen_height,
 				 int screen_width,
-				 struct size* hero_coords);
+				 Player& me);
 
 /**
  * Blit the players in “players” on the renderer “renderer”
