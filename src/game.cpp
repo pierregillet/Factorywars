@@ -341,7 +341,7 @@ destroy_game_textures (SDL_Texture* player_texture, SDL_Texture* textures[][10])
   SDL_DestroyTexture (player_texture);
 }
 
-int
+void
 move_coordinates_on_keydown (struct coordinates* screen_origin,
 			     bool* keys_state, int screen_height,
 			     int screen_width, Player& me)
@@ -350,23 +350,31 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
   hero_screen_coords.x -= screen_origin->x;
   hero_screen_coords.y -= screen_origin->y;
 
-  if (hero_screen_coords.x >= screen_width / 2 && hero_screen_coords.y >= screen_height / 2)
+  if (hero_screen_coords.x >= screen_width / 2)
     {
-      screen_origin->y -= (keys_state[key_up])? 5 : 0;
-      screen_origin->y += (keys_state[key_down])? 5 : 0;
       screen_origin->x -= (keys_state[key_left])? 5 : 0;
       screen_origin->x += (keys_state[key_right])? 5 : 0;
     }
-  if (screen_origin->y <= 0 || screen_origin->x <= 0)
+  if (hero_screen_coords.y >= screen_height / 2)
     {
-      hero_screen_coords.y -= (keys_state[key_up])? 5 : 0;
-      hero_screen_coords.y += (keys_state[key_down])? 5 : 0;
+      screen_origin->y -= (keys_state[key_up])? 5 : 0;
+      screen_origin->y += (keys_state[key_down])? 5 : 0;
+    }
+
+  if (screen_origin->x <= 0)
+    {
       hero_screen_coords.x -= (keys_state[key_left])? 5 : 0;
       hero_screen_coords.x += (keys_state[key_right])? 5 : 0;
     }
+  if (screen_origin->y <= 0)
+    {
+      hero_screen_coords.y -= (keys_state[key_up])? 5 : 0;
+      hero_screen_coords.y += (keys_state[key_down])? 5 : 0;
+    }
+
   
-  hero_screen_coords.x = (hero_screen_coords.x < 0 )? 0 : hero_screen_coords.x;
-  hero_screen_coords.y = (hero_screen_coords.y < 0 )? 0 : hero_screen_coords.y;
+  hero_screen_coords.x = (hero_screen_coords.x < 0)? 0 : hero_screen_coords.x;
+  hero_screen_coords.y = (hero_screen_coords.y < 0)? 0 : hero_screen_coords.y;
 
   if (hero_screen_coords.x > screen_width / 2)
     hero_screen_coords.x = screen_width / 2;
@@ -374,13 +382,12 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
   if (hero_screen_coords.y > screen_height / 2)
     hero_screen_coords.y = screen_height / 2;
 
+
   struct coordinates hero_coords;
   hero_coords.x = hero_screen_coords.x + screen_origin->x;
   hero_coords.y = hero_screen_coords.y + screen_origin->y;
 
   me.setCoordinates (hero_coords);
- 
-  return 1;
 }
 
 void
