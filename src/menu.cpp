@@ -113,6 +113,7 @@ display_main_menu (SDL_Renderer* main_renderer,
 
   // The background rectangle
   SDL_Rect bg_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
+  struct coordinates blit_coords;
 
   while (stay)
     {
@@ -120,7 +121,6 @@ display_main_menu (SDL_Renderer* main_renderer,
       blit_rect (main_renderer, {0, 0, 0, 255}, bg_rect);
 
       // On affiche le fond du menu
-      struct size blit_coords;
       SDL_Rect rect;
       blit (main_renderer,
 	    {screen_dimensions.x / 2 - 480 / 2, screen_dimensions.y / 2 - 640 / 2},
@@ -153,28 +153,32 @@ display_main_menu (SDL_Renderer* main_renderer,
 
       SDL_RenderPresent (main_renderer);
 
+      
       ret = handle_main_menu_events (main_renderer,
 				     screen_dimensions,
 				     buttons, number_of_buttons);
 
+      // Si charger une partie a été cliqué
       if (ret == 2)
 	{
 	  ret = get_save_path (main_renderer, dst, dst_len,
 			       screen_dimensions);
+	  
+	  // Si une sauvegarde a été choisie
 	  if (ret == 1)
 	    {
 	      stay = 0;
 	      continue;
 	    }
 	}
-      else if (ret == 4)
+      else if (ret == 4) 	// À propos
 	{
 	  ret = about (main_renderer, screen_dimensions);
-	  if (ret != 0)
+	  if (ret != 0)		// Si on ne doit pas quitter
 	    continue;
 	}
 
-      if (ret <= 1)
+      if (ret <= 1) 		// Si on doit quitter
 	stay = 0;
     }
   
@@ -337,7 +341,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 
   
   int rows = (screen_dimensions.y - 66) / row_height;
-  struct size blit_origin = {.x = 10, .y = 0};
+  struct coordinates blit_origin = {.x = 10, .y = 0};
 
   int highlighted_line = 0;
   int event_type = 0;
@@ -564,7 +568,7 @@ display_in_game_menu (SDL_Renderer* main_renderer,
   SDL_Rect bg_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};
 
   // On affiche le fond du menu
-  struct size blit_coords;
+  struct coordinates blit_coords;
   SDL_Rect rect;
   blit (main_renderer,
 	{screen_dimensions.x / 2 - 480 / 2, screen_dimensions.y / 2 - 640 / 2},
@@ -692,7 +696,7 @@ about (SDL_Renderer* main_renderer, struct size screen_dimensions)
   button_text_rect.y = button.y + button.h / 2 - button_text_rect.h / 2;
 
   
-  struct size blit_origin = {.x = 10, .y = 0};
+  struct coordinates blit_origin = {.x = 10, .y = 0};
 
   // On affiche un fond noir
   fill_rect = {0, 0, screen_dimensions.x, screen_dimensions.y};

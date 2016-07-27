@@ -92,7 +92,7 @@ init (SDL_Window** main_window,
 
 int
 blit (SDL_Renderer* main_renderer,
-      struct size blit_origin,
+      struct coordinates blit_origin,
       int width,
       int height,
       SDL_Texture* texture)
@@ -217,8 +217,8 @@ display_ground (SDL_Renderer* main_renderer,
 					  .y = screen_dimensions.y / default_square_width};
 
   // Load the squares depending on the player position.
-  struct size square_top_left_corner = {.x = 0,
-					.y = 0};
+  struct coordinates square_top_left_corner = {.x = 0,
+					       .y = 0};
   unsigned int biome_texture; // Contains the square's biome's number.
 
   for (int row = 0; row <= squares_to_draw.y; row ++)
@@ -268,8 +268,8 @@ display_fps (SDL_Renderer* main_renderer,
 
   SDL_Texture* message = SDL_CreateTextureFromSurface (main_renderer, surface_message);
 
-  struct size blit_origin = {.x = 0,
-			     .y = 0};
+  struct coordinates blit_origin = {.x = 0,
+				    .y = 0};
   int blit_height = 0;
   int blit_width = 0;
   SDL_QueryTexture (message, NULL, NULL,
@@ -304,7 +304,7 @@ copy_surface (SDL_Surface* src)
 void
 blit_rect (SDL_Renderer* renderer, SDL_Color color, SDL_Rect rectangle)
 {
-  SDL_RenderSetViewport (renderer, NULL);
+  SDL_RenderSetViewport (renderer, &rectangle);
   SDL_SetRenderDrawColor (renderer, color.r, color.g, color.b, color.a);
   SDL_RenderFillRect (renderer, &rectangle);
 }

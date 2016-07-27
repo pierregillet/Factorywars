@@ -52,7 +52,7 @@ display_background (SDL_Renderer** Renderer,
   struct coordinates coords;
   int id;
   SDL_Texture* display_id;
-  struct size temp;
+  struct coordinates temp;
   struct chunk_info current_chunk_info;
 
   for(int i(0); i < screen_height + screen_origin.y % chunk_width; i += chunk_width)

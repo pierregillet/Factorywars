@@ -42,7 +42,7 @@ display_items (SDL_Renderer** Renderer,
 {
 
   int item_id, blit_x, blit_y;
-  struct size bliting_coords;
+  struct coordinates bliting_coords;
   SDL_Texture* item_texture;
   
   if (chunk.biome_id == -1)

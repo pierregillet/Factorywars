@@ -65,7 +65,7 @@ void destroy_game_textures (SDL_Texture* player_texture, SDL_Texture* textures[]
 /**
  * Move screen_origin and hero_coords coordinates if a key is pressed.
  */
-int move_coordinates_on_keydown (struct coordinates* screen_origin,
+void move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 bool* keys_state,
 				 int screen_height,
 				 int screen_width,
