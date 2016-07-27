@@ -63,7 +63,8 @@ SDL_Texture* create_texture_from_text (const char* text, int font_size,
  * @param number is the number of buttons.
  * @return + 0 if quit was clicked.
  * + 1 if new game was clicked.
- * + 2 if load game was clicked
+ * + 2 if load game was clicked.
+ * + 4 if about was clicked.
  */
 int handle_main_menu_events (SDL_Renderer* main_renderer,
 			     struct size screen_dimensions,

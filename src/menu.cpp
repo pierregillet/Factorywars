@@ -153,28 +153,32 @@ display_main_menu (SDL_Renderer* main_renderer,
 
       SDL_RenderPresent (main_renderer);
 
+      
       ret = handle_main_menu_events (main_renderer,
 				     screen_dimensions,
 				     buttons, number_of_buttons);
 
+      // Si charger une partie a été cliqué
       if (ret == 2)
 	{
 	  ret = get_save_path (main_renderer, dst, dst_len,
 			       screen_dimensions);
+	  
+	  // Si une sauvegarde a été choisie
 	  if (ret == 1)
 	    {
 	      stay = 0;
 	      continue;
 	    }
 	}
-      else if (ret == 4)
+      else if (ret == 4) 	// À propos
 	{
 	  ret = about (main_renderer, screen_dimensions);
-	  if (ret != 0)
+	  if (ret != 0)		// Si on ne doit pas quitter
 	    continue;
 	}
 
-      if (ret <= 1)
+      if (ret <= 1) 		// Si on doit quitter
 	stay = 0;
     }
   
