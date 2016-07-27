@@ -123,6 +123,8 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   get_config_value ("name", config_value, config_value_len);
   players[0].setName (config_value);
   players[0].setCoordinates ({screen_center.x, screen_center.y});
+
+  struct coordinates hero_coords = {screen_center.x, screen_center.y};
   
   /* 
    * keys_state contains only 4 elements
@@ -285,11 +287,8 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
       display_background (&main_renderer, &map,
 			  textures, screen_origin,
 			  screen_dimensions.y, screen_dimensions.x);
-      blit (main_renderer,
-	    players[0].getCoordinates (),
-	    25,
-	    41,
-	    player_texture);
+
+
 
       blit (main_renderer,
 	    toolbar_origin,
@@ -347,9 +346,11 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
 			     bool* keys_state, int screen_height,
 			     int screen_width, Player& me)
 {
-  struct coordinates hero_coords = me.getCoordinates ();
+  struct coordinates hero_screen_coords = me.getCoordinates ();
+  hero_screen_coords.x -= screen_origin->x;
+  hero_screen_coords.y -= screen_origin->y;
 
-  if (hero_coords.x >= screen_width / 2 && hero_coords.y >= screen_height / 2)
+  if (hero_screen_coords.x >= screen_width / 2 && hero_screen_coords.y >= screen_height / 2)
     {
       screen_origin->y -= (keys_state[key_up])? 5 : 0;
       screen_origin->y += (keys_state[key_down])? 5 : 0;
@@ -358,20 +359,24 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
     }
   if (screen_origin->y <= 0 || screen_origin->x <= 0)
     {
-      hero_coords.y -= (keys_state[key_up])? 5 : 0;
-      hero_coords.y += (keys_state[key_down])? 5 : 0;
-      hero_coords.x -= (keys_state[key_left])? 5 : 0;
-      hero_coords.x += (keys_state[key_right])? 5 : 0;
+      hero_screen_coords.y -= (keys_state[key_up])? 5 : 0;
+      hero_screen_coords.y += (keys_state[key_down])? 5 : 0;
+      hero_screen_coords.x -= (keys_state[key_left])? 5 : 0;
+      hero_screen_coords.x += (keys_state[key_right])? 5 : 0;
     }
   
-  hero_coords.x = (hero_coords.x < 0 )? 0 : hero_coords.x;
-  hero_coords.y = (hero_coords.y < 0 )? 0 : hero_coords.y;
+  hero_screen_coords.x = (hero_screen_coords.x < 0 )? 0 : hero_screen_coords.x;
+  hero_screen_coords.y = (hero_screen_coords.y < 0 )? 0 : hero_screen_coords.y;
 
-  if (hero_coords.x > screen_width / 2)
-    hero_coords.x = screen_width / 2;
+  if (hero_screen_coords.x > screen_width / 2)
+    hero_screen_coords.x = screen_width / 2;
 
-  if (hero_coords.y > screen_height / 2)
-    hero_coords.y = screen_height / 2;
+  if (hero_screen_coords.y > screen_height / 2)
+    hero_screen_coords.y = screen_height / 2;
+
+  struct coordinates hero_coords;
+  hero_coords.x = hero_screen_coords.x + screen_origin->x;
+  hero_coords.y = hero_screen_coords.y + screen_origin->y;
 
   me.setCoordinates (hero_coords);
  
@@ -383,16 +388,10 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 		 SDL_Renderer* renderer, SDL_Texture* player_texture,
 		 struct size screen_dimensions)
 {
-  std::string my_name = players[0].getName ();
-
   struct coordinates player_coordinates;
 
-  // Display players
   for (Player player : players)
     {
-      if (player.getName () == my_name)
-	continue;
-
       player_coordinates = player.getCoordinates ();
 
       if (player_coordinates.x >= screen_origin.x
