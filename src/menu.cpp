@@ -208,7 +208,10 @@ handle_main_menu_events (SDL_Renderer* main_renderer,
   while (stay)
     {
       if (SDL_PollEvent (&event) == 0)
-	continue;
+	{
+	  SDL_Delay (50);
+	  continue;
+	}
 
       switch (event.type)
 	{
@@ -241,8 +244,6 @@ handle_main_menu_events (SDL_Renderer* main_renderer,
 	  break;
 	}
     }
-  
-  // Afficher les autres menus
 
   return 1;
 }
@@ -451,7 +452,10 @@ handle_load_save_menu_events (SDL_Rect* buttons, int number_of_buttons,
   while (stay)
     {
       if (SDL_PollEvent (&event) == 0)
-	continue;
+	{
+	  SDL_Delay (50);
+	  continue;
+	}
 
       switch (event.type)
 	{
@@ -626,7 +630,10 @@ handle_in_game_menu_events (SDL_Rect* buttons, int number_of_buttons)
   while (stay)
     {
       if (SDL_PollEvent (&event) == 0)
-	continue;
+	{
+	  SDL_Delay (50);
+	  continue;
+	}
 
       switch (event.type)
 	{
@@ -733,7 +740,10 @@ handle_about_menu_events (SDL_Rect* buttons, int number_of_buttons)
   while (stay)
     {
       if (SDL_PollEvent (&event) == 0)
-	continue;
+	{
+	  SDL_Delay (50);
+	  continue;
+	}
 
       switch (event.type)
 	{

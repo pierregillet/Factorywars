@@ -267,6 +267,7 @@ display_fps (SDL_Renderer* main_renderer,
 							 white);
 
   SDL_Texture* message = SDL_CreateTextureFromSurface (main_renderer, surface_message);
+  SDL_FreeSurface (surface_message);
 
   struct coordinates blit_origin = {.x = 0,
 				    .y = 0};
@@ -284,6 +285,7 @@ display_fps (SDL_Renderer* main_renderer,
 			   .h = 150};
 
   SDL_RenderCopy (main_renderer, message, NULL, &message_rect);
+  SDL_DestroyTexture (message);
 }
 
 SDL_Surface*
