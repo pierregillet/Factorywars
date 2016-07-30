@@ -36,8 +36,8 @@
 #include <locale.h>
 
 #include "gui.h"
-#include "gettext.h"
 
+#include "gettext.h"
 #define _(string) gettext (string)
 
 extern "C" {

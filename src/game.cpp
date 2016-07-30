@@ -122,9 +122,9 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   std::vector<Player> players (1, Player ());
   get_config_value ("name", config_value, config_value_len);
   players[0].setName (config_value);
-  players[0].setCoordinates ({screen_center.x, screen_center.y});
+  players[0].setCoordinates ({0, 0});
 
-  struct coordinates hero_coords = {screen_center.x, screen_center.y};
+  struct coordinates hero_coords = {0, 0};
   
   /* 
    * keys_state contains only 4 elements

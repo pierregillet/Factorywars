@@ -168,7 +168,6 @@ read_save_file (Map* map, const char* save_file_path)
 	{
 	  fprintf (stderr, "Error while reading save file.\n");
 	  fprintf (stderr, "It is not possible to reallocate memory for the buffer.\n");
-	  free (buffer);
 	  return 0;
 	}
     }

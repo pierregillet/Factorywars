@@ -119,7 +119,8 @@ am_factorywars_OBJECTS = src/main.$(OBJEXT) src/game_events.$(OBJEXT) \
 	src/player.$(OBJEXT) src/config.$(OBJEXT) \
 	src/network.$(OBJEXT) src/display_map.$(OBJEXT) \
 	src/display_item.$(OBJEXT) src/multiplayer.$(OBJEXT) \
-	src/map.pb-c.$(OBJEXT) src/menu.$(OBJEXT) src/game.$(OBJEXT)
+	src/map.pb-c.$(OBJEXT) src/player-data.pb-c.$(OBJEXT) \
+	src/menu.$(OBJEXT) src/game.$(OBJEXT)
 factorywars_OBJECTS = $(am_factorywars_OBJECTS)
 am__DEPENDENCIES_1 =
 factorywars_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -419,7 +420,7 @@ EXTRA_DIST = config.rpath  \
 	factorywars.conf\
 	README.md\
 	TODO.md\
-	src/map.proto\
+	src/map.proto src/player-data.proto\
 	saves
 
 factorywars_SOURCES = \
@@ -437,6 +438,7 @@ factorywars_SOURCES = \
 	src/display_item.cpp src/display_item.h\
 	src/multiplayer.cpp src/multiplayer.h\
 	src/map.pb-c.c src/map.pb-c.h\
+	src/player-data.pb-c.c src/player-data.pb-c.h\
 	src/menu.cpp src/menu.h\
 	src/game.cpp src/game.h\
 	src/gettext.h\
@@ -587,6 +589,8 @@ src/multiplayer.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/map.pb-c.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/player-data.pb-c.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/menu.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/game.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 
@@ -614,6 +618,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/menu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/multiplayer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/network.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/player-data.pb-c.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/player.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/save.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/utils.Po@am__quote@
