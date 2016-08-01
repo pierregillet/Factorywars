@@ -373,6 +373,7 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
 	{
 	  if (i == highlighted_line)
 	    {
+	      printf ("%d\n", i);
 	      fill_rect = {0, i * row_height, screen_dimensions.x, row_height};
 	      blit_rect (main_renderer, {255, 0, 0, 255}, fill_rect);
 	    }
@@ -556,7 +557,7 @@ display_in_game_menu (SDL_Renderer* main_renderer,
   const char* menu_text[] = {_("Save"),
 		       _("Save and quit"),
 		       _("Settings"),
-		       _("Main Menu"),
+		       _("Main menu"),
 		       _("Quit")};
 
   int font_size = 40;
