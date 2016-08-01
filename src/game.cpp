@@ -255,6 +255,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 	  else if (ret == 2)
 	    {
 	      save_to_file (&map, map_path);
+	      save_players (players, save_path);
 	      break;
 	    }
 
