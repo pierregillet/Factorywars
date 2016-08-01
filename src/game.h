@@ -85,3 +85,8 @@ void display_players (std::vector<Player>& players,
 		      SDL_Renderer* renderer,
 		      SDL_Texture* player_texture,
 		      struct size screen_dimensions);
+
+/**
+ * Save the players
+ */
+int save_players (std::vector<Player>& players, std::string save_dir_path);

@@ -54,58 +54,58 @@ Player::Player(int health,
   m_selected_tool = 0;
   m_velocity = velocity;
   m_id = 1;
+  m_save_file_path = "";
 }
 
 inline int
 Player::getHealth () const
 {
-  return this->m_health;
+  return m_health;
 }
 
 std::string
 Player::getName () const
 {
-  return this->m_name;
+  return m_name;
 }
 
 void
 Player::setName (const char* name)
 {
-  this->m_name = name;
+  m_name = name;
 }
 
 void
 Player::setName (std::string name)
 {
-  this->m_name = name;
+  m_name = name;
 }
 
 void
 Player::setCoordinates (struct coordinates new_coords)
 {
-  this->m_coordinates.x = new_coords.x;
-  this->m_coordinates.y = new_coords.y;
+  m_coordinates.x = new_coords.x;
+  m_coordinates.y = new_coords.y;
 }
 
 struct coordinates
 Player::getCoordinates () const
 {
-  return this->m_coordinates;
+  return m_coordinates;
 }
 
 inline int
 Player::playerIsAttacked (std::string enemy_name,
 			  int damage)
 {
-  this->m_health -= damage;
-  return this->m_health;
+  m_health -= damage;
+  return m_health;
 }
 
 inline void
 Player::playerWalks (bool horizontal,
 		     bool vertical)
 {
-  // We'll maybe have to add this-> before every m_coordinates, gotta check
   if (horizontal == 1)
     m_coordinates.x ++;
   else
@@ -138,8 +138,8 @@ Player::save (std::string path) const
   PlayerData player_data = PLAYER_DATA__INIT;
 
   // Fill the player’s name
-  player_data.name = (char*) malloc (sizeof (char) * this->m_name.size ());
-  strcpy (player_data.name, this->m_name.c_str ());
+  player_data.name = (char*) malloc (sizeof (char) * m_name.size ());
+  strcpy (player_data.name, m_name.c_str ());
 
   // Coordinates
   player_data.x = (int64_t) m_coordinates.x;
@@ -161,9 +161,16 @@ Player::save (std::string path) const
   player_data.inventory_number = (int32_t*) malloc (sizeof (int32_t) * number_of_items_inventory);
 
   if (player_data.inventory_item_id == NULL)
-    return 0;
+    {
+      fprintf (stderr, _("Error, cannot allocate memory.\n"));
+      return 0;
+    }
+
   if (player_data.inventory_number == NULL)
-    return 0;
+    {
+      fprintf (stderr, _("Error, cannot allocate memory.\n"));
+      return 0;
+    }
   
   for (int i = 0; i < number_of_items_inventory; i++)
     {
@@ -177,13 +184,19 @@ Player::save (std::string path) const
   player_data.n_toolbar_item_id = number_of_items_toolbar;
   player_data.n_toolbar_number = number_of_items_toolbar;
 
-  player_data.inventory_item_id = (int32_t*) malloc (sizeof (int32_t) * number_of_items_toolbar);
-  player_data.inventory_number = (int32_t*) malloc (sizeof (int32_t) * number_of_items_toolbar);
+  player_data.toolbar_item_id = (int32_t*) malloc (sizeof (int32_t) * number_of_items_toolbar);
+  player_data.toolbar_number = (int32_t*) malloc (sizeof (int32_t) * number_of_items_toolbar);
 
   if (player_data.toolbar_item_id == NULL)
-    return 0;
+    {
+      fprintf (stderr, _("Error, cannot allocate memory.\n"));
+      return 0;
+    }
   if (player_data.toolbar_number == NULL)
-    return 0;
+    {
+      fprintf (stderr, _("Error, cannot allocate memory.\n"));
+      return 0;
+    }
   
   for (int i = 0; i < number_of_items_toolbar; i++)
     {
@@ -195,7 +208,10 @@ Player::save (std::string path) const
   unsigned long len = player_data__get_packed_size (&player_data);
   uint8_t *buffer = (uint8_t*) malloc (len);
   if (buffer == NULL)
-    return 0;
+    {
+      fprintf (stderr, _("Error, cannot allocate memory.\n"));
+      return 0;
+    }
 
   player_data__pack (&player_data, buffer);
 
@@ -227,10 +243,10 @@ Player::save (std::string path) const
 int
 Player::save () const
 {
-  if (this->m_save_file_path.empty ())
+  if (m_save_file_path.empty ())
     return 0;
 
-  return this->save (this->m_save_file_path);
+  return save (m_save_file_path);
 }
 
 int
@@ -250,6 +266,10 @@ Player::read_save (std::string path)
   int n = 0;
 
   FILE *save_file = fopen (path.c_str (), "r");
+  if (save_file == NULL)
+    {
+      return 0;
+    }
 
   while (fread (&c, sizeof (char), 1, save_file))
     {
@@ -263,6 +283,7 @@ Player::read_save (std::string path)
 	  return 0;
 	}
     }
+  fclose (save_file);
 
   player_data = player_data__unpack (NULL, n, buffer);
   if (player_data == NULL)
@@ -275,13 +296,13 @@ Player::read_save (std::string path)
   free (buffer);
 
   // Fill player’s informations
-  this->m_name = std::string (player_data->name);
-  this->m_health = player_data->health;
+  m_name = std::string (player_data->name);
+  m_health = player_data->health;
 
-  this->m_coordinates.x = player_data->x;
-  this->m_coordinates.y = player_data->y;
+  m_coordinates.x = player_data->x;
+  m_coordinates.y = player_data->y;
 
-  this->m_velocity = player_data->velocity;
+  m_velocity = player_data->velocity;
 
   if (player_data->n_inventory_item_id < 100)
     return 0;
@@ -289,25 +310,25 @@ Player::read_save (std::string path)
   if (player_data->n_inventory_number < 100)
     return 0;
 
-  if (player_data->n_toolbar_item_id < 100)
+  if (player_data->n_toolbar_item_id < 10)
     return 0;
 
-  if (player_data->n_toolbar_number < 100)
+  if (player_data->n_toolbar_number < 10)
     return 0;
 
   for (int i = 0; i < 100; i++)
     {
-      this->m_inventory[i][0] = player_data->inventory_item_id[i];
-      this->m_inventory[i][1] = player_data->inventory_number[i];
+      m_inventory[i][0] = player_data->inventory_item_id[i];
+      m_inventory[i][1] = player_data->inventory_number[i];
     }
 
   for (int i = 0; i < 10; i++)
     {
-      this->m_toolbar[i][0] = player_data->toolbar_item_id[i];
-      this->m_toolbar[i][1] = player_data->toolbar_number[i];
+      m_toolbar[i][0] = player_data->toolbar_item_id[i];
+      m_toolbar[i][1] = player_data->toolbar_number[i];
     }
 
-  this->m_selected_tool = player_data->selected_tool;
+  m_selected_tool = player_data->selected_tool;
   
   player_data__free_unpacked (player_data, NULL);
 
@@ -317,20 +338,20 @@ Player::read_save (std::string path)
 int
 Player::read_save ()
 {
-  if (this->m_save_file_path.empty ())
+  if (m_save_file_path.empty ())
     return 0;
-  
-  return this->read_save (this->m_save_file_path);
+
+  return read_save (m_save_file_path);
 }
 
 void
 Player::setSaveFilePath (std::string path)
 {
-  this->m_save_file_path = path;
+  m_save_file_path = path;
 }
 
 std::string
 Player::getSaveFilePath () const
 {
-  return this->m_save_file_path;
+  return m_save_file_path;
 }

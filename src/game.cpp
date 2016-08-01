@@ -113,18 +113,51 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   screen_center.x = screen_dimensions.x / 2;
   screen_center.y = screen_dimensions.y / 2;
   
-  struct coordinates screen_origin = {.x = 0,
-				      .y = 0};
+  struct coordinates screen_origin, hero_coords;
 
+  // On charge la sauvegarde du joueur
   const int config_value_len = 256;
   char config_value[config_value_len];
 
   std::vector<Player> players (1, Player ());
-  get_config_value ("name", config_value, config_value_len);
-  players[0].setName (config_value);
-  players[0].setCoordinates ({0, 0});
 
-  struct coordinates hero_coords = {0, 0};
+  // S’il y a un fichier de sauvegarde pour le joueur, on le charge
+  get_config_value ("name", config_value, config_value_len);
+  players[0].setSaveFilePath (std::string (save_path) + "/"
+			      + std::string (config_value));
+  players[0].read_save ();
+
+  // On utilise les coordonnées du joueur
+  if (players[0].getCoordinates ().x > screen_center.x)
+    {
+      hero_coords.x = screen_center.x;
+      screen_origin.x = players[0].getCoordinates ().x - hero_coords.x;
+    }
+  else
+    {
+      hero_coords.x = players[0].getCoordinates ().x;
+      screen_origin.x = 0;
+    }
+
+  if (players[0].getCoordinates ().y > screen_center.y)
+    {
+      hero_coords.y = screen_center.y;
+      screen_origin.y = players[0].getCoordinates ().y - hero_coords.y;
+    }
+  else
+    {
+      hero_coords.y = players[0].getCoordinates ().y;
+      screen_origin.y = 0;
+    }
+
+  // On charge la sauvegarde de la carte
+  const int map_path_len = 256;
+  char map_path[map_path_len];
+
+  snprintf (map_path, map_path_len, "%s/%s", save_path, "map");
+
+  Map map = MAP__INIT;
+  read_save_file (&map, map_path);      
   
   /* 
    * keys_state contains only 4 elements
@@ -159,14 +192,6 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
       return 0;
     }
 
-  const int map_path_len = 256;
-  char map_path[map_path_len];
-
-  snprintf (map_path, map_path_len, "%s/%s", save_path, "map");
-
-  Map map = MAP__INIT;
-  read_save_file (&map, map_path);
-
   
   // We need to display the map at the beginning
   display_background (&main_renderer, &map,
@@ -174,7 +199,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 		      screen_dimensions.y, screen_dimensions.x);
 
   // Display character
-  blit (main_renderer, screen_center, 25, 41, player_texture);
+  // blit (main_renderer, screen_center, 25, 41, player_texture);
   
   // Display HUD
   struct coordinates toolbar_origin;
@@ -222,7 +247,10 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 	    break;
 
 	  else if (ret == 1)
-	    save_to_file (&map, map_path);
+	    {
+	      save_to_file (&map, map_path);
+	      save_players (players, save_path);
+	    }
 
 	  else if (ret == 2)
 	    {
@@ -414,5 +442,20 @@ display_players (std::vector<Player>& players, struct coordinates screen_origin,
 		    player_texture);
 	    }
 	}
+    }
+}
+
+int
+save_players (std::vector<Player>& players, std::string save_dir_path)
+{
+  for (Player player : players)
+    {
+      if (player.getName ().empty ())
+	continue;
+
+      if (player.getSaveFilePath ().empty ())
+	player.setSaveFilePath (save_dir_path + "/" + player.getName ());
+
+      player.save ();
     }
 }
