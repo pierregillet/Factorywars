@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: factorywars 0.1\n"
 "Report-Msgid-Bugs-To: factorywars-bugs@gnufr.xyz\n"
-"POT-Creation-Date: 2016-07-21 16:22+0200\n"
-"PO-Revision-Date: 2016-07-21 16:25+0200\n"
+"POT-Creation-Date: 2016-08-01 15:39+0200\n"
+"PO-Revision-Date: 2016-08-01 15:46+0200\n"
 "Last-Translator:  <0x539@nybble.fr>\n"
 "Language-Team: French <0x539@nybble.fr>\n"
 "Language: fr\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: src/gui.cpp:267
+#: src/gui.cpp:263
 msgid "fps"
 msgstr "ips"
 
@@ -28,7 +28,7 @@ msgstr "Nouvelle partie"
 msgid "Load game"
 msgstr "Charger une partie"
 
-#: src/menu.cpp:98 src/menu.cpp:550
+#: src/menu.cpp:98 src/menu.cpp:558
 msgid "Settings"
 msgstr "Paramètres"
 
@@ -36,49 +36,45 @@ msgstr "Paramètres"
 msgid "About"
 msgstr "À propos"
 
-#: src/menu.cpp:100 src/menu.cpp:552
+#: src/menu.cpp:100 src/menu.cpp:560
 msgid "Quit"
 msgstr "Quitter"
 
-#: src/menu.cpp:323 src/menu.cpp:679
+#: src/menu.cpp:328 src/menu.cpp:559 src/menu.cpp:690
 msgid "Main menu"
 msgstr "Menu principal"
 
-#: src/menu.cpp:548
+#: src/menu.cpp:556
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: src/menu.cpp:549
+#: src/menu.cpp:557
 msgid "Save and quit"
 msgstr "Sauvegarder et quitter"
 
-#: src/menu.cpp:551
-msgid "Main Menu"
-msgstr "Menu principal"
-
-#: src/main.cpp:136
+#: src/main.cpp:119
 #, c-format
 msgid "Usage: %s [OPTION]..."
 msgstr "Utilisation : %s [OPTION]..."
 
-#: src/main.cpp:138
+#: src/main.cpp:121
 #, c-format
 msgid "The best game in the world!"
 msgstr "Le meilleur jeu du monde !"
 
-#: src/main.cpp:141
+#: src/main.cpp:124
 #, c-format
 msgid "-h, --help display this help and exit."
 msgstr "-h, --help affiche cette aide et quitte."
 
-#: src/main.cpp:144
+#: src/main.cpp:127
 #, c-format
 msgid "-s, --server <IP> specify the ip of the server you want to join."
 msgstr ""
 "-s, --server <IP> spécifie l'adresse IP du serveur que l'on souhaite "
 "rejoindre."
 
-#: src/main.cpp:146
+#: src/main.cpp:129
 #, c-format
 msgid ""
 "-p, --server-port <port> specify the port of the server you want to join "
@@ -87,18 +83,51 @@ msgstr ""
 "-p, --server-port <port> spécifie le port du serveur que l'on souhaite "
 "rejoindre."
 
-#: src/main.cpp:161
+#: src/main.cpp:144
 #, c-format
 msgid ""
 "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>"
-msgstr "Licence GPLv3+ : GNU GPL version 3 ou toute version ultérieure <https://www.gnu.org/licenses/gpl-3.0.fr.html>"
+msgstr ""
+"Licence GPLv3+ : GNU GPL version 3 ou toute version ultérieure <https://www."
+"gnu.org/licenses/gpl-3.0.fr.html>"
 
-#: src/main.cpp:163
+#: src/main.cpp:146
 #, c-format
 msgid "This is free software: you are free to change and destribute it."
-msgstr "Ceci est un logiciel libre : vous êtes libre de le modifier et de le distribuer."
+msgstr ""
+"Ceci est un logiciel libre : vous êtes libre de le modifier et de le "
+"distribuer."
 
-#: src/main.cpp:165
+#: src/main.cpp:148
 #, c-format
 msgid "There is NO WARRANTY, to the extent permitted by law."
 msgstr "Il n'y a AUCUNE GARANTIE, dans les limites permises par la loi."
+
+#: src/player.cpp:165 src/player.cpp:171 src/player.cpp:192 src/player.cpp:197
+#: src/player.cpp:212
+#, c-format
+msgid "Error, cannot allocate memory.\n"
+msgstr "Erreur, impossible d'allouer de la mémoire.\n"
+
+#: src/player.cpp:222
+#, c-format
+msgid "Error the file cannot be opened.\n"
+msgstr "Erreur, le fichier ne peut être ouvert.\n"
+
+#: src/player.cpp:261
+#, c-format
+msgid "Failed to allocate memory.\n"
+msgstr "Impossible d'allouer de la mémoire.\n"
+
+#: src/player.cpp:282
+#, c-format
+msgid "Failed to reallocate memory.\n"
+msgstr "Impossible de réallouer de la mémoire.\n"
+
+#: src/player.cpp:291
+#, c-format
+msgid "Error while reading the file.\n"
+msgstr "Erreur lors de la lecture du fichier.\n"
+
+#~ msgid "Main Menu"
+#~ msgstr "Menu principal"
