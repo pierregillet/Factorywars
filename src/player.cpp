@@ -355,3 +355,106 @@ Player::getSaveFilePath () const
 {
   return m_save_file_path;
 }
+
+int
+Player::add_object_to_inventory (int item_id, int number)
+{
+  const int NUMBER_OF_ELEMENTS = 100;
+  const int STACK_LIMIT = 100;
+
+  // On vérifie que « number » ne dépasse pas la limite d’empilement.
+  if (number > STACK_LIMIT)
+    return 0;
+
+  int same_id = -1;
+  int first_empty_element = -1;
+
+  for (int i = 0; i < NUMBER_OF_ELEMENTS; i++)
+    {
+      // Si un ou plusieurs objets du même type sont déjà présent, on regarde
+      // si on peut en rajouter « number ».
+      if (m_inventory[i][0] == item_id)
+	{
+	  if (m_inventory[i][1] <= STACK_LIMIT + number)
+	    {
+	      same_id = i;
+	      m_inventory[i][1] += number;
+	      return 1;
+	    }
+	}
+
+      if (m_inventory[i][0] == 0 && first_empty_element != -1)
+	first_empty_element = i;
+    }
+
+  // Si on arrive ici, c’est qu’aucun élément du même type n’a été trouvé dans
+  // le tableau ou bien il n’était plus possible d’empiler « number » nouveaux
+  // objets.
+
+  // On vérifie donc si nous avons trouvé une case vide.
+  if (first_empty_element != -1)
+    {
+      // Si c’est le cas, on ajoute « number » objets dans cette case
+      m_inventory[first_empty_element][0] = item_id;
+      m_inventory[first_empty_element][1] = number;
+    }
+  else
+    return 0;			// Il n’y a plus de place 
+
+  return 1;
+}
+
+int
+Player::remove_object_from_inventory (int item_id, int number)
+{
+  const int NUMBER_OF_ELEMENTS = 100;
+  const int STACK_LIMIT = 100;
+
+  // Si on essaye de retirer plus d’objets que l’inventaire ne peut en
+  // contenir.
+  if (number > NUMBER_OF_ELEMENTS * STACK_LIMIT)
+    return 0;
+
+  int number_of_items = 0;
+  std::vector<int> relevant_squares;
+
+  for (int i = 0; i < NUMBER_OF_ELEMENTS; i++)
+    {
+      if (m_inventory[i][0] == item_id)
+	{
+	  number_of_items += m_inventory[i][1];
+	  relevant_squares.push_back (i);
+	}
+    }
+
+  if (number_of_items < number)
+    return 0;
+
+  for (int square : relevant_squares)
+    {
+      if (number == 0)
+	break;
+
+      if (number >= STACK_LIMIT)
+	{
+	  number -= m_inventory[square][1];
+
+	  m_inventory[square][0] = 0;
+	  m_inventory[square][1] = 0;
+	}
+      else
+	{
+	  if (number >= m_inventory[square][1])
+	    {
+	      number -= m_inventory[square][1];
+
+	      m_inventory[square][0] = 0;
+	      m_inventory[square][1] = 0;
+	    }
+	  else
+	    m_inventory[square][1] -= number;
+	}
+    }
+  
+  return 1;
+}

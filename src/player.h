@@ -29,6 +29,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
+
 #include <string.h>
 
 #include "structures.h"
@@ -106,6 +108,16 @@ Player
    * Get the player’s coordinates.
    */
   struct coordinates getCoordinates () const;
+  
+  /**
+   * Set the default path to the save file.
+   */
+  void setSaveFilePath (std::string path);
+
+  /**
+   * Get the default path to the save file.
+   */
+  std::string getSaveFilePath () const;
 
   /**
    * Change the selected tool.
@@ -139,15 +151,18 @@ Player
   int read_save ();
 
   /**
-   * Set the default path to the save file.
+   * Add an object to the inventory.
+   *
+   * @return 1 if success, 0 otherwise.
    */
-  void setSaveFilePath (std::string path);
+  int add_object_to_inventory (int item_id, int number);
 
   /**
-   * Get the default path to the save file.
+   * Remove an object from the inventory.
+   *
+   * @return 1 if success, 0 otherwise.
    */
-  std::string getSaveFilePath () const;
-
+  int remove_object_from_inventory (int item_id, int number);
 
  private:
   std::string m_name;
