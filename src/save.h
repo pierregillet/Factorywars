@@ -152,5 +152,5 @@ int find_chunk_using_chunk_coordinates (struct coordinates chunk_coordinates,
  */
 int
 find_square_using_square_coordinates (struct coordinates chunk_coordinates,
-					     struct coordinates square_coordinates,
-					     Map* map);
+				      struct coordinates square_coordinates,
+				      Map* map);

@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+message player_data
+{
+  required string name = 1;
+  required int32 health = 2;
+  required sint64 x = 3;
+  required sint64 y = 4;
+  required int32 velocity = 5;
+  repeated int32 inventory_item_id = 6 [packed=true];
+  repeated int32 inventory_number = 7 [packed=true];
+  repeated int32 toolbar_item_id = 8 [packed=true];
+  repeated int32 toolbar_number = 9 [packed=true];
+  required int32 selected_tool = 10;
+}

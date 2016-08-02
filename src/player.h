@@ -29,8 +29,15 @@
 #pragma once
 
 #include <string>
-#include "structures.h"
+#include <vector>
 
+#include <string.h>
+
+#include "structures.h"
+#include "player-data.pb-c.h"
+
+#include "gettext.h"
+#define _(string) gettext (string)
 
 class
 Player
@@ -101,6 +108,16 @@ Player
    * Get the player’s coordinates.
    */
   struct coordinates getCoordinates () const;
+  
+  /**
+   * Set the default path to the save file.
+   */
+  void setSaveFilePath (std::string path);
+
+  /**
+   * Get the default path to the save file.
+   */
+  std::string getSaveFilePath () const;
 
   /**
    * Change the selected tool.
@@ -113,14 +130,53 @@ Player
    */
   unsigned short getSelectedTool ();
 
+  /**
+   * Save the player’s data in a file.
+   */
+  int save (std::string path) const;
+
+  /**
+   * Save the player’s data in the default file.
+   */
+  int save () const;
+
+  /**
+   * Fill the members variables with those in the given save file.
+   */
+  int read_save (std::string path);
+
+  /**
+   * Fill the members variables with those in the default save file.
+   */
+  int read_save ();
+
+  /**
+   * Add an object to the inventory.
+   *
+   * @return 1 if success, 0 otherwise.
+   */
+  int add_object_to_inventory (int item_id, int number);
+
+  /**
+   * Remove an object from the inventory.
+   *
+   * @return 1 if success, 0 otherwise.
+   */
+  int remove_object_from_inventory (int item_id, int number);
 
  private:
-  int m_health;
   std::string m_name;
-  coordinates m_coordinates;
+
+  int m_health;
   int m_velocity;
+
+  coordinates m_coordinates;
+
   int m_inventory[100][2];
   int m_toolbar[10][2];
+
   unsigned short m_id;
   unsigned short m_selected_tool;
+
+  std::string m_save_file_path;
 };

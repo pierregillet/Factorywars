@@ -556,7 +556,7 @@ display_in_game_menu (SDL_Renderer* main_renderer,
   const char* menu_text[] = {_("Save"),
 		       _("Save and quit"),
 		       _("Settings"),
-		       _("Main Menu"),
+		       _("Main menu"),
 		       _("Quit")};
 
   int font_size = 40;
