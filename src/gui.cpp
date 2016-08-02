@@ -40,7 +40,10 @@ load_texture (SDL_Renderer* main_renderer, const char* path)
 
   new_texture = SDL_CreateTextureFromSurface (main_renderer, loaded_surface);
   SDL_FreeSurface (loaded_surface);
-  
+
+  if (new_texture == NULL)
+    fprintf (stderr, "Could not load the texture : %s", SDL_GetError);
+ 
   return new_texture;
 }
 
