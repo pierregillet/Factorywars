@@ -14,6 +14,7 @@ content of the README.md file.
 + Create a website.
 + Use Texlive for documentation.
 + Update the list of dependencies in COMPILE.md.
++ Randomly generate maps (maybe perlin noise algorithm).
 
 Main
 ----
@@ -22,6 +23,7 @@ Main
 Players
 -------
 + Use the player’s inventory system.
++ Prevent players to move when there is an object where they want to move.
 
 Network
 -------
@@ -38,6 +40,7 @@ GUI
 + FPS limit.
 + Display using a system of ticks.
 + Handle the case in which if there is no change in the current view, we don't draw everything again (if it is lighter than redrawing everything).
++ Handle windows resizing.
 
 Events
 ------
