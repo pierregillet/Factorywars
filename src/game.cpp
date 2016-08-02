@@ -58,40 +58,32 @@ load_game_textures (SDL_Renderer* main_renderer,
   const char*
     hud_textures_paths[] = {TEXTURESDIR"/toolbar.png"};
 
-  int i = 0;
-  
-  for (const char* path : player_textures_paths)
+  for (int i = 0;
+       i < sizeof (player_textures_paths) / sizeof (char*);
+       i++)
     {
-      textures[0][i] = load_texture (main_renderer,
-				     path);
-      i++;
+      textures[0][i] = load_texture (main_renderer, player_textures_paths[i]);
+    }
+  
+  for (int i = 0;
+       i < sizeof (biomes_textures_paths) / sizeof (char*);
+       i++)
+    {
+      textures[1][i] = load_texture (main_renderer, biomes_textures_paths[i]);
     }
 
-  i = 0;
-  
-  for (const char* path : biomes_textures_paths)
+  for (int i = 0;
+       i < sizeof (objects_textures_paths) / sizeof (char*);
+       i++)
     {
-      textures[1][i] = load_texture (main_renderer,
-				     path);
-      i++;
+      textures[2][i] = load_texture (main_renderer, objects_textures_paths[i]);
     }
 
-  i = 0;
-
-  for (const char* path : objects_textures_paths)
+  for (int i = 0;
+       i < sizeof (hud_textures_paths) / sizeof (char*);
+       i++)
     {
-      textures[2][i] = load_texture (main_renderer,
-				     path);
-      i++;
-    }
-
-  i = 0;
-  
-  for (const char* path : hud_textures_paths)
-    {
-      textures[3][i] = load_texture (main_renderer,
-				     path);
-      i++;
+      textures[3][i] = load_texture (main_renderer, hud_textures_paths[i]);
     }
 }
 
