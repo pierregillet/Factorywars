@@ -12,14 +12,12 @@ content of the README.md file.
 + Translate the user’s side of the game in french and esperanto.
 + Follow [XDG Base Directory Specification](https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html).
 + Create a website.
-+ Auto saving.
 + Use Texlive for documentation.
-+ In blit function, change the structure from size to coordinates.
-+ Update the list of dependencies in COMPILE.md
++ Update the list of dependencies in COMPILE.md.
 
 Main
 ----
-+ Put the main loop in the main.cpp file.
++ Put the main loop in the main.cpp file. We need to discuss if it’s necessary.
 
 Players
 -------
@@ -33,15 +31,13 @@ Network
 
 GUI
 ---
-+ Replace screen_height and screen_width with a structure
-+ Rewrite most of gui.cpp (it is a mess in there!).
++ Replace screen_height and screen_width with a structure.
 + Blit by layers, first the ground textures then the objects.
++ Blit squares individually (not chunks).
 + Allow to zoom on the map/items in-game.
 + FPS limit.
-+ Display menus.
 + Display using a system of ticks.
 + Handle the case in which if there is no change in the current view, we don't draw everything again (if it is lighter than redrawing everything).
-+ In blit function, change the structure from size to coordinates.
 
 Events
 ------
@@ -53,8 +49,14 @@ Textures
 + Create ores’ textures.
 + Create the in-game objects textures.
 + Create menu’s textures.
++ Create the inventory’s textures.
 
 Configuration
 -------------
 + Switch from XML to JSON.
 + Create functions to modify the configuration file.
+
+Save
+----
++ Auto saving.
++ Create super chunks for saving, we need to discuss the size of those chunks but maybe 128*128 squares (64 times smaller than for now, 8*8 of current chunks).
