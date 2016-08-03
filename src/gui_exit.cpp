@@ -2,13 +2,10 @@
  * @file
  * @author Corentin Bocquillon <0x539@nybble.fr>
  * @author Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
- * @author Loup Fourment
  *
  * @section LICENSE
  *
  * Copyright (C) 2016 Corentin Bocquillon <0x539@nybble.fr>
- *
- * Copyright (C) 2016 Loup Fourment
  *
  * Copyright (C) 2016 Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
  *
@@ -23,24 +20,51 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with factorywars.  If not, see <http://www.gnu.org/licenses/
+ * along with factorywars.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @section DESCRIPTION
  *
- * display_item.h is the header of display_item.c
+ * gui_exit.cpp contains the gui’s exit code.
  */
 
-#pragma once
+#include "gui_exit.h"
 
-#include <stdio.h>
+void
+free_textures (SDL_Texture* textures[][10],
+	       SDL_Texture** current_texture)
+{
+  for (int i = 0 ; i < 4 ; i++)
+    {
+      SDL_DestroyTexture (textures[0][i]);
+    }
 
-#include "gui_utils.h"
-#include "structures.h"
-#include "map.h"
+  for (int i = 0 ; i < 5 ; i++)
+    {
+      SDL_DestroyTexture (textures[1][i]);
+    }
 
-void display_items (SDL_Renderer** Renderer,
-		    SDL_Texture* textures[][10],
-		    struct coordinates screen_origin,
-		    struct chunk_info chunk,
-		    int l,
-		    int m); 
+  for (int i = 0 ; i < 4 ; i++)
+    {
+      SDL_DestroyTexture (textures[2][i]);
+    }
+
+  for (int i = 0 ; i < 1 ; i++)
+    {
+      SDL_DestroyTexture (textures[3][i]);
+    }
+
+  SDL_DestroyTexture (*current_texture);
+}
+
+void
+quit_sdl (SDL_Window** main_window,
+	  SDL_Renderer** main_renderer)
+{  
+  SDL_DestroyRenderer (*main_renderer);
+  SDL_DestroyWindow (*main_window);
+
+  TTF_Quit ();
+  IMG_Quit ();
+  SDL_Quit ();
+}
+

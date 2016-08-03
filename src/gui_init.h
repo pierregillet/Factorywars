@@ -2,15 +2,12 @@
  * @file
  * @author Corentin Bocquillon <0x539@nybble.fr>
  * @author Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
- * @author Loup Fourment
  *
  * @section LICENSE
  *
- * Copyright (C) 2016 Corentin Bocquillon <corentin@nybble.fr>
+ * Copyright (C) 2016 Corentin Bocquillon <0x539@nybble.fr>
  *
- * Copyright (C) 2016 Loup Fourment <pierre.gillet+factorywars@linuxw.info>
- *
- * Copyright (C) 2016 Pierre Gillet
+ * Copyright (C) 2016 Pierre Gillet <pierre.gillet+factorywars@linuxw.info>
  *
  * factorywars is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,34 +24,30 @@
  *
  * @section DESCRIPTION
  *
- * display_map.h is the header of display_map.cpp
+ * gui_init.h is the header of gui_init.cpp.
  */
 
 #pragma once
 
-#include <stdio.h>
-#include <string>
-
 #include "gui_utils.h"
-#include "structures.h"
-#include "display_item.h"
-#include "map.h"
 
-extern "C" {
-#include "config.h"
-}
+/**
+ * Load the game textures.
+ */
+void load_game_textures (SDL_Renderer* main_renderer,
+			 SDL_Texture* textures[][10]);
 
-/** load_biomes fills the current table with textures
-  */
-/* void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table); */
+/**
+ * Initiates the SDL basics, like the window and the renderer.
+ *
+ * @param main_window is the main window.
+ * @param main_renderer is the main renderer.
+ * @param screen_height is an int pointer where we will store the screen height.
+ * @param screen_width is an int pointer where we will store the screnn width.
+ * @param textures is an array of arrays containing the textures.
+ */
+void init (SDL_Window** main_window,
+	   SDL_Renderer** main_renderer,
+	   const int screen_height,
+	   const int screen_width);
 
-/** display_background displays the map
-  * it takes the save path file
-  * and a table with biomes
-  */ 
-void display_background (SDL_Renderer** Renderer,
-			 Map* map,
-			 SDL_Texture* textures[][10],
-			 struct coordinates screen_origin,
-			 const int screen_height,
-			 const int screen_width);

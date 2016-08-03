@@ -27,7 +27,7 @@
  *
  * @section DESCRIPTION
  *
- * gui.h is the header of gui.cpp
+ * gui_utils.h is the header of gui_utils.cpp
  */
 
 #pragma once
@@ -49,6 +49,7 @@
 #include "menu.h"
 #include "game.h"
 #include "map.h"
+#include "gui_exit.h"
 
 #include "gettext.h"
 #define _(string) gettext (string)
@@ -89,20 +90,6 @@ SDL_Texture* load_texture (SDL_Renderer* Renderer,
 			   const char* path);
 
 /**
- * Initiates the SDL basics, like the window and the renderer.
- *
- * @param main_window is the main window.
- * @param main_renderer is the main renderer.
- * @param screen_height is an int pointer where we will store the screen height.
- * @param screen_width is an int pointer where we will store the screnn width.
- * @param textures is an array of arrays containing the textures.
- */
-void init (SDL_Window** main_window,
-	   SDL_Renderer** main_renderer,
-	   const int screen_height,
-	   const int screen_width);
-
-/**
  * Blit Textures at given coordinates x,y.
  *
  * @return int true if there is no error
@@ -112,34 +99,6 @@ int blit (SDL_Renderer* Renderer,
 	  int width,
 	  int height,
 	  SDL_Texture* texture);
-
-/**
- * Free the textures
- * 
- * @param current_texture is the player’s texture.
- * @param textures is the array containing all the textures.
- */
-void free_textures (SDL_Texture* textures[][10],
-		    SDL_Texture** current_texture);
-
-/**
- * Quits the SDL and TTF.
- *
- * @param main_window is the main window.
- * @param main_renderer is the main renderer.
- */
-void quit_sdl (SDL_Window** main_window,
-	       SDL_Renderer** main_renderer);
-
-/**
- * Run the gui
- *
- * @param read_pipe is the read end of the pipe to communicate with the network process.
- * @param write_pipe is the write end of the pipe to communicate with the network process.
- * @param players is a vector containing every players connected.
- * @return -1 if there is an error or 0 if there is no error.
- */
-int run_gui ();
 
 /**
  * Calculates the fps using start_time and resets it.

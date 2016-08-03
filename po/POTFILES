@@ -1,9 +1,0 @@
-     ../src/gui.cpp \
-     ../src/config.c \
-     ../src/network.c \
-     ../src/multiplayer.cpp \
-     ../src/menu.cpp \
-     ../src/main.cpp \
-     ../src/player.cpp \
-     ../src/save.c \
-     ../src/utils.c

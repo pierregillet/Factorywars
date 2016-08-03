@@ -27,10 +27,10 @@
  *
  * @section DESCRIPTION
  *
- * gui.cpp contains the gui’s code.
+ * gui_utils.cpp contains the gui's utils.
  */
 
-#include "gui.h"
+#include "gui_utils.h"
 
 SDL_Texture*
 load_texture (SDL_Renderer* main_renderer, const char* path)
@@ -45,52 +45,6 @@ load_texture (SDL_Renderer* main_renderer, const char* path)
     fprintf (stderr, "Could not load the texture : %s", SDL_GetError);
  
   return new_texture;
-}
-
-void
-init (SDL_Window** main_window,
-      SDL_Renderer** main_renderer,
-      const int screen_height,
-      const int screen_width)
-{
-  if (SDL_Init (SDL_INIT_VIDEO) < 0)
-    {
-      fprintf (stderr, "Error: %s\n", SDL_GetError ());
-    }
-
-  if( TTF_Init() == -1 )
-    {
-      fprintf(stderr, "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
-      SDL_Quit();
-    }
-	
-  // if the SDL launched correctly
-  *main_window = SDL_CreateWindow ("Factorywars",
-				   SDL_WINDOWPOS_UNDEFINED,
-				   SDL_WINDOWPOS_UNDEFINED,
-				   screen_width,
-				   screen_height,
-				   SDL_WINDOW_SHOWN
-				   | SDL_WINDOW_RESIZABLE);
-	  
-  if (*main_window == NULL) 
-    {
-      fprintf (stderr, "Couldn’t create window : %s\n", SDL_GetError());
-      SDL_Quit();
-    }
-	  
-  // if window has been created without errors
-  *main_renderer = SDL_CreateRenderer (*main_window, -1,
-				       SDL_RENDERER_ACCELERATED
-				       | SDL_RENDERER_PRESENTVSYNC);
-
-  SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
-
-  if (!IMG_Init (IMG_INIT_PNG) & IMG_INIT_PNG)
-    fprintf (stderr, "Error while initializing SDL_image library.\n");
-
-  if (TTF_Init () == -1)
-    fprintf (stderr, "Error while initializing SDL_ttf library.\n");
 }
 
 int
@@ -111,99 +65,7 @@ blit (SDL_Renderer* main_renderer,
   return 1;
 }
 
-void
-free_textures (SDL_Texture* textures[][10],
-	       SDL_Texture** current_texture)
-{
-  for (int i = 0 ; i < 4 ; i++)
-    {
-      SDL_DestroyTexture (textures[0][i]);
-    }
-
-  for (int i = 0 ; i < 5 ; i++)
-    {
-      SDL_DestroyTexture (textures[1][i]);
-    }
-
-  for (int i = 0 ; i < 4 ; i++)
-    {
-      SDL_DestroyTexture (textures[2][i]);
-    }
-
-  for (int i = 0 ; i < 1 ; i++)
-    {
-      SDL_DestroyTexture (textures[3][i]);
-    }
-
-  SDL_DestroyTexture (*current_texture);
-}
-
-void
-quit_sdl (SDL_Window** main_window,
-	  SDL_Renderer** main_renderer)
-{  
-  SDL_DestroyRenderer (*main_renderer);
-  SDL_DestroyWindow (*main_window);
-
-  TTF_Quit ();
-  IMG_Quit ();
-  SDL_Quit ();
-}
-
-int 
-run_gui ()
-{
-  const int config_value_len = 256;
-  char config_value[config_value_len];
-
-  get_config_value ("height", config_value, config_value_len);
-  int screen_height = atoi (config_value);
-
-  get_config_value ("width", config_value, config_value_len);
-  int screen_width = atoi (config_value);
-
-  struct size screen_dimensions = {.x = screen_width,
-				   .y = screen_height};
-
-  SDL_Window *Window = NULL;
-  SDL_Renderer *Renderer = NULL;
-
-  init (&Window, &Renderer, screen_height,
-	screen_width);
-  
-  const int save_path_len = 256;
-  char save_path[save_path_len], map_path[save_path_len];
-  int ret;
-
-  int stay = 1;
-
-  while (stay)
-    {
-      ret = display_main_menu (Renderer, screen_dimensions,
-			       save_path, save_path_len);
-      if (ret == 0)
-	{
-	  quit_sdl (&Window, &Renderer);
-	  return 0;
-	}
-
-      // else if (ret == 2)
-      //   snprintf (map_path, save_path_len, "%s/%s", save_path, "map");
-      // else
-      //   strncpy (map_path, "protosave", save_path_len);
-
-      ret = run_game (Renderer, save_path, screen_dimensions);
-
-      if (ret == 0)
-	stay = 0;
-    }
-
-  quit_sdl (&Window, &Renderer);
-  
-  return 0;
-}
-
-// WORK IN PROGRESS : just needs confirmation on how we manage the save with protobuf.
+// WORK IN PROGRESS
 void
 display_ground (SDL_Renderer* main_renderer,
 		SDL_Texture* textures[][10],

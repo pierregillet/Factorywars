@@ -34,14 +34,20 @@
 
 #include <string>
 
-#include "gui.h"
+#include "gui_utils.h"
+#include "gui_init.h"
 #include "player.h"
 
+
 /**
- * Load the game textures.
+ * Run the gui
+ *
+ * @param read_pipe is the read end of the pipe to communicate with the network process.
+ * @param write_pipe is the write end of the pipe to communicate with the network process.
+ * @param players is a vector containing every players connected.
+ * @return -1 if there is an error or 0 if there is no error.
  */
-void load_game_textures (SDL_Renderer* main_renderer,
-			 SDL_Texture* textures[][10]);
+int run_gui ();
 
 /**
  * Run a game.
@@ -55,7 +61,7 @@ void load_game_textures (SDL_Renderer* main_renderer,
  * @return 0 if we need to quit or 1 if we need to display the main menu again.
  */
 int run_game (SDL_Renderer* main_renderer, const char* save_path,
-	      struct size screen_dimensions);
+	      struct size* screen_dimensions);
 
 /**
  * Destroy the game’s textures.
@@ -79,7 +85,7 @@ void move_coordinates_on_keydown (struct coordinates* screen_origin,
  * @param renderer is the renderer where we blit the players.
  * @param player_texture is the texture to blit.
  * @param screen_dimensons is the screen’s dimensions.
- */
+2 */
 void display_players (std::vector<Player>& players,
 		      struct coordinates screen_origin,
 		      SDL_Renderer* renderer,

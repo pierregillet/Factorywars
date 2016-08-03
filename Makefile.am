@@ -12,8 +12,10 @@ bin_PROGRAMS = factorywars
 factorywars_SOURCES = \
 	src/main.cpp\
 	src/game_events.cpp src/game_events.h\
-	src/gui.cpp src/gui.h\
 	src/map.cpp src/map.h\
+	src/gui_utils.cpp src/gui_utils.h\
+	src/gui_exit.cpp src/gui_exit.h\
+	src/gui_init.cpp src/gui_init.h\
 	src/utils.c src/utils.h\
 	src/items.cpp src/items.h\
 	src/XMLParser.c src/XMLParser.h\
