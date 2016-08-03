@@ -55,7 +55,7 @@ void load_game_textures (SDL_Renderer* main_renderer,
  * @return 0 if we need to quit or 1 if we need to display the main menu again.
  */
 int run_game (SDL_Renderer* main_renderer, const char* save_path,
-	      struct size screen_dimensions);
+	      struct size* screen_dimensions);
 
 /**
  * Destroy the game’s textures.

@@ -134,14 +134,13 @@ handle_mousewheel (int wheel_x,
 
 int
 handle_window (SDL_WindowEvent window_event,
-	       int* screen_height,
-	       int* screen_width)
+	       struct size* screen_dimensions)
 {
   switch (window_event.event)
     {
     case SDL_WINDOWEVENT_RESIZED:
-      *screen_width = window_event.data1;
-      *screen_height = window_event.data2;
+      screen_dimensions->x = window_event.data1;
+      screen_dimensions->y = window_event.data2;
       break;
     }
   return 1;
@@ -152,8 +151,7 @@ handle_events (SDL_Texture* textures[][10],
 	       SDL_Texture** CurrentTexture,
 	       bool* keys_state,
 	       bool* clicks_state,
-	       int* screen_height,
-	       int* screen_width,
+	       struct size* screen_dimensions,
 	       struct coordinates* screen_origin,
 	       struct map_coordinates* click_map_coords,
 	       std::vector<Player>& players)
@@ -193,7 +191,7 @@ handle_events (SDL_Texture* textures[][10],
 	  break;
 
 	case SDL_WINDOWEVENT:
-	  handle_window (event.window, screen_height, screen_width);
+	  handle_window (event.window, screen_dimensions);
 	  break;
 
 	default:

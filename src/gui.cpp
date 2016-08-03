@@ -192,7 +192,7 @@ run_gui ()
       // else
       //   strncpy (map_path, "protosave", save_path_len);
 
-      ret = run_game (Renderer, save_path, screen_dimensions);
+      ret = run_game (Renderer, save_path, &screen_dimensions);
 
       if (ret == 0)
 	stay = 0;

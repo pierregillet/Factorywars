@@ -74,8 +74,7 @@ int handle_mousewheel (int wheel_x,
  * Handle all of the window related events.
  */
 int handle_window (SDL_WindowEvent window_event,
-		   int* screen_height,
-		   int* screen_width);
+		   struct size* screen_dimensions);
 
 /**
  * Handle the SDL events.
@@ -84,8 +83,7 @@ int handle_events (SDL_Texture* textures[][10],
 		   SDL_Texture** CurrentTexture,
 		   bool* keys_state,
 		   bool* clicks_state,
-		   int* screen_height,
-		   int* screen_width,
+		   struct size* screen_dimensions,
 		   struct coordinates* screen_origin,
 		   struct map_coordinates* click_map_coords,
 		   std::vector<Player>& players);

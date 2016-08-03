@@ -89,7 +89,7 @@ load_game_textures (SDL_Renderer* main_renderer,
 
 int
 run_game (SDL_Renderer* main_renderer, const char* save_path,
-	  struct size screen_dimensions)
+	  struct size* screen_dimensions)
 {
   SDL_Texture* textures[4][10];
   load_game_textures (main_renderer, textures);
@@ -102,8 +102,8 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   unsigned int start_time = SDL_GetTicks ();
 
   struct coordinates screen_center; 
-  screen_center.x = screen_dimensions.x / 2;
-  screen_center.y = screen_dimensions.y / 2;
+  screen_center.x = screen_dimensions->x / 2;
+  screen_center.y = screen_dimensions->y / 2;
   
   struct coordinates screen_origin, hero_coords;
 
@@ -188,29 +188,28 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   // We need to display the map at the beginning
   display_background (&main_renderer, &map,
 		      textures, screen_origin,
-		      screen_dimensions.y, screen_dimensions.x);
+		      screen_dimensions->y, screen_dimensions->x);
 
   // Display character
   // blit (main_renderer, screen_center, 25, 41, player_texture);
   
   // Display HUD
   struct coordinates toolbar_origin;
-  toolbar_origin.x = (int) (screen_dimensions.x / 4);
-  toolbar_origin.y = (int) (screen_dimensions.y - (screen_dimensions.x / 2 * 0.11));
+  toolbar_origin.x = (int) (screen_dimensions->x / 4);
+  toolbar_origin.y = (int) (screen_dimensions->y - (screen_dimensions->x / 2 * 0.11));
 
   struct size
-    toolbar_size = {.x = (int) (screen_dimensions.x / 2),
-		    .y = (int) (screen_dimensions.x / 2 * 0.11)};
+    toolbar_size = {.x = (int) (screen_dimensions->x / 2),
+		    .y = (int) (screen_dimensions->x / 2 * 0.11)};
 
-  blit (main_renderer, toolbar_origin, toolbar_size.x, toolbar_size.y,
-	textures[3][0]);
+  blit (main_renderer, toolbar_origin, toolbar_size.x,
+	toolbar_size.y,	textures[3][0]);
 
   display_fps (main_renderer, &start_time, ttf_freesans);
   SDL_RenderPresent (main_renderer);
 
-  while (handle_events (textures, &player_texture, keys_state,
-			clicks_state, &screen_dimensions.y,
-			&screen_dimensions.x, &screen_origin,
+  while (handle_events (textures, &player_texture, keys_state, clicks_state,
+			screen_dimensions, &screen_origin,
 			&click_map_coords, players) != 0)
     {
       start_time = SDL_GetTicks();
@@ -221,7 +220,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 	  if (keys_state[i])
 	    {
               move_coordinates_on_keydown (&screen_origin, keys_state,
-					   screen_dimensions.y, screen_dimensions.x,
+					   screen_dimensions->y, screen_dimensions->x,
 					   players[0]);
 
 	      // send_move_command (network_write_pipe, screen_origin,
@@ -232,7 +231,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 
       if (keys_state[key_escape])
 	{
-	  ret = display_in_game_menu (main_renderer, screen_dimensions);
+	  ret = display_in_game_menu (main_renderer, *screen_dimensions);
 	  keys_state[key_escape] = 0;
 
 	  if (ret == 0)
@@ -307,7 +306,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 
       display_background (&main_renderer, &map,
 			  textures, screen_origin,
-			  screen_dimensions.y, screen_dimensions.x);
+			  screen_dimensions->y, screen_dimensions->x);
 
 
 
@@ -319,7 +318,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 
       display_players (players, screen_origin,
 		       main_renderer, player_texture,
-		       screen_dimensions);
+		       *screen_dimensions);
 
       display_fps (main_renderer,
 		   &start_time,
