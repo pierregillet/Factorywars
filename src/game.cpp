@@ -327,6 +327,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
     }
 
   destroy_game_textures (player_texture, textures);
+  free_map_struct (&map);
 
   if (ret == 4)
     return 1;
