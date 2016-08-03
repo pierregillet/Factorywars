@@ -100,16 +100,6 @@ int blit (SDL_Renderer* Renderer,
 	  SDL_Texture* texture);
 
 /**
- * Run the gui
- *
- * @param read_pipe is the read end of the pipe to communicate with the network process.
- * @param write_pipe is the write end of the pipe to communicate with the network process.
- * @param players is a vector containing every players connected.
- * @return -1 if there is an error or 0 if there is no error.
- */
-int run_gui ();
-
-/**
  * Calculates the fps using start_time and resets it.
  * 
  * @param start_time contains the time in milliseconds elapsed since the SDL was initialized.

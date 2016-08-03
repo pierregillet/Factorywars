@@ -38,6 +38,17 @@
 #include "gui_init.h"
 #include "player.h"
 
+
+/**
+ * Run the gui
+ *
+ * @param read_pipe is the read end of the pipe to communicate with the network process.
+ * @param write_pipe is the write end of the pipe to communicate with the network process.
+ * @param players is a vector containing every players connected.
+ * @return -1 if there is an error or 0 if there is no error.
+ */
+int run_gui ();
+
 /**
  * Run a game.
  *
@@ -74,7 +85,7 @@ void move_coordinates_on_keydown (struct coordinates* screen_origin,
  * @param renderer is the renderer where we blit the players.
  * @param player_texture is the texture to blit.
  * @param screen_dimensons is the screen’s dimensions.
- */
+2 */
 void display_players (std::vector<Player>& players,
 		      struct coordinates screen_origin,
 		      SDL_Renderer* renderer,

@@ -65,60 +65,7 @@ blit (SDL_Renderer* main_renderer,
   return 1;
 }
 
-int 
-run_gui ()
-{
-  const int config_value_len = 256;
-  char config_value[config_value_len];
-
-  get_config_value ("height", config_value, config_value_len);
-  int screen_height = atoi (config_value);
-
-  get_config_value ("width", config_value, config_value_len);
-  int screen_width = atoi (config_value);
-
-  struct size screen_dimensions = {.x = screen_width,
-				   .y = screen_height};
-
-  SDL_Window *Window = NULL;
-  SDL_Renderer *Renderer = NULL;
-
-  init (&Window, &Renderer, screen_height,
-	screen_width);
-  
-  const int save_path_len = 256;
-  char save_path[save_path_len], map_path[save_path_len];
-  int ret;
-
-  int stay = 1;
-
-  while (stay)
-    {
-      ret = display_main_menu (Renderer, screen_dimensions,
-			       save_path, save_path_len);
-      if (ret == 0)
-	{
-	  quit_sdl (&Window, &Renderer);
-	  return 0;
-	}
-
-      // else if (ret == 2)
-      //   snprintf (map_path, save_path_len, "%s/%s", save_path, "map");
-      // else
-      //   strncpy (map_path, "protosave", save_path_len);
-
-      ret = run_game (Renderer, save_path, &screen_dimensions);
-
-      if (ret == 0)
-	stay = 0;
-    }
-
-  quit_sdl (&Window, &Renderer);
-  
-  return 0;
-}
-
-// WORK IN PROGRESS : just needs confirmation on how we manage the save with protobuf.
+// WORK IN PROGRESS
 void
 display_ground (SDL_Renderer* main_renderer,
 		SDL_Texture* textures[][10],
