@@ -209,8 +209,8 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   SDL_RenderPresent (main_renderer);
 
   while (handle_events (textures, &player_texture, keys_state,
-			clicks_state, screen_dimensions.y,
-			screen_dimensions.x, &screen_origin,
+			clicks_state, &screen_dimensions.y,
+			&screen_dimensions.x, &screen_origin,
 			&click_map_coords, players) != 0)
     {
       start_time = SDL_GetTicks();
