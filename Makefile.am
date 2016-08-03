@@ -13,7 +13,7 @@ factorywars_SOURCES = \
 	src/main.cpp\
 	src/game_events.cpp src/game_events.h\
 	src/gui.cpp src/gui.h\
-	src/save.c src/save.h\
+	src/map.cpp src/map.h\
 	src/utils.c src/utils.h\
 	src/items.cpp src/items.h\
 	src/XMLParser.c src/XMLParser.h\

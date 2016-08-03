@@ -114,7 +114,7 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(fontsdir)" \
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_factorywars_OBJECTS = src/main.$(OBJEXT) src/game_events.$(OBJEXT) \
-	src/gui.$(OBJEXT) src/save.$(OBJEXT) src/utils.$(OBJEXT) \
+	src/gui.$(OBJEXT) src/map.$(OBJEXT) src/utils.$(OBJEXT) \
 	src/items.$(OBJEXT) src/XMLParser.$(OBJEXT) \
 	src/player.$(OBJEXT) src/config.$(OBJEXT) \
 	src/network.$(OBJEXT) src/display_map.$(OBJEXT) \
@@ -427,7 +427,7 @@ factorywars_SOURCES = \
 	src/main.cpp\
 	src/game_events.cpp src/game_events.h\
 	src/gui.cpp src/gui.h\
-	src/save.c src/save.h\
+	src/map.cpp src/map.h\
 	src/utils.c src/utils.h\
 	src/items.cpp src/items.h\
 	src/XMLParser.c src/XMLParser.h\
@@ -570,7 +570,7 @@ src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/game_events.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/gui.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/save.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/map.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/utils.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/items.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/XMLParser.$(OBJEXT): src/$(am__dirstamp) \
@@ -614,13 +614,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/gui.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/items.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/map.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/map.pb-c.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/menu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/multiplayer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/network.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/player-data.pb-c.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/player.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/save.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/utils.Po@am__quote@
 
 .c.o:

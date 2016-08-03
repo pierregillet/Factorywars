@@ -27,7 +27,7 @@
  *
  * @section DESCRIPTION
  *
- * save.h is the header of save.c.
+ * map.h is the header of map.cpp.
  */
 
 #pragma once
@@ -40,9 +40,13 @@
 #include <math.h>
 
 #include "structures.h"
-#include "config.h"
-#include "utils.h"
 #include "map.pb-c.h"
+
+extern "C"
+{
+  #include "config.h"
+  #include "utils.h"
+}
 
 /**
  * Get the surface item at given coordinates.
@@ -154,3 +158,5 @@ int
 find_square_using_square_coordinates (struct coordinates chunk_coordinates,
 				      struct coordinates square_coordinates,
 				      Map* map);
+
+

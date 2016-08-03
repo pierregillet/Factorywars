@@ -30,7 +30,7 @@
  * save.cpp provide functions to read and write save files.
  */
 
-#include "save.h"
+#include "map.h"
 
 int
 get_biome_id (struct coordinates chunk_coordinates, Map* map)
@@ -149,7 +149,7 @@ read_save_file (Map* map, const char* save_file_path)
   Square ***squares;
 
   uint8_t *buffer;
-  buffer = malloc (sizeof (uint8_t));
+  buffer = (uint8_t*) malloc (sizeof (uint8_t));
 
   char c;
   int n = 0;
@@ -184,22 +184,22 @@ read_save_file (Map* map, const char* save_file_path)
   /* We copy tmp_map in map */
   map->n_chunks = tmp_map->n_chunks;
 
-  squares = malloc (sizeof (Square**) * map->n_chunks);
-  chunks = malloc (sizeof (Chunk*) * map->n_chunks);
+  squares = (Square***) malloc (sizeof (Square**) * map->n_chunks);
+  chunks = (Chunk**) malloc (sizeof (Chunk*) * map->n_chunks);
   for (int i = 0; i < map->n_chunks; i++)
     {
-      chunks[i] = malloc (sizeof (Chunk));
+      chunks[i] = (Chunk*) malloc (sizeof (Chunk));
       chunk__init (chunks[i]);
 
       chunks[i]->x = tmp_map->chunks[i]->x;
       chunks[i]->y = tmp_map->chunks[i]->y;
 
       chunks[i]->n_squares = tmp_map->chunks[i]->n_squares;
-      squares[i] = malloc (sizeof (Square*) * chunks[i]->n_squares);
+      squares[i] = (Square**) malloc (sizeof (Square*) * chunks[i]->n_squares);
 
       for (int j = 0; j < chunks[i]->n_squares; j++)
 	{
-	  squares[i][j] = malloc (sizeof (Square));
+	  squares[i][j] = (Square*) malloc (sizeof (Square));
 	  square__init (squares[i][j]);
 
 	  squares[i][j]->x = tmp_map->chunks[i]->squares[j]->x;
@@ -227,7 +227,7 @@ save_to_file (Map* map, const char* save_file_path)
 {
   unsigned long len = map__get_packed_size (map);
 
-  void *buffer = malloc (len);
+  uint8_t *buffer = (uint8_t*) malloc (len);
   if (buffer == NULL)
     return 0;
 
@@ -291,8 +291,8 @@ find_chunk_using_chunk_coordinates (struct coordinates chunk_coordinates,
 
 int
 find_square_using_square_coordinates (struct coordinates chunk_coordinates,
-					     struct coordinates square_coordinates,
-					     Map* map)
+				      struct coordinates square_coordinates,
+				      Map* map)
 {
   int chunk_number = find_chunk_using_chunk_coordinates (chunk_coordinates,
 							 map);

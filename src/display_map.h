@@ -32,15 +32,16 @@
 
 #pragma once
 
-#include "structures.h"
 #include <stdio.h>
 #include <string>
-#include "gui.h"
 #include <stdio.h>
+
+#include "structures.h"
+#include "gui.h"
 #include "display_item.h"
+#include "map.h"
 
 extern "C" {
-#include "save.h"
 #include "config.h"
 }
 
