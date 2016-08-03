@@ -35,13 +35,8 @@
 #include <string>
 
 #include "gui.h"
+#include "gui_init.h"
 #include "player.h"
-
-/**
- * Load the game textures.
- */
-void load_game_textures (SDL_Renderer* main_renderer,
-			 SDL_Texture* textures[][10]);
 
 /**
  * Run a game.

@@ -47,52 +47,6 @@ load_texture (SDL_Renderer* main_renderer, const char* path)
   return new_texture;
 }
 
-void
-init (SDL_Window** main_window,
-      SDL_Renderer** main_renderer,
-      const int screen_height,
-      const int screen_width)
-{
-  if (SDL_Init (SDL_INIT_VIDEO) < 0)
-    {
-      fprintf (stderr, "Error: %s\n", SDL_GetError ());
-    }
-
-  if( TTF_Init() == -1 )
-    {
-      fprintf(stderr, "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
-      SDL_Quit();
-    }
-	
-  // if the SDL launched correctly
-  *main_window = SDL_CreateWindow ("Factorywars",
-				   SDL_WINDOWPOS_UNDEFINED,
-				   SDL_WINDOWPOS_UNDEFINED,
-				   screen_width,
-				   screen_height,
-				   SDL_WINDOW_SHOWN
-				   | SDL_WINDOW_RESIZABLE);
-	  
-  if (*main_window == NULL) 
-    {
-      fprintf (stderr, "Couldn’t create window : %s\n", SDL_GetError());
-      SDL_Quit();
-    }
-	  
-  // if window has been created without errors
-  *main_renderer = SDL_CreateRenderer (*main_window, -1,
-				       SDL_RENDERER_ACCELERATED
-				       | SDL_RENDERER_PRESENTVSYNC);
-
-  SDL_SetRenderDrawColor (*main_renderer, 0xFF,0xFF,0xFF,0xFF);
-
-  if (!IMG_Init (IMG_INIT_PNG) & IMG_INIT_PNG)
-    fprintf (stderr, "Error while initializing SDL_image library.\n");
-
-  if (TTF_Init () == -1)
-    fprintf (stderr, "Error while initializing SDL_ttf library.\n");
-}
-
 int
 blit (SDL_Renderer* main_renderer,
       struct coordinates blit_origin,
@@ -109,45 +63,6 @@ blit (SDL_Renderer* main_renderer,
   SDL_RenderCopy (main_renderer, texture, NULL, NULL);
 
   return 1;
-}
-
-void
-free_textures (SDL_Texture* textures[][10],
-	       SDL_Texture** current_texture)
-{
-  for (int i = 0 ; i < 4 ; i++)
-    {
-      SDL_DestroyTexture (textures[0][i]);
-    }
-
-  for (int i = 0 ; i < 5 ; i++)
-    {
-      SDL_DestroyTexture (textures[1][i]);
-    }
-
-  for (int i = 0 ; i < 4 ; i++)
-    {
-      SDL_DestroyTexture (textures[2][i]);
-    }
-
-  for (int i = 0 ; i < 1 ; i++)
-    {
-      SDL_DestroyTexture (textures[3][i]);
-    }
-
-  SDL_DestroyTexture (*current_texture);
-}
-
-void
-quit_sdl (SDL_Window** main_window,
-	  SDL_Renderer** main_renderer)
-{  
-  SDL_DestroyRenderer (*main_renderer);
-  SDL_DestroyWindow (*main_window);
-
-  TTF_Quit ();
-  IMG_Quit ();
-  SDL_Quit ();
 }
 
 int 

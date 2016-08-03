@@ -114,7 +114,8 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(fontsdir)" \
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
 am_factorywars_OBJECTS = src/main.$(OBJEXT) src/game_events.$(OBJEXT) \
-	src/gui.$(OBJEXT) src/save.$(OBJEXT) src/utils.$(OBJEXT) \
+	src/gui.$(OBJEXT) src/gui_exit.$(OBJEXT) \
+	src/gui_init.$(OBJEXT) src/save.$(OBJEXT) src/utils.$(OBJEXT) \
 	src/items.$(OBJEXT) src/XMLParser.$(OBJEXT) \
 	src/player.$(OBJEXT) src/config.$(OBJEXT) \
 	src/network.$(OBJEXT) src/display_map.$(OBJEXT) \
@@ -427,6 +428,8 @@ factorywars_SOURCES = \
 	src/main.cpp\
 	src/game_events.cpp src/game_events.h\
 	src/gui.cpp src/gui.h\
+	src/gui_exit.cpp src/gui_exit.h\
+	src/gui_init.cpp src/gui_init.h\
 	src/save.c src/save.h\
 	src/utils.c src/utils.h\
 	src/items.cpp src/items.h\
@@ -570,6 +573,10 @@ src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/game_events.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/gui.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/gui_exit.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/gui_init.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/save.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/utils.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/items.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
@@ -612,6 +619,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/game.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/game_events.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/gui.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/gui_exit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/gui_init.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/items.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/map.pb-c.Po@am__quote@

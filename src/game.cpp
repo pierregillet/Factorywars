@@ -32,61 +32,6 @@
 
 #include "game.h"
 
-void
-load_game_textures (SDL_Renderer* main_renderer,
-		    SDL_Texture* textures[][10])
-{
-  const char*
-    player_textures_paths[] = {TEXTURESDIR"/LEFT.png",
-			       TEXTURESDIR"/RIGHT.png",
-			       TEXTURESDIR"/LEFT.png",
-			       TEXTURESDIR"/RIGHT.png"};
-
-  const char*
-    biomes_textures_paths[] = {TEXTURESDIR"/biome1.png",
-			       TEXTURESDIR"/biome1.png",
-			       TEXTURESDIR"/biome2.png",
-			       TEXTURESDIR"/biome1.png",
-			       TEXTURESDIR"/biome1.png"};
-
-  const char*
-    objects_textures_paths[] = {TEXTURESDIR"/arbre.png",
-				TEXTURESDIR"/pierre1.png",
-				TEXTURESDIR"/pierre2.png",
-				TEXTURESDIR"/pierre3.png"};
-
-  const char*
-    hud_textures_paths[] = {TEXTURESDIR"/toolbar.png"};
-
-  for (int i = 0;
-       i < sizeof (player_textures_paths) / sizeof (char*);
-       i++)
-    {
-      textures[0][i] = load_texture (main_renderer, player_textures_paths[i]);
-    }
-  
-  for (int i = 0;
-       i < sizeof (biomes_textures_paths) / sizeof (char*);
-       i++)
-    {
-      textures[1][i] = load_texture (main_renderer, biomes_textures_paths[i]);
-    }
-
-  for (int i = 0;
-       i < sizeof (objects_textures_paths) / sizeof (char*);
-       i++)
-    {
-      textures[2][i] = load_texture (main_renderer, objects_textures_paths[i]);
-    }
-
-  for (int i = 0;
-       i < sizeof (hud_textures_paths) / sizeof (char*);
-       i++)
-    {
-      textures[3][i] = load_texture (main_renderer, hud_textures_paths[i]);
-    }
-}
-
 int
 run_game (SDL_Renderer* main_renderer, const char* save_path,
 	  struct size* screen_dimensions)
