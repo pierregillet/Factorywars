@@ -46,7 +46,6 @@ Player
   
   /**
    * Constructor that creates a player with default values.
-   * It should only be used for testing purpose.
    */
   Player ();
 
