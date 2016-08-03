@@ -27,7 +27,7 @@
  * gui_exit.cpp contains the gui’s exit code.
  */
 
-#include "gui.h"
+#include "gui_exit.h"
 
 void
 free_textures (SDL_Texture* textures[][10],

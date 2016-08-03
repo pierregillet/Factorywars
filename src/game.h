@@ -34,7 +34,7 @@
 
 #include <string>
 
-#include "gui.h"
+#include "gui_utils.h"
 #include "gui_init.h"
 #include "player.h"
 

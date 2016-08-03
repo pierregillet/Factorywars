@@ -27,7 +27,7 @@
  *
  * @section DESCRIPTION
  *
- * gui.h is the header of gui.cpp
+ * gui_utils.h is the header of gui_utils.cpp
  */
 
 #pragma once

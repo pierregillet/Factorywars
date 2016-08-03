@@ -39,7 +39,7 @@
 
 #include "structures.h"
 #include "player.h"
-#include "gui.h"
+#include "gui_utils.h"
 
 /**
  * Handle the keydown events.

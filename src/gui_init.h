@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "gui.h"
+#include "gui_utils.h"
 
 /**
  * Load the game textures.

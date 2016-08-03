@@ -35,7 +35,7 @@
 #include "structures.h"
 #include <stdio.h>
 #include <string>
-#include "gui.h"
+#include "gui_utils.h"
 #include <stdio.h>
 #include "display_item.h"
 

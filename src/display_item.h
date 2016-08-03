@@ -34,7 +34,7 @@
 
 #include "structures.h"
 #include <stdio.h>
-#include "gui.h"
+#include "gui_utils.h"
 
 extern "C" {
 #include "save.h"

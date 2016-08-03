@@ -27,10 +27,10 @@
  *
  * @section DESCRIPTION
  *
- * gui.cpp contains the gui’s code.
+ * gui_utils.cpp contains the gui's utils.
  */
 
-#include "gui.h"
+#include "gui_utils.h"
 
 SDL_Texture*
 load_texture (SDL_Renderer* main_renderer, const char* path)
