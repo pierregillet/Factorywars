@@ -36,9 +36,9 @@
 #include <string>
 
 #include "gui_utils.h"
-#include "structures.h"
+#include "../structures.h"
 #include "display_item.h"
-#include "map.h"
+#include "../map.h"
 
 extern "C" {
 #include "config.h"

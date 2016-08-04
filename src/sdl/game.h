@@ -36,7 +36,8 @@
 
 #include "gui_utils.h"
 #include "gui_init.h"
-#include "player.h"
+#include "../player.h"
+#include "menu.h"
 
 
 /**
