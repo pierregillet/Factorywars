@@ -396,3 +396,17 @@ number_of_files (struct directory_list* dir_list)
 
   return number;
 }
+
+int
+is_existing (const char path)
+{
+  FILE* file = fopen (path, "r");
+
+  if (file == NULL)
+    return 0;
+  else
+    {
+      fclose (file);
+      return 1;
+    }
+}

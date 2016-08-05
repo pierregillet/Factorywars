@@ -133,3 +133,10 @@ void free_dir_list (struct directory_list* dir_list);
  * @return the number of files.
  */
 int number_of_files (struct directory_list* dir_list);
+
+/**
+ * Test if a file exists.
+ *
+ * @return 0 if it does not exists, 1 if it exists.
+ */
+int is_existing (const char path);
