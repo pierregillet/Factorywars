@@ -35,7 +35,7 @@
 #include <config.h>
 #include <locale.h>
 
-#include "gui_utils.h"
+#include "sdl/gui_utils.h"
 
 #include "gettext.h"
 #define _(string) gettext (string)

@@ -113,16 +113,15 @@ am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(fontsdir)" \
 	"$(DESTDIR)$(texturesdir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_factorywars_OBJECTS = src/main.$(OBJEXT) src/game_events.$(OBJEXT) \
-	src/map.$(OBJEXT) src/gui_utils.$(OBJEXT) \
-	src/gui_exit.$(OBJEXT) src/gui_init.$(OBJEXT) \
-	src/utils.$(OBJEXT) src/items.$(OBJEXT) \
-	src/XMLParser.$(OBJEXT) src/player.$(OBJEXT) \
-	src/config.$(OBJEXT) src/network.$(OBJEXT) \
-	src/display_map.$(OBJEXT) src/display_item.$(OBJEXT) \
-	src/multiplayer.$(OBJEXT) src/map.pb-c.$(OBJEXT) \
-	src/player-data.pb-c.$(OBJEXT) src/menu.$(OBJEXT) \
-	src/game.$(OBJEXT)
+am_factorywars_OBJECTS = src/main.$(OBJEXT) src/config.$(OBJEXT) \
+	src/items.$(OBJEXT) src/map.$(OBJEXT) src/map.pb-c.$(OBJEXT) \
+	src/multiplayer.$(OBJEXT) src/network.$(OBJEXT) \
+	src/player.$(OBJEXT) src/player-data.pb-c.$(OBJEXT) \
+	src/utils.$(OBJEXT) src/XMLParser.$(OBJEXT) \
+	src/sdl/display_item.$(OBJEXT) src/sdl/display_map.$(OBJEXT) \
+	src/sdl/game.$(OBJEXT) src/sdl/game_events.$(OBJEXT) \
+	src/sdl/gui_exit.$(OBJEXT) src/sdl/gui_init.$(OBJEXT) \
+	src/sdl/gui_utils.$(OBJEXT) src/sdl/menu.$(OBJEXT)
 factorywars_OBJECTS = $(am_factorywars_OBJECTS)
 am__DEPENDENCIES_1 =
 factorywars_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -427,26 +426,26 @@ EXTRA_DIST = config.rpath  \
 
 factorywars_SOURCES = \
 	src/main.cpp\
-	src/game_events.cpp src/game_events.h\
-	src/map.cpp src/map.h\
-	src/gui_utils.cpp src/gui_utils.h\
-	src/gui_exit.cpp src/gui_exit.h\
-	src/gui_init.cpp src/gui_init.h\
-	src/utils.c src/utils.h\
-	src/items.cpp src/items.h\
-	src/XMLParser.c src/XMLParser.h\
-	src/player.cpp src/player.h\
 	src/config.c src/config.h\
-	src/network.c src/network.h\
-	src/display_map.cpp src/display_map.h\
-	src/display_item.cpp src/display_item.h\
-	src/multiplayer.cpp src/multiplayer.h\
-	src/map.pb-c.c src/map.pb-c.h\
-	src/player-data.pb-c.c src/player-data.pb-c.h\
-	src/menu.cpp src/menu.h\
-	src/game.cpp src/game.h\
 	src/gettext.h\
-	src/structures.h
+	src/items.cpp src/items.h\
+	src/map.cpp src/map.h\
+	src/map.pb-c.c src/map.pb-c.h\
+	src/multiplayer.cpp src/multiplayer.h\
+	src/network.c src/network.h\
+	src/player.cpp src/player.h\
+	src/player-data.pb-c.c src/player-data.pb-c.h\
+	src/structures.h\
+	src/utils.c src/utils.h\
+	src/XMLParser.c src/XMLParser.h\
+	src/sdl/display_item.cpp src/sdl/display_item.h\
+	src/sdl/display_map.cpp src/sdl/display_map.h\
+	src/sdl/game.cpp src/sdl/game.h\
+	src/sdl/game_events.cpp src/sdl/game_events.h\
+	src/sdl/gui_exit.cpp src/sdl/gui_exit.h\
+	src/sdl/gui_init.cpp src/sdl/gui_init.h\
+	src/sdl/gui_utils.cpp src/sdl/gui_utils.h\
+	src/sdl/menu.cpp src/sdl/menu.h
 
 factorywars_LDADD = $(LIBINTL)
 texturesdir = $(pkgdatadir)/textures
@@ -571,37 +570,45 @@ src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
 src/main.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/game_events.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/map.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/gui_utils.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/gui_exit.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/gui_init.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/utils.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/items.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/XMLParser.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/player.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/config.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/network.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/display_map.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/display_item.$(OBJEXT): src/$(am__dirstamp) \
+src/items.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/map.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/map.pb-c.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/multiplayer.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/map.pb-c.$(OBJEXT): src/$(am__dirstamp) \
+src/network.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/player.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/player-data.pb-c.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/menu.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
-src/game.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/utils.$(OBJEXT): src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/XMLParser.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/sdl/$(am__dirstamp):
+	@$(MKDIR_P) src/sdl
+	@: > src/sdl/$(am__dirstamp)
+src/sdl/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) src/sdl/$(DEPDIR)
+	@: > src/sdl/$(DEPDIR)/$(am__dirstamp)
+src/sdl/display_item.$(OBJEXT): src/sdl/$(am__dirstamp) \
+	src/sdl/$(DEPDIR)/$(am__dirstamp)
+src/sdl/display_map.$(OBJEXT): src/sdl/$(am__dirstamp) \
+	src/sdl/$(DEPDIR)/$(am__dirstamp)
+src/sdl/game.$(OBJEXT): src/sdl/$(am__dirstamp) \
+	src/sdl/$(DEPDIR)/$(am__dirstamp)
+src/sdl/game_events.$(OBJEXT): src/sdl/$(am__dirstamp) \
+	src/sdl/$(DEPDIR)/$(am__dirstamp)
+src/sdl/gui_exit.$(OBJEXT): src/sdl/$(am__dirstamp) \
+	src/sdl/$(DEPDIR)/$(am__dirstamp)
+src/sdl/gui_init.$(OBJEXT): src/sdl/$(am__dirstamp) \
+	src/sdl/$(DEPDIR)/$(am__dirstamp)
+src/sdl/gui_utils.$(OBJEXT): src/sdl/$(am__dirstamp) \
+	src/sdl/$(DEPDIR)/$(am__dirstamp)
+src/sdl/menu.$(OBJEXT): src/sdl/$(am__dirstamp) \
+	src/sdl/$(DEPDIR)/$(am__dirstamp)
 
 factorywars$(EXEEXT): $(factorywars_OBJECTS) $(factorywars_DEPENDENCIES) $(EXTRA_factorywars_DEPENDENCIES) 
 	@rm -f factorywars$(EXEEXT)
@@ -610,29 +617,30 @@ factorywars$(EXEEXT): $(factorywars_OBJECTS) $(factorywars_DEPENDENCIES) $(EXTRA
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 	-rm -f src/*.$(OBJEXT)
+	-rm -f src/sdl/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/XMLParser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/config.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/display_item.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/display_map.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/game.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/game_events.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/gui_exit.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/gui_init.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/gui_utils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/items.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/map.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/map.pb-c.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/menu.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/multiplayer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/network.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/player-data.pb-c.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/player.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/utils.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/sdl/$(DEPDIR)/display_item.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/sdl/$(DEPDIR)/display_map.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/sdl/$(DEPDIR)/game.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/sdl/$(DEPDIR)/game_events.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/sdl/$(DEPDIR)/gui_exit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/sdl/$(DEPDIR)/gui_init.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/sdl/$(DEPDIR)/gui_utils.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/sdl/$(DEPDIR)/menu.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -1038,6 +1046,8 @@ distclean-generic:
 	-test . = "$(srcdir)" || test -z "$(CONFIG_CLEAN_VPATH_FILES)" || rm -f $(CONFIG_CLEAN_VPATH_FILES)
 	-rm -f src/$(DEPDIR)/$(am__dirstamp)
 	-rm -f src/$(am__dirstamp)
+	-rm -f src/sdl/$(DEPDIR)/$(am__dirstamp)
+	-rm -f src/sdl/$(am__dirstamp)
 	-test -z "$(DISTCLEANFILES)" || rm -f $(DISTCLEANFILES)
 
 maintainer-clean-generic:
@@ -1049,7 +1059,7 @@ clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf src/$(DEPDIR)
+	-rm -rf src/$(DEPDIR) src/sdl/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-tags
@@ -1097,7 +1107,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf src/$(DEPDIR)
+	-rm -rf src/$(DEPDIR) src/sdl/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

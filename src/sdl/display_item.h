@@ -35,8 +35,8 @@
 #include <stdio.h>
 
 #include "gui_utils.h"
-#include "structures.h"
-#include "map.h"
+#include "../structures.h"
+#include "../map.h"
 
 void display_items (SDL_Renderer** Renderer,
 		    SDL_Texture* textures[][10],

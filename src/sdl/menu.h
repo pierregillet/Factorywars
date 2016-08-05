@@ -37,7 +37,7 @@
 #include <wchar.h>
 
 #include "gui_utils.h"
-#include "gettext.h"
+#include "../gettext.h"
 
 #define _(string) gettext (string)
 

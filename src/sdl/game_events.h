@@ -37,8 +37,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <vector>
 
-#include "structures.h"
-#include "player.h"
+#include "../structures.h"
+#include "../player.h"
 #include "gui_utils.h"
 
 /**

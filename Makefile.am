@@ -11,26 +11,26 @@ EXTRA_DIST = config.rpath  \
 bin_PROGRAMS = factorywars
 factorywars_SOURCES = \
 	src/main.cpp\
-	src/game_events.cpp src/game_events.h\
-	src/map.cpp src/map.h\
-	src/gui_utils.cpp src/gui_utils.h\
-	src/gui_exit.cpp src/gui_exit.h\
-	src/gui_init.cpp src/gui_init.h\
-	src/utils.c src/utils.h\
-	src/items.cpp src/items.h\
-	src/XMLParser.c src/XMLParser.h\
-	src/player.cpp src/player.h\
 	src/config.c src/config.h\
-	src/network.c src/network.h\
-	src/display_map.cpp src/display_map.h\
-	src/display_item.cpp src/display_item.h\
-	src/multiplayer.cpp src/multiplayer.h\
-	src/map.pb-c.c src/map.pb-c.h\
-	src/player-data.pb-c.c src/player-data.pb-c.h\
-	src/menu.cpp src/menu.h\
-	src/game.cpp src/game.h\
 	src/gettext.h\
-	src/structures.h
+	src/items.cpp src/items.h\
+	src/map.cpp src/map.h\
+	src/map.pb-c.c src/map.pb-c.h\
+	src/multiplayer.cpp src/multiplayer.h\
+	src/network.c src/network.h\
+	src/player.cpp src/player.h\
+	src/player-data.pb-c.c src/player-data.pb-c.h\
+	src/structures.h\
+	src/utils.c src/utils.h\
+	src/XMLParser.c src/XMLParser.h\
+	src/sdl/display_item.cpp src/sdl/display_item.h\
+	src/sdl/display_map.cpp src/sdl/display_map.h\
+	src/sdl/game.cpp src/sdl/game.h\
+	src/sdl/game_events.cpp src/sdl/game_events.h\
+	src/sdl/gui_exit.cpp src/sdl/gui_exit.h\
+	src/sdl/gui_init.cpp src/sdl/gui_init.h\
+	src/sdl/gui_utils.cpp src/sdl/gui_utils.h\
+	src/sdl/menu.cpp src/sdl/menu.h
 
 factorywars_LDADD = $(LIBINTL)
 
