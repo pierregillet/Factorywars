@@ -2,8 +2,9 @@ message square
 {
   required int32 floor = 1;
   required int32 item = 2;
-  required int32 x = 3;
-  required int32 y = 4;
+  required int32 quantity = 3;
+  required int32 x = 4;
+  required int32 y = 5;
 }
 
 message chunk
@@ -13,7 +14,7 @@ message chunk
   repeated square squares = 3;
 }
 
-message map
+message tile
 {
   repeated chunk chunks = 1;
 }
