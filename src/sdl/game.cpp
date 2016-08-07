@@ -183,7 +183,11 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
       return 0;
     }
 
-  
+  // Variables used for FPS calculation.
+  unsigned int fps_lasttime = SDL_GetTicks(); //the last recorded time.
+  unsigned int fps_current; //the current FPS.
+  unsigned int fps_frames = 0; //frames passed since the last recorded fps.
+
   // We need to display the map at the beginning
   display_background (&main_renderer, &map,
 		      textures, screen_origin,
@@ -204,7 +208,9 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   blit (main_renderer, toolbar_origin, toolbar_size.x,
 	toolbar_size.y,	textures[3][0]);
 
-  display_fps (main_renderer, &start_time, ttf_freesans);
+  display_fps (main_renderer, ttf_freesans, &fps_lasttime,
+	       &fps_current, &fps_frames);
+      
   SDL_RenderPresent (main_renderer);
 
   while (handle_events (textures, &player_texture, keys_state, clicks_state,
@@ -319,9 +325,8 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 		       main_renderer, player_texture,
 		       *screen_dimensions);
 
-      display_fps (main_renderer,
-		   &start_time,
-		   ttf_freesans);
+      display_fps (main_renderer, ttf_freesans, &fps_lasttime,
+		   &fps_current, &fps_frames);
       SDL_RenderPresent (main_renderer);	  
       SDL_Delay (1/200);
     }

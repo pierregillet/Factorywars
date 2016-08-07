@@ -100,16 +100,6 @@ int blit (SDL_Renderer* Renderer,
 	  SDL_Texture* texture);
 
 /**
- * Calculates the fps using start_time and resets it.
- * 
- * @param start_time contains the time in milliseconds elapsed since the SDL was initialized.
- * 
- * @return The number of fps.
- */
-int
-get_fps (unsigned int* start_time);
-
-/**
  * Gets and displays the fps in the top-right corner.
  * 
  * @param main_renderer is the renderer used.
@@ -118,8 +108,10 @@ get_fps (unsigned int* start_time);
  */
 void
 display_fps (SDL_Renderer* main_renderer,
-	     unsigned int* start_time,
-	     TTF_Font* ttf_freesans);
+	     TTF_Font* ttf_freesans,
+	     unsigned int* fps_lasttime,
+	     unsigned int* fps_current,
+	     unsigned int* fps_frames);
 
 /**
  * Copy a surface in another and return the new surface

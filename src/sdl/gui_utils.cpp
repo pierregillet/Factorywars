@@ -99,37 +99,26 @@ display_ground (SDL_Renderer* main_renderer,
     }
 }
 
-int
-get_fps (unsigned int* start_time)
-{
-  unsigned int current_fps = 0;
-  unsigned int current_time = SDL_GetTicks ();
-  unsigned int delta_time = current_time - *start_time;
-  *start_time = current_time;
-  if (delta_time > 0)
-    current_fps = 1000 / delta_time;
-  else if (delta_time < 0)
-    current_fps = (1000 / -delta_time);
-  else
-    current_fps = 0;
-  return current_fps;
-}
-
 void
-display_fps (SDL_Renderer* main_renderer,
-	     unsigned int* start_time,
-	     TTF_Font* ttf_freesans)
+display_fps (SDL_Renderer* main_renderer, TTF_Font* ttf_freesans,
+	     unsigned int* fps_lasttime, unsigned int* fps_current,
+	     unsigned int* fps_frames)
 {
   SDL_Color white = {255, 255, 255};
-
   char fps[10];
-  unsigned int tmp_fps = get_fps (start_time);
+  
+  (*fps_frames)++;
+  if (*fps_lasttime < SDL_GetTicks() - 500) // -1000 because we count the FPS on 1000ms = 1s
+    {
+      *fps_lasttime = SDL_GetTicks();
+      *fps_current = *fps_frames;
+      *fps_frames = 0;
+    }
 
-  snprintf (fps, 10, "%d %s", tmp_fps, _("fps"));
+  snprintf (fps, 10, "%d %s", *fps_current, _("fps"));
 
   SDL_Surface* surface_message = TTF_RenderText_Blended (ttf_freesans,
-							 fps,
-							 white);
+							 fps, white);
 
   SDL_Texture* message = SDL_CreateTextureFromSurface (main_renderer, surface_message);
   SDL_FreeSurface (surface_message);
