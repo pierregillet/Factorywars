@@ -7,136 +7,136 @@
 #endif
 
 #include "tile.pb-c.h"
-void   square__init
-                     (Square         *message)
+void   square_proto__init
+                     (SquareProto         *message)
 {
-  static Square init_value = SQUARE__INIT;
+  static SquareProto init_value = SQUARE_PROTO__INIT;
   *message = init_value;
 }
-size_t square__get_packed_size
-                     (const Square *message)
+size_t square_proto__get_packed_size
+                     (const SquareProto *message)
 {
-  assert(message->base.descriptor == &square__descriptor);
+  assert(message->base.descriptor == &square_proto__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t square__pack
-                     (const Square *message,
+size_t square_proto__pack
+                     (const SquareProto *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &square__descriptor);
+  assert(message->base.descriptor == &square_proto__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t square__pack_to_buffer
-                     (const Square *message,
+size_t square_proto__pack_to_buffer
+                     (const SquareProto *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &square__descriptor);
+  assert(message->base.descriptor == &square_proto__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Square *
-       square__unpack
+SquareProto *
+       square_proto__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Square *)
-     protobuf_c_message_unpack (&square__descriptor,
+  return (SquareProto *)
+     protobuf_c_message_unpack (&square_proto__descriptor,
                                 allocator, len, data);
 }
-void   square__free_unpacked
-                     (Square *message,
+void   square_proto__free_unpacked
+                     (SquareProto *message,
                       ProtobufCAllocator *allocator)
 {
-  assert(message->base.descriptor == &square__descriptor);
+  assert(message->base.descriptor == &square_proto__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   chunk__init
-                     (Chunk         *message)
+void   chunk_proto__init
+                     (ChunkProto         *message)
 {
-  static Chunk init_value = CHUNK__INIT;
+  static ChunkProto init_value = CHUNK_PROTO__INIT;
   *message = init_value;
 }
-size_t chunk__get_packed_size
-                     (const Chunk *message)
+size_t chunk_proto__get_packed_size
+                     (const ChunkProto *message)
 {
-  assert(message->base.descriptor == &chunk__descriptor);
+  assert(message->base.descriptor == &chunk_proto__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t chunk__pack
-                     (const Chunk *message,
+size_t chunk_proto__pack
+                     (const ChunkProto *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &chunk__descriptor);
+  assert(message->base.descriptor == &chunk_proto__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t chunk__pack_to_buffer
-                     (const Chunk *message,
+size_t chunk_proto__pack_to_buffer
+                     (const ChunkProto *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &chunk__descriptor);
+  assert(message->base.descriptor == &chunk_proto__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Chunk *
-       chunk__unpack
+ChunkProto *
+       chunk_proto__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Chunk *)
-     protobuf_c_message_unpack (&chunk__descriptor,
+  return (ChunkProto *)
+     protobuf_c_message_unpack (&chunk_proto__descriptor,
                                 allocator, len, data);
 }
-void   chunk__free_unpacked
-                     (Chunk *message,
+void   chunk_proto__free_unpacked
+                     (ChunkProto *message,
                       ProtobufCAllocator *allocator)
 {
-  assert(message->base.descriptor == &chunk__descriptor);
+  assert(message->base.descriptor == &chunk_proto__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-void   tile__init
-                     (Tile         *message)
+void   tile_proto__init
+                     (TileProto         *message)
 {
-  static Tile init_value = TILE__INIT;
+  static TileProto init_value = TILE_PROTO__INIT;
   *message = init_value;
 }
-size_t tile__get_packed_size
-                     (const Tile *message)
+size_t tile_proto__get_packed_size
+                     (const TileProto *message)
 {
-  assert(message->base.descriptor == &tile__descriptor);
+  assert(message->base.descriptor == &tile_proto__descriptor);
   return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
 }
-size_t tile__pack
-                     (const Tile *message,
+size_t tile_proto__pack
+                     (const TileProto *message,
                       uint8_t       *out)
 {
-  assert(message->base.descriptor == &tile__descriptor);
+  assert(message->base.descriptor == &tile_proto__descriptor);
   return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
 }
-size_t tile__pack_to_buffer
-                     (const Tile *message,
+size_t tile_proto__pack_to_buffer
+                     (const TileProto *message,
                       ProtobufCBuffer *buffer)
 {
-  assert(message->base.descriptor == &tile__descriptor);
+  assert(message->base.descriptor == &tile_proto__descriptor);
   return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
 }
-Tile *
-       tile__unpack
+TileProto *
+       tile_proto__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data)
 {
-  return (Tile *)
-     protobuf_c_message_unpack (&tile__descriptor,
+  return (TileProto *)
+     protobuf_c_message_unpack (&tile_proto__descriptor,
                                 allocator, len, data);
 }
-void   tile__free_unpacked
-                     (Tile *message,
+void   tile_proto__free_unpacked
+                     (TileProto *message,
                       ProtobufCAllocator *allocator)
 {
-  assert(message->base.descriptor == &tile__descriptor);
+  assert(message->base.descriptor == &tile_proto__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
-static const ProtobufCFieldDescriptor square__field_descriptors[5] =
+static const ProtobufCFieldDescriptor square_proto__field_descriptors[5] =
 {
   {
     "floor",
@@ -144,7 +144,7 @@ static const ProtobufCFieldDescriptor square__field_descriptors[5] =
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Square, floor),
+    offsetof(SquareProto, floor),
     NULL,
     NULL,
     0,             /* flags */
@@ -156,7 +156,7 @@ static const ProtobufCFieldDescriptor square__field_descriptors[5] =
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Square, item),
+    offsetof(SquareProto, item),
     NULL,
     NULL,
     0,             /* flags */
@@ -168,7 +168,7 @@ static const ProtobufCFieldDescriptor square__field_descriptors[5] =
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Square, quantity),
+    offsetof(SquareProto, quantity),
     NULL,
     NULL,
     0,             /* flags */
@@ -180,7 +180,7 @@ static const ProtobufCFieldDescriptor square__field_descriptors[5] =
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Square, x),
+    offsetof(SquareProto, x),
     NULL,
     NULL,
     0,             /* flags */
@@ -192,41 +192,41 @@ static const ProtobufCFieldDescriptor square__field_descriptors[5] =
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Square, y),
+    offsetof(SquareProto, y),
     NULL,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned square__field_indices_by_name[] = {
+static const unsigned square_proto__field_indices_by_name[] = {
   0,   /* field[0] = floor */
   1,   /* field[1] = item */
   2,   /* field[2] = quantity */
   3,   /* field[3] = x */
   4,   /* field[4] = y */
 };
-static const ProtobufCIntRange square__number_ranges[1 + 1] =
+static const ProtobufCIntRange square_proto__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 5 }
 };
-const ProtobufCMessageDescriptor square__descriptor =
+const ProtobufCMessageDescriptor square_proto__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
-  "square",
-  "Square",
-  "Square",
+  "square_proto",
+  "SquareProto",
+  "SquareProto",
   "",
-  sizeof(Square),
+  sizeof(SquareProto),
   5,
-  square__field_descriptors,
-  square__field_indices_by_name,
-  1,  square__number_ranges,
-  (ProtobufCMessageInit) square__init,
+  square_proto__field_descriptors,
+  square_proto__field_indices_by_name,
+  1,  square_proto__number_ranges,
+  (ProtobufCMessageInit) square_proto__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor chunk__field_descriptors[3] =
+static const ProtobufCFieldDescriptor chunk_proto__field_descriptors[3] =
 {
   {
     "x",
@@ -234,7 +234,7 @@ static const ProtobufCFieldDescriptor chunk__field_descriptors[3] =
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Chunk, x),
+    offsetof(ChunkProto, x),
     NULL,
     NULL,
     0,             /* flags */
@@ -246,7 +246,7 @@ static const ProtobufCFieldDescriptor chunk__field_descriptors[3] =
     PROTOBUF_C_LABEL_REQUIRED,
     PROTOBUF_C_TYPE_INT32,
     0,   /* quantifier_offset */
-    offsetof(Chunk, y),
+    offsetof(ChunkProto, y),
     NULL,
     NULL,
     0,             /* flags */
@@ -257,74 +257,100 @@ static const ProtobufCFieldDescriptor chunk__field_descriptors[3] =
     3,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
-    offsetof(Chunk, n_squares),
-    offsetof(Chunk, squares),
-    &square__descriptor,
+    offsetof(ChunkProto, n_squares),
+    offsetof(ChunkProto, squares),
+    &square_proto__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned chunk__field_indices_by_name[] = {
+static const unsigned chunk_proto__field_indices_by_name[] = {
   2,   /* field[2] = squares */
   0,   /* field[0] = x */
   1,   /* field[1] = y */
 };
-static const ProtobufCIntRange chunk__number_ranges[1 + 1] =
+static const ProtobufCIntRange chunk_proto__number_ranges[1 + 1] =
 {
   { 1, 0 },
   { 0, 3 }
 };
-const ProtobufCMessageDescriptor chunk__descriptor =
+const ProtobufCMessageDescriptor chunk_proto__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
-  "chunk",
-  "Chunk",
-  "Chunk",
+  "chunk_proto",
+  "ChunkProto",
+  "ChunkProto",
   "",
-  sizeof(Chunk),
+  sizeof(ChunkProto),
   3,
-  chunk__field_descriptors,
-  chunk__field_indices_by_name,
-  1,  chunk__number_ranges,
-  (ProtobufCMessageInit) chunk__init,
+  chunk_proto__field_descriptors,
+  chunk_proto__field_indices_by_name,
+  1,  chunk_proto__number_ranges,
+  (ProtobufCMessageInit) chunk_proto__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor tile__field_descriptors[1] =
+static const ProtobufCFieldDescriptor tile_proto__field_descriptors[3] =
 {
   {
-    "chunks",
+    "x",
     1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(TileProto, x),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "y",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_INT32,
+    0,   /* quantifier_offset */
+    offsetof(TileProto, y),
+    NULL,
+    NULL,
+    0,             /* flags */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "chunks",
+    3,
     PROTOBUF_C_LABEL_REPEATED,
     PROTOBUF_C_TYPE_MESSAGE,
-    offsetof(Tile, n_chunks),
-    offsetof(Tile, chunks),
-    &chunk__descriptor,
+    offsetof(TileProto, n_chunks),
+    offsetof(TileProto, chunks),
+    &chunk_proto__descriptor,
     NULL,
     0,             /* flags */
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
 };
-static const unsigned tile__field_indices_by_name[] = {
-  0,   /* field[0] = chunks */
+static const unsigned tile_proto__field_indices_by_name[] = {
+  2,   /* field[2] = chunks */
+  0,   /* field[0] = x */
+  1,   /* field[1] = y */
 };
-static const ProtobufCIntRange tile__number_ranges[1 + 1] =
+static const ProtobufCIntRange tile_proto__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 1 }
+  { 0, 3 }
 };
-const ProtobufCMessageDescriptor tile__descriptor =
+const ProtobufCMessageDescriptor tile_proto__descriptor =
 {
   PROTOBUF_C__MESSAGE_DESCRIPTOR_MAGIC,
-  "tile",
-  "Tile",
-  "Tile",
+  "tile_proto",
+  "TileProto",
+  "TileProto",
   "",
-  sizeof(Tile),
-  1,
-  tile__field_descriptors,
-  tile__field_indices_by_name,
-  1,  tile__number_ranges,
-  (ProtobufCMessageInit) tile__init,
+  sizeof(TileProto),
+  3,
+  tile_proto__field_descriptors,
+  tile_proto__field_indices_by_name,
+  1,  tile_proto__number_ranges,
+  (ProtobufCMessageInit) tile_proto__init,
   NULL,NULL,NULL    /* reserved[123] */
 };

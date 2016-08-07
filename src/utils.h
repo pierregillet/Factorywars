@@ -139,4 +139,4 @@ int number_of_files (struct directory_list* dir_list);
  *
  * @return 0 if it does not exists, 1 if it exists.
  */
-int is_existing (const char path);
+int is_existing (const char* path);

@@ -70,8 +70,7 @@ void
 display_ground (SDL_Renderer* main_renderer,
 		SDL_Texture* textures[][10],
 		const struct size screen_dimensions,
-		struct coordinates player_coordinates,
-		Map map)
+		struct coordinates player_coordinates)
 {
   const unsigned int NUMBER_OF_SQUARES_PER_ROW = 16; // Per chunk
   unsigned int default_square_width = 24; // In pixels

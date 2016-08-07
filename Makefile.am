@@ -5,7 +5,7 @@ EXTRA_DIST = config.rpath  \
 	factorywars.conf\
 	README.md\
 	TODO.md\
-	src/map.proto src/player-data.proto\
+	src/tile.proto src/player-data.proto\
 	saves
 
 bin_PROGRAMS = factorywars
@@ -15,7 +15,7 @@ factorywars_SOURCES = \
 	src/gettext.h\
 	src/items.cpp src/items.h\
 	src/map.cpp src/map.h\
-	src/map.pb-c.c src/map.pb-c.h\
+	src/tile.pb-c.c src/tile.pb-c.h\
 	src/multiplayer.cpp src/multiplayer.h\
 	src/network.c src/network.h\
 	src/player.cpp src/player.h\

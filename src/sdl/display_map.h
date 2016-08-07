@@ -33,28 +33,24 @@
 #pragma once
 
 #include <stdio.h>
+
 #include <string>
 
 #include "gui_utils.h"
-#include "../structures.h"
-#include "display_item.h"
 #include "../map.h"
+#include "../structures.h"
 
 extern "C" {
 #include "config.h"
 }
 
-/** load_biomes fills the current table with textures
-  */
-/* void load_biomes (SDL_Renderer** Renderer, SDL_Texture** table); */
-
-/** display_background displays the map
+/** 
+  * display_background displays the map
   * it takes the save path file
   * and a table with biomes
   */ 
-void display_background (SDL_Renderer** Renderer,
-			 Map* map,
-			 SDL_Texture* textures[][10],
+void display_background (SDL_Renderer* Renderer,
+			 Map& map,
 			 struct coordinates screen_origin,
 			 const int screen_height,
 			 const int screen_width);

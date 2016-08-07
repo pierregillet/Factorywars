@@ -1,4 +1,4 @@
-message square
+message square_proto
 {
   required int32 floor = 1;
   required int32 item = 2;
@@ -7,14 +7,16 @@ message square
   required int32 y = 5;
 }
 
-message chunk
+message chunk_proto
 {
   required int32 x = 1;
   required int32 y = 2;
-  repeated square squares = 3;
+  repeated square_proto squares = 3;
 }
 
-message tile
+message tile_proto
 {
-  repeated chunk chunks = 1;
+  required int32 x = 1;
+  required int32 y = 2;
+  repeated chunk_proto chunks = 3;
 }

@@ -11,7 +11,8 @@ PKG_CHECK_MODULES([libSDL2], [sdl2 >= 2])
 PKG_CHECK_MODULES([libSDL2Image], [SDL2_image])
 PKG_CHECK_MODULES([PROTOBUFC], [libprotobuf-c >= 1.0.0])
 PKG_CHECK_MODULES([SDL2ttf], [SDL2_ttf >= 2])
-LIBS="$LIBS $libSDL2Image_LIBS $libxml2_LIBS $PROTOBUFC_LIBS $SDL2ttf_LIBS"
+
+LIBS="$LIBS $libSDL2Image_LIBS $libxml2_LIBS $PROTOBUFC_LIBS $SDL2ttf_LIBS -lnoise"
 
 AC_ARG_ENABLE([run-in-place],
   AS_HELP_STRING([--enable-run-in-place],

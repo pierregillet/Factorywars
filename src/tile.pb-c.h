@@ -15,9 +15,9 @@ PROTOBUF_C__BEGIN_DECLS
 #endif
 
 
-typedef struct _Square Square;
-typedef struct _Chunk Chunk;
-typedef struct _Tile Tile;
+typedef struct _SquareProto SquareProto;
+typedef struct _ChunkProto ChunkProto;
+typedef struct _TileProto TileProto;
 
 
 /* --- enums --- */
@@ -25,7 +25,7 @@ typedef struct _Tile Tile;
 
 /* --- messages --- */
 
-struct  _Square
+struct  _SquareProto
 {
   ProtobufCMessage base;
   int32_t floor;
@@ -34,102 +34,104 @@ struct  _Square
   int32_t x;
   int32_t y;
 };
-#define SQUARE__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&square__descriptor) \
+#define SQUARE_PROTO__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&square_proto__descriptor) \
     , 0, 0, 0, 0, 0 }
 
 
-struct  _Chunk
+struct  _ChunkProto
 {
   ProtobufCMessage base;
   int32_t x;
   int32_t y;
   size_t n_squares;
-  Square **squares;
+  SquareProto **squares;
 };
-#define CHUNK__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&chunk__descriptor) \
+#define CHUNK_PROTO__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&chunk_proto__descriptor) \
     , 0, 0, 0,NULL }
 
 
-struct  _Tile
+struct  _TileProto
 {
   ProtobufCMessage base;
+  int32_t x;
+  int32_t y;
   size_t n_chunks;
-  Chunk **chunks;
+  ChunkProto **chunks;
 };
-#define TILE__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&tile__descriptor) \
-    , 0,NULL }
+#define TILE_PROTO__INIT \
+ { PROTOBUF_C_MESSAGE_INIT (&tile_proto__descriptor) \
+    , 0, 0, 0,NULL }
 
 
-/* Square methods */
-void   square__init
-                     (Square         *message);
-size_t square__get_packed_size
-                     (const Square   *message);
-size_t square__pack
-                     (const Square   *message,
+/* SquareProto methods */
+void   square_proto__init
+                     (SquareProto         *message);
+size_t square_proto__get_packed_size
+                     (const SquareProto   *message);
+size_t square_proto__pack
+                     (const SquareProto   *message,
                       uint8_t             *out);
-size_t square__pack_to_buffer
-                     (const Square   *message,
+size_t square_proto__pack_to_buffer
+                     (const SquareProto   *message,
                       ProtobufCBuffer     *buffer);
-Square *
-       square__unpack
+SquareProto *
+       square_proto__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   square__free_unpacked
-                     (Square *message,
+void   square_proto__free_unpacked
+                     (SquareProto *message,
                       ProtobufCAllocator *allocator);
-/* Chunk methods */
-void   chunk__init
-                     (Chunk         *message);
-size_t chunk__get_packed_size
-                     (const Chunk   *message);
-size_t chunk__pack
-                     (const Chunk   *message,
+/* ChunkProto methods */
+void   chunk_proto__init
+                     (ChunkProto         *message);
+size_t chunk_proto__get_packed_size
+                     (const ChunkProto   *message);
+size_t chunk_proto__pack
+                     (const ChunkProto   *message,
                       uint8_t             *out);
-size_t chunk__pack_to_buffer
-                     (const Chunk   *message,
+size_t chunk_proto__pack_to_buffer
+                     (const ChunkProto   *message,
                       ProtobufCBuffer     *buffer);
-Chunk *
-       chunk__unpack
+ChunkProto *
+       chunk_proto__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   chunk__free_unpacked
-                     (Chunk *message,
+void   chunk_proto__free_unpacked
+                     (ChunkProto *message,
                       ProtobufCAllocator *allocator);
-/* Tile methods */
-void   tile__init
-                     (Tile         *message);
-size_t tile__get_packed_size
-                     (const Tile   *message);
-size_t tile__pack
-                     (const Tile   *message,
+/* TileProto methods */
+void   tile_proto__init
+                     (TileProto         *message);
+size_t tile_proto__get_packed_size
+                     (const TileProto   *message);
+size_t tile_proto__pack
+                     (const TileProto   *message,
                       uint8_t             *out);
-size_t tile__pack_to_buffer
-                     (const Tile   *message,
+size_t tile_proto__pack_to_buffer
+                     (const TileProto   *message,
                       ProtobufCBuffer     *buffer);
-Tile *
-       tile__unpack
+TileProto *
+       tile_proto__unpack
                      (ProtobufCAllocator  *allocator,
                       size_t               len,
                       const uint8_t       *data);
-void   tile__free_unpacked
-                     (Tile *message,
+void   tile_proto__free_unpacked
+                     (TileProto *message,
                       ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
-typedef void (*Square_Closure)
-                 (const Square *message,
+typedef void (*SquareProto_Closure)
+                 (const SquareProto *message,
                   void *closure_data);
-typedef void (*Chunk_Closure)
-                 (const Chunk *message,
+typedef void (*ChunkProto_Closure)
+                 (const ChunkProto *message,
                   void *closure_data);
-typedef void (*Tile_Closure)
-                 (const Tile *message,
+typedef void (*TileProto_Closure)
+                 (const TileProto *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -137,9 +139,9 @@ typedef void (*Tile_Closure)
 
 /* --- descriptors --- */
 
-extern const ProtobufCMessageDescriptor square__descriptor;
-extern const ProtobufCMessageDescriptor chunk__descriptor;
-extern const ProtobufCMessageDescriptor tile__descriptor;
+extern const ProtobufCMessageDescriptor square_proto__descriptor;
+extern const ProtobufCMessageDescriptor chunk_proto__descriptor;
+extern const ProtobufCMessageDescriptor tile_proto__descriptor;
 
 PROTOBUF_C__END_DECLS
 

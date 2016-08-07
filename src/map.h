@@ -35,12 +35,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <string.h>
-#include <regex.h>
-#include <math.h>
+#include <config.h>
+#include <time.h>
+#include <SDL2/SDL.h>
+
+#include <vector>
+#include <string>
+#include <fstream>
+#include <noise/noise.h>
 
 #include "structures.h"
-#include "map.pb-c.h"
+#include "tile.pb-c.h"
+#include "sdl/gui_utils.h"
 
 extern "C"
 {
@@ -48,115 +56,100 @@ extern "C"
   #include "utils.h"
 }
 
-/**
- * Get the surface item at given coordinates.
- * @param chunk_coordinates is the chunk coordinates.
- * @param square_coordinates is the square coordinates.
- * @param map is a structure which contain the map.
- * @return -1 if there is an error, anything else if not.
- */
-int get_surface_item (struct coordinates chunk_coordinates,
-		      struct coordinates square_coordinates,
-		      Map* map);
+#include "gettext.h"
+#define _(string) gettext (string)
 
-/**
- * Get the biome id of the given chunk.
- * @param chunk_coordinates is the coordinates of the chunk.
- * @param save_file_path is the path to the save file.
- * @return -1 if there is an error, anything else if not.
- */
-int get_biome_id (struct coordinates chunk_coordinates, Map* map);
 
-/**
- * Set the surface item at given coordinates.
- * @param chunk_coordinates is the chunk coordinates.
- * @param square_coordinates is the square coordinates.
- * @param item_id is the item id.
- * @param map is the map’s structure.
- * @return 1 if there are no errors, 0 if the chunk line does not exist
- * and 2 for other errors.
- */
-int set_surface_item (struct coordinates chunk_coordinates,
-		      struct coordinates square_coordinates, int item_id,
-		      Map* map);
-
-/**
- * Get the position of the square coordinates in the line describing the chunk.
- * @param chunk_coordinates are the coordinates of the chunk.
- * @param square_coordinates are the coordinates of the square.
- * @param save_file_path is the path to the save file.
- * @return the position of the square coordinates in the string or 0
- * for rm_so and rm_eo if it doesn’t exist.
- */
-regmatch_t find_square_coordinates_pos (struct coordinates chunk_coordinates,
-					struct coordinates square_coordinates,
-					const char* save_file_path);
-
-/**
- * Get the chunk coordinates of the bottom left corner chunk for displaying it.
- * @param player_offset is the number of pixels from the left bottom corner
- * of the map.
- * @return the chunk coordinates of the bottom left corner chunk.
- */
 struct coordinates
 get_chunk_coordinates_from_player_movement (struct coordinates player_offset);
 
-/**
- * Get the chunk info.
- *
- * @param chunk_coordiantes is the coordinates of the chunk.
- * @param map is the map informations.
- * @return the chunk informations in a structure chunk_info or a biome id of
- * -1 if there is an error.
- */
-struct chunk_info get_chunk_info (struct coordinates chunk_coordinates,
-				  Map* map);
+std::string get_save_directory_path ();
 
-/**
- * Read a file and write informations in a Map structure.
- *
- * @param map is the map structure where we’ll write the informations from the file.
- * @param save_file_path is the path to the save file.
- * @return 1 if success and < 1 if there is an error.
- */
-int read_save_file (Map* map, const char* save_file_path);
+class Chunk
+{
+ public:
+  Chunk (struct coordinates chunk_coordinates, TileProto* tile, SDL_Renderer* window_renderer);
+  ~Chunk ();
 
-/**
- * Write a Map structure to a file.
- *
- * @param map is the map structure where we’ll get the informations.
- * @param save_file_path is the path to the save file.
- * @return 1 if success and < 1 if there is an error.
- */
-int save_to_file (Map* map, const char* save_file_path);
+  inline struct coordinates getChunkCoordinates () const;
+  inline struct coordinates getTileCoordinates () const;
 
-/**
- * Free a map structure.
- *
- * @param map is the map structure we’ll free.
- */
-void free_map_struct (Map* map);
+  SDL_Texture* get_chunk_texture ();
 
-/**
- * Get chunk number using chunk coordinates
- *
- * @param chunk_coordinates is the chunk’s coordinates.
- * @param map is the structure containing the map.
- * @return the chunk number or -1 if there is an error.
- */
-int find_chunk_using_chunk_coordinates (struct coordinates chunk_coordinates,
-					Map* map);
-/**
- * Get square number using its coordinates
- *
- * @param chunk_coordinates is the chunk’s coordinates.
- * @param square_coordinates is the square’s coordinates.
- * @param map is the structure containing the map.
- * @return the square number or -1 if there is an error.
- */
-int
-find_square_using_square_coordinates (struct coordinates chunk_coordinates,
-				      struct coordinates square_coordinates,
-				      Map* map);
+  void set_square_item (struct coordinates square_coordinates, int item_id,
+			int quantity = 1);
+  int get_square_item_id (struct coordinates square_coordinates);
+  int get_square_item_quantity (struct coordinates square_coordinates);
+
+  time_t getLastUse () const;
+
+ private:
+  SDL_Surface* m_ground;
+  SDL_Texture* m_chunk_texture;
+  SDL_Renderer* m_window_renderer;
+
+  ChunkProto* m_me;
+  struct coordinates m_chunk_coordinates, m_tile_coordinates;
+
+  time_t m_last_use;
+
+  void generate_ground_surface ();
+  void generate_texture ();
+};
 
 
+class Map
+{
+ public:
+  /**
+   * Default constructor.
+   * 
+   * @param game_name is the name of the game.
+   * @param generate_seed, if it’s true, the function will generate a seed
+   * unless a seed has already been generated for this game.
+   */
+  Map (std::string game_name, SDL_Renderer* window_renderer, bool generate_seed = true);
+
+  /**
+   * Same as default constructor but if the game does not exist,
+   * it uses the seed given as parameter if a seed has not already been 
+   * generated for this game.
+   * @param game_name is the name of the game.
+   * @param seed is used to generate chunks randomly.
+   */
+  Map (std::string game_name, int seed, SDL_Renderer* window_renderer);
+
+    
+  SDL_Texture* get_chunk_texture (struct coordinates chunk_coordinates);
+
+  int get_surface_item (struct coordinates chunk_coordinates,
+			struct coordinates square_coordinates);
+
+  void set_surface_item (struct coordinates chunk_coordinates,
+			 struct coordinates square_coordinates, int item_id,
+			 int quantity = 1);
+
+ private:
+  int m_seed;
+  std::string m_game_path;
+  std::string m_tiles_directory_path;
+  noise::module::Perlin m_map_noise;
+
+  std::vector<Chunk> m_chunks;
+  std::vector<TileProto*> m_tiles;
+
+  SDL_Renderer* m_window_renderer;
+
+  void load_tile (struct coordinates tile_coordinates);
+
+  /**
+   * Il faudra vérifier à chaque tronçon déchargé si c’était le dernier 
+   * utilisé de sa dalle.
+   */
+  void unload_unused_chunks ();
+  void generate_tile (struct coordinates tile_coordinates);
+  struct coordinates get_tile_by_chunk (struct coordinates
+					chunk_coordinates) const;
+
+  int get_floor_id (double random_value);
+};

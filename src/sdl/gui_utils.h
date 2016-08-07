@@ -38,16 +38,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include <vector>
 
 #include "../structures.h"
-#include "display_item.h"
-#include "display_map.h"
-#include "../multiplayer.h"
-#include "game_events.h"
-#include "menu.h"
-#include "game.h"
-#include "../map.h"
 #include "gui_exit.h"
 
 #include "../gettext.h"
