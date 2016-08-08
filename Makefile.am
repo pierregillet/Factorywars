@@ -41,7 +41,8 @@ dist_textures_DATA = \
 	media/textures/arbre.png media/textures/biome1.png\
 	media/textures/biome2.png media/textures/LEFT.png\
 	media/textures/RIGHT.png media/textures/pierre1.png\
-	media/textures/pierre2.png media/textures/pierre3.png
+	media/textures/pierre2.png media/textures/pierre3.png\
+	media/textures/biome3.png
 
 fontsdir = $(pkgdatadir)/fonts
 dist_fonts_DATA = media/fonts/FreeSans.ttf

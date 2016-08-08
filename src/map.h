@@ -70,6 +70,7 @@ class Chunk
  public:
   Chunk (struct coordinates chunk_coordinates, TileProto* tile, SDL_Renderer* window_renderer);
   ~Chunk ();
+  Chunk (const Chunk& other);
 
   inline struct coordinates getChunkCoordinates () const;
   inline struct coordinates getTileCoordinates () const;

@@ -403,11 +403,6 @@ is_existing (const char* path)
   FILE* file = fopen (path, "r");
 
   if (file == NULL)
-    printf ("Not existing : %s\n", path);
-  else
-    printf ("Existing : %s\n", path);
-
-  if (file == NULL)
     return 0;
   else
     {

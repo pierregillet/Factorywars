@@ -85,8 +85,6 @@ Map::Map (std::string game_name, SDL_Renderer* window_renderer, bool generate_se
   m_game_path = get_save_directory_path () + game_name;
   m_tiles_directory_path = m_game_path + "/tiles/";
 
-  printf ("%s\n", m_game_path.c_str ());
-
   std::string seed_path = m_game_path + "/" + "seed";
 
   mode_t rwx_rx_rx = S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IXGRP
@@ -150,22 +148,23 @@ Map::Map (std::string game_name, int seed, SDL_Renderer* window_renderer)
 SDL_Texture*
 Map::get_chunk_texture (struct coordinates chunk_coordinates)
 {
-  for (Chunk chunk : m_chunks)
+  unload_unused_chunks ();
+  for (int i = 0; i < m_chunks.size (); i++)
     {
-      if (chunk.getChunkCoordinates ().x == chunk_coordinates.x
-	  && chunk.getChunkCoordinates ().y == chunk_coordinates.y)
-	return chunk.get_chunk_texture ();
+      if (m_chunks[i].getChunkCoordinates ().x == chunk_coordinates.x
+	  && m_chunks[i].getChunkCoordinates ().y == chunk_coordinates.y)
+	return m_chunks[i].get_chunk_texture ();
     }
 
   // Le tronçon n’est pas encore en mémoire.
   load_tile (get_tile_by_chunk (chunk_coordinates));
 
   // On cherche de nouveau.
-  for (Chunk chunk : m_chunks)
+  for (int i = 0; i < m_chunks.size (); i++)
     {
-      if (chunk.getChunkCoordinates ().x == chunk_coordinates.x
-	  && chunk.getChunkCoordinates ().y == chunk_coordinates.y)
-	return chunk.get_chunk_texture ();
+      if (m_chunks[i].getChunkCoordinates ().x == chunk_coordinates.x
+	  && m_chunks[i].getChunkCoordinates ().y == chunk_coordinates.y)
+	return m_chunks[i].get_chunk_texture ();
     }
 
   // Erreur
@@ -177,12 +176,12 @@ Map::set_surface_item (struct coordinates chunk_coordinates,
 		       struct coordinates square_coordinates, int item_id,
 		       int quantity)
 {
-  for (Chunk chunk : m_chunks)
+  for (int i = 0; i < m_chunks.size (); i++)
     {
-      if (chunk.getChunkCoordinates ().x == chunk_coordinates.x
-	  && chunk.getChunkCoordinates ().y == chunk_coordinates.y)
+      if (m_chunks[i].getChunkCoordinates ().x == chunk_coordinates.x
+	  && m_chunks[i].getChunkCoordinates ().y == chunk_coordinates.y)
 	{
-	  chunk.set_square_item (square_coordinates, item_id, quantity);
+	  m_chunks[i].set_square_item (square_coordinates, item_id, quantity);
 
 	  return;
 	}
@@ -193,12 +192,12 @@ int
 Map::get_surface_item (struct coordinates chunk_coordinates,
 		       struct coordinates square_coordinates)
 {
-  for (Chunk chunk : m_chunks)
+  for (int i = 0; i < m_chunks.size (); i++)
     {
-      if (chunk.getChunkCoordinates ().x == chunk_coordinates.x
-	  && chunk.getChunkCoordinates ().y == chunk_coordinates.y)
+      if (m_chunks[i].getChunkCoordinates ().x == chunk_coordinates.x
+	  && m_chunks[i].getChunkCoordinates ().y == chunk_coordinates.y)
 	{
-	  return chunk.get_square_item_id (square_coordinates);
+	  return m_chunks[i].get_square_item_id (square_coordinates);
 	}
     }
 }
@@ -207,11 +206,10 @@ void
 Map::load_tile (struct coordinates tile_coordinates)
 {
   // Il faut vérifier que la dalle n’est pas déjà chargée.
-  for (TileProto* tile : m_tiles)
+  for (int i = 0; i < m_tiles.size (); i++)
     {
-      printf ("%d;%d\n", tile->x, tile->y);
-
-      if (tile->x == tile_coordinates.x && tile->y == tile_coordinates.y)
+      if (m_tiles[i]->x == tile_coordinates.x
+	  && m_tiles[i]->y == tile_coordinates.y)
 	return;
     }
 
@@ -274,9 +272,7 @@ Map::load_tile (struct coordinates tile_coordinates)
   // le vecteur m_chunks.
   for (int i = 0; i < tile->n_chunks; i++)
     {
-      printf ("i : %d\n", i);
       m_chunks.push_back (Chunk ({tile->chunks[i]->x, tile->chunks[i]->y}, tile, m_window_renderer));
-      printf ("i2 : %d\n", i);
     }
 }
 
@@ -302,8 +298,6 @@ Map::generate_tile (struct coordinates tile_coordinates)
   
   for (int i = 0; i < tile.n_chunks; i++)
     {
-      printf ("i : %d\n", i);
-      printf ("1\n");
       tile.chunks[i] = (ChunkProto*) malloc (sizeof (ChunkProto));
       if (tile.chunks[i] == NULL)
 	{
@@ -312,13 +306,10 @@ Map::generate_tile (struct coordinates tile_coordinates)
 	  free (tile.chunks);
 	  return;
 	}
-      printf ("2\n");
 
       chunk_proto__init (tile.chunks[i]);
-      printf ("3\n");
       tile.chunks[i]->x = i / 8 + 8 * tile.x;
       tile.chunks[i]->y = i % 8 + 8 * tile.y;
-      printf ("4\n");
       
       tile.chunks[i]->n_squares = 16 * 16;
       tile.chunks[i]->squares = (SquareProto**)
@@ -337,10 +328,8 @@ Map::generate_tile (struct coordinates tile_coordinates)
 	  return;
 	}
 
-      printf ("%d cases dans %d;%d\n", tile.chunks[i]->n_squares, tile.chunks[i]->x, tile.chunks[i]->y);
       for (int j = 0; j < tile.chunks[i]->n_squares; j++)
 	{
-	  printf ("j : %d\n", j);
 	  tile.chunks[i]->squares[j] = (SquareProto*) malloc (sizeof (SquareProto));
 	  if (tile.chunks[i]->squares[j] == NULL)
 	    {
@@ -358,17 +347,12 @@ Map::generate_tile (struct coordinates tile_coordinates)
 	  random_value = m_map_noise.GetValue (square_coordinates.x * (1.0/1000.0),
 					       square_coordinates.y * (1.0/1000.0),
 					       0);
-	  // printf ("%f\n", random_value);
 	  tile.chunks[i]->squares[j]->floor = get_floor_id (random_value);
-
-	  // printf ("%d;%d %d\n", tile.chunks[i]->squares[j]->x, tile.chunks[i]->squares[j]->y, tile.chunks[i]->squares[j]->floor);
 
 	  tile.chunks[i]->squares[j]->item = -1;
 	  tile.chunks[i]->squares[j]->quantity = 0;
 	}
-      printf ("Ici\n");
     }
-  printf ("Là\n");
 
   // On l’écrit dans son fichier.
   unsigned long len = tile_proto__get_packed_size (&tile);
@@ -475,10 +459,10 @@ Map::unload_unused_chunks ()
 
 	  // On regarde si d’autres tronçons contenus dans cette dalle existe
 	  // encore.
-	  for (Chunk chunk : m_chunks)
+	  for (int j = 0; j < m_chunks.size (); j++)
 	    {
-	      if (chunk.getTileCoordinates ().x == tile_coordinates.x
-		  && chunk.getTileCoordinates ().y == tile_coordinates.y)
+	      if (m_chunks[j].getTileCoordinates ().x == tile_coordinates.x
+		  && m_chunks[j].getTileCoordinates ().y == tile_coordinates.y)
 		{
 		  delete_tile = true;
 		  break;
@@ -529,12 +513,11 @@ Chunk::Chunk (struct coordinates chunk_coordinates, TileProto* tile, SDL_Rendere
   
   generate_ground_surface ();
 
-  printf ("1\n");
+  m_chunk_texture = NULL;
   generate_texture ();
 
   // On initialise le temps de dernière utilisation à maintenant.
   m_last_use = time (NULL);
-  printf ("2\n");
 }
 
 Chunk::~Chunk ()
@@ -544,6 +527,24 @@ Chunk::~Chunk ()
 
   if (m_chunk_texture != NULL)
     SDL_DestroyTexture (m_chunk_texture);
+}
+
+Chunk::Chunk (const Chunk& other)
+{
+  m_ground = copy_surface (other.m_ground);
+  m_window_renderer = other.m_window_renderer;
+  m_me = other.m_me;
+
+  m_chunk_coordinates.x = other.m_chunk_coordinates.x;
+  m_chunk_coordinates.y = other.m_chunk_coordinates.y;
+
+  m_tile_coordinates.x = other.m_tile_coordinates.x;
+  m_tile_coordinates.y = other.m_tile_coordinates.y;
+
+  m_last_use = other.m_last_use;
+
+  m_chunk_texture = NULL;
+  generate_texture ();
 }
 
 inline struct coordinates
@@ -561,6 +562,12 @@ Chunk::getTileCoordinates () const
 SDL_Texture*
 Chunk::get_chunk_texture ()
 {
+  if (m_chunk_texture == NULL)
+    {
+      fprintf (stderr, _("The chunk’s texture is not correct."));
+      fprintf (stderr, "\n");
+    }
+
   m_last_use = time (NULL);
   return m_chunk_texture;
 }
@@ -569,20 +576,18 @@ void
 Chunk::set_square_item (struct coordinates square_coordinates, int item_id,
 			int quantity)
 {
-  SquareProto* current_square = NULL;
-  
   // On doit trouver le carré.
   for (int i = 0; i < m_me->n_squares; i++)
     {
-      current_square = m_me->squares[i];
-
-      if (current_square->x == square_coordinates.x
-	  && current_square->y == square_coordinates.y)
+      if (m_me->squares[i]->x == square_coordinates.x
+	  && m_me->squares[i]->y == square_coordinates.y)
 	{
-	  current_square->item = item_id;
-	  current_square->quantity = quantity;
+	  m_me->squares[i]->item = item_id;
+	  m_me->squares[i]->quantity = quantity;
 	}
     }
+
+  generate_texture ();
 
   m_last_use = time (NULL);
 }
@@ -632,7 +637,7 @@ Chunk::getLastUse () const
 void
 Chunk::generate_texture ()
 {
-  if (m_chunk_texture == NULL)
+  if (m_chunk_texture != NULL)
     SDL_DestroyTexture (m_chunk_texture);
 
   SDL_Surface* items[2];
@@ -673,6 +678,13 @@ Chunk::generate_texture ()
 	}
     }
 
+      
+  // std::string nom_de_l_image = std::to_string (m_chunk_coordinates.x) + ";";
+  // nom_de_l_image += std::to_string (m_chunk_coordinates.y) + ".bmp";
+  // printf ("%s\n", nom_de_l_image.c_str ());
+  
+  // SDL_SaveBMP (chunk_surface, nom_de_l_image.c_str ());
+
   m_chunk_texture = SDL_CreateTextureFromSurface (m_window_renderer, chunk_surface);
 
   for (int i = 0; i < 2; i++)
@@ -683,7 +695,6 @@ Chunk::generate_texture ()
 void
 Chunk::generate_ground_surface ()
 {
-  printf ("ici1 !\n");
   if (m_ground == NULL)
     SDL_FreeSurface (m_ground);
   
@@ -709,11 +720,12 @@ Chunk::generate_ground_surface ()
       fprintf (stderr, "%s\n", SDL_GetError ());
     }
 
-  SDL_Surface* biomes[2];
+  SDL_Surface* biomes[3];
   biomes[0] = IMG_Load (TEXTURESDIR"/biome1.png");
   biomes[1] = IMG_Load (TEXTURESDIR"/biome2.png");
+  biomes[2] = IMG_Load (TEXTURESDIR"/biome3.png");
 
-  for (int i = 0; i < 2; i++)
+  for (int i = 0; i < 3; i++)
     {
       if (biomes[i] == NULL)
 	{
@@ -748,14 +760,19 @@ Chunk::generate_ground_surface ()
 	  SDL_BlitSurface (biomes[1], NULL, m_ground, &floor_pos);
 	  break;
 
+	case 3:
+	  floor_pos.x = current_square->x * 24;
+	  floor_pos.y = current_square->y * 24;
+
+	  SDL_BlitSurface (biomes[2], NULL, m_ground, &floor_pos);
+	  break;
+
 	default:
 	  break;
 	}
     }
 
   // Il faut libérer les surfaces des biomes
-  for (int i = 0; i < 2; i++)
+  for (int i = 0; i < 3; i++)
     SDL_FreeSurface (biomes[i]);
-
-  printf ("ici2 !\n");
 }
