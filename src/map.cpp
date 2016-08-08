@@ -410,15 +410,15 @@ Map::get_floor_id (double random_value)
 {
   int floor_id = -1;
 
-  // [-1 ; -0,33]
-  if (random_value >= -1 && random_value <= -1.0 / 3.0)
+  // [-1 ; 0]
+  if (random_value >= -1.0 && random_value <= 0.0)
     {
       // Biome 1
       floor_id = 1;
     }
 
-  // ]-0,33 ; 0,33]
-  else if (random_value > -1.0 / 3.0 && random_value <= 1.0 / 3.0)
+  // ]0 ; 0,33]
+  else if (random_value > 0.0 && random_value <= 1.0 / 3.0)
     {
       // Biome 2
       floor_id = 2;
@@ -437,6 +437,7 @@ Map::get_floor_id (double random_value)
 void
 Map::unload_unused_chunks ()
 {
+  return;
   time_t last_use;
   time_t now = time (NULL);
 
@@ -459,12 +460,13 @@ Map::unload_unused_chunks ()
 
 	  // On regarde si d’autres tronçons contenus dans cette dalle existe
 	  // encore.
+	  delete_tile = true;
 	  for (int j = 0; j < m_chunks.size (); j++)
 	    {
 	      if (m_chunks[j].getTileCoordinates ().x == tile_coordinates.x
 		  && m_chunks[j].getTileCoordinates ().y == tile_coordinates.y)
 		{
-		  delete_tile = true;
+		  delete_tile = false;
 		  break;
 		}
 	    }
@@ -681,8 +683,6 @@ Chunk::generate_texture ()
       
   // std::string nom_de_l_image = std::to_string (m_chunk_coordinates.x) + ";";
   // nom_de_l_image += std::to_string (m_chunk_coordinates.y) + ".bmp";
-  // printf ("%s\n", nom_de_l_image.c_str ());
-  
   // SDL_SaveBMP (chunk_surface, nom_de_l_image.c_str ());
 
   m_chunk_texture = SDL_CreateTextureFromSurface (m_window_renderer, chunk_surface);
