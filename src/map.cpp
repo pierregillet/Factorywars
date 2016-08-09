@@ -800,7 +800,7 @@ Chunk::generate_item_surface ()
 
   const int NUMBER_OF_ITEMS = 2;
   SDL_Surface* items[NUMBER_OF_ITEMS];
-  items[0] = IMG_Load (TEXTURESDIR"/biome1.png");
+  items[0] = IMG_Load (TEXTURESDIR"/arbre.png");
   items[1] = IMG_Load (TEXTURESDIR"/pierre1.png");
   for (int i = 0; i < NUMBER_OF_ITEMS; i++)
     {
@@ -825,7 +825,7 @@ Chunk::generate_item_surface ()
 	{
 	case 1:
 	  floor_pos = {.x = current_square->x * 24,
-		       .y = current_square->y * 24, .w = 24, .h = 24};
+		       .y = current_square->y * 24 - 24, .w = 24, .h = 48};
 
 	  SDL_BlitScaled (items[0], NULL, m_items.get (), &floor_pos);
 	  break;
