@@ -42,6 +42,7 @@
 #include <SDL2/SDL.h>
 
 #include <vector>
+#include <memory>
 #include <string>
 #include <fstream>
 #include <noise/noise.h>
@@ -86,7 +87,7 @@ class Chunk
 
  private:
   SDL_Surface* m_ground;
-  SDL_Texture* m_chunk_texture;
+  std::shared_ptr<SDL_Texture> m_chunk_texture;
   SDL_Renderer* m_window_renderer;
 
   ChunkProto* m_me;

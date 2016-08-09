@@ -511,11 +511,8 @@ Chunk::Chunk (struct coordinates chunk_coordinates, TileProto* tile, SDL_Rendere
   m_window_renderer = window_renderer;
 
   m_ground = NULL;
-  m_chunk_texture = NULL;
-  
   generate_ground_surface ();
 
-  m_chunk_texture = NULL;
   generate_texture ();
 
   // On initialise le temps de dernière utilisation à maintenant.
@@ -526,9 +523,6 @@ Chunk::~Chunk ()
 {
   if (m_ground != NULL)
     SDL_FreeSurface (m_ground);
-
-  if (m_chunk_texture != NULL)
-    SDL_DestroyTexture (m_chunk_texture);
 }
 
 Chunk::Chunk (const Chunk& other)
@@ -545,9 +539,10 @@ Chunk::Chunk (const Chunk& other)
 
   m_last_use = other.m_last_use;
 
-  m_chunk_texture = NULL;
-  generate_texture ();
+  m_chunk_texture = std::shared_ptr<SDL_Texture> (other.m_chunk_texture);
 }
+
+
 
 inline struct coordinates
 Chunk::getChunkCoordinates () const
@@ -564,14 +559,15 @@ Chunk::getTileCoordinates () const
 SDL_Texture*
 Chunk::get_chunk_texture ()
 {
-  if (m_chunk_texture == NULL)
+  if (!m_chunk_texture)
     {
-      fprintf (stderr, _("The chunk’s texture is not correct."));
+      fprintf (stderr, _("The texture of the chunk %d;%d is not correct."),
+	       m_chunk_coordinates.x, m_chunk_coordinates.y);
       fprintf (stderr, "\n");
     }
 
   m_last_use = time (NULL);
-  return m_chunk_texture;
+  return m_chunk_texture.get ();
 }
 
 void
@@ -639,12 +635,18 @@ Chunk::getLastUse () const
 void
 Chunk::generate_texture ()
 {
-  if (m_chunk_texture != NULL)
-    SDL_DestroyTexture (m_chunk_texture);
-
-  SDL_Surface* items[2];
+  const int NUMBER_OF_ITEMS = 2;
+  SDL_Surface* items[NUMBER_OF_ITEMS];
   items[0] = IMG_Load (TEXTURESDIR"/arbre.png");
   items[1] = IMG_Load (TEXTURESDIR"/pierre1.png");
+  for (int i = 0; i < NUMBER_OF_ITEMS; i++)
+    {
+      if (items[i] == NULL)
+	{
+	  fprintf (stderr, _("Error while loading items’ textures"));
+	  fprintf (stderr, "\n");
+	}
+    }
 
   SDL_Surface* chunk_surface;
   chunk_surface = copy_surface (m_ground);
@@ -685,7 +687,19 @@ Chunk::generate_texture ()
   // nom_de_l_image += std::to_string (m_chunk_coordinates.y) + ".bmp";
   // SDL_SaveBMP (chunk_surface, nom_de_l_image.c_str ());
 
-  m_chunk_texture = SDL_CreateTextureFromSurface (m_window_renderer, chunk_surface);
+  m_chunk_texture = std::shared_ptr<SDL_Texture> (SDL_CreateTextureFromSurface
+						  (m_window_renderer,
+						   chunk_surface),
+						  SDL_DestroyTexture);
+
+  if (!m_chunk_texture)
+    {
+      fprintf (stderr,
+	       _("Error while generating the texture of the chunk %d;%d"),
+	       m_chunk_coordinates.x, m_chunk_coordinates.y);
+
+      fprintf (stderr, "\n");
+    }
 
   for (int i = 0; i < 2; i++)
     SDL_FreeSurface (items[i]);
