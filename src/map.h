@@ -86,8 +86,8 @@ class Chunk
   time_t getLastUse () const;
 
  private:
-  SDL_Surface* m_ground;
   std::shared_ptr<SDL_Texture> m_chunk_texture;
+  std::shared_ptr<SDL_Surface> m_ground, m_items;
   SDL_Renderer* m_window_renderer;
 
   ChunkProto* m_me;
@@ -96,6 +96,7 @@ class Chunk
   time_t m_last_use;
 
   void generate_ground_surface ();
+  void generate_item_surface ();
   void generate_texture ();
 };
 

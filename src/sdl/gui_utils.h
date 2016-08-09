@@ -106,14 +106,6 @@ display_fps (SDL_Renderer* main_renderer,
 	     unsigned int* fps_frames);
 
 /**
- * Copy a surface in another and return the new surface
- *
- * @param src is the surface to copy
- * @return a pointer to the new surface.
- */
-SDL_Surface* copy_surface (SDL_Surface* src);
-
-/**
  * Display a rectangle of a specific color.
  *
  * @param renderer is the renderer used to display the rectangle.

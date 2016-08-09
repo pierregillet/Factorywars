@@ -141,21 +141,6 @@ display_fps (SDL_Renderer* main_renderer, TTF_Font* ttf_freesans,
   SDL_DestroyTexture (message);
 }
 
-SDL_Surface*
-copy_surface (SDL_Surface* src)
-{
-  SDL_Surface *dest;
-  dest = SDL_CreateRGBSurfaceFrom (src->pixels, src->w, src->h,
-				   src->format->BitsPerPixel,
-				   src->pitch,
-				   src->format->Rmask,
-				   src->format->Gmask,
-				   src->format->Bmask,
-				   src->format->Amask);
-
-  return dest;
-}
-
 void
 blit_rect (SDL_Renderer* renderer, SDL_Color color, SDL_Rect rectangle)
 {

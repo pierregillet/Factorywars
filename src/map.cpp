@@ -410,22 +410,22 @@ Map::get_floor_id (double random_value)
 {
   int floor_id = -1;
 
-  // [-1 ; 0]
-  if (random_value >= -1.0 && random_value <= 0.0)
+  // [-1 ; -0,1]
+  if (random_value >= -1.0 && random_value <= -0.1)
     {
       // Biome 1
       floor_id = 1;
     }
 
-  // ]0 ; 0,33]
-  else if (random_value > 0.0 && random_value <= 1.0 / 3.0)
+  // ]0,1 ; 0,1]
+  else if (random_value > -0.1 && random_value <= 0.1)
     {
       // Biome 2
       floor_id = 2;
     }
 
-  // ]0,33 ; 1]
-  else if (random_value > 1.0 / 3.0 && random_value <= 1)
+  // ]0,1 ; 1]
+  else if (random_value > 0.1 && random_value <= 1)
     {
       // Biome 3
       floor_id = 3;
@@ -510,9 +510,8 @@ Chunk::Chunk (struct coordinates chunk_coordinates, TileProto* tile, SDL_Rendere
 
   m_window_renderer = window_renderer;
 
-  m_ground = NULL;
   generate_ground_surface ();
-
+  generate_item_surface ();
   generate_texture ();
 
   // On initialise le temps de dernière utilisation à maintenant.
@@ -521,13 +520,13 @@ Chunk::Chunk (struct coordinates chunk_coordinates, TileProto* tile, SDL_Rendere
 
 Chunk::~Chunk ()
 {
-  if (m_ground != NULL)
-    SDL_FreeSurface (m_ground);
+  m_chunk_texture.reset ();
+  m_ground.reset ();
+  m_items.reset ();
 }
 
 Chunk::Chunk (const Chunk& other)
 {
-  m_ground = copy_surface (other.m_ground);
   m_window_renderer = other.m_window_renderer;
   m_me = other.m_me;
 
@@ -540,6 +539,8 @@ Chunk::Chunk (const Chunk& other)
   m_last_use = other.m_last_use;
 
   m_chunk_texture = std::shared_ptr<SDL_Texture> (other.m_chunk_texture);
+  m_ground = std::shared_ptr<SDL_Surface> (other.m_ground);
+  m_items = std::shared_ptr<SDL_Surface> (other.m_items);
 }
 
 
@@ -585,6 +586,7 @@ Chunk::set_square_item (struct coordinates square_coordinates, int item_id,
 	}
     }
 
+  generate_item_surface ();
   generate_texture ();
 
   m_last_use = time (NULL);
@@ -635,83 +637,9 @@ Chunk::getLastUse () const
 void
 Chunk::generate_texture ()
 {
-  const int NUMBER_OF_ITEMS = 2;
-  SDL_Surface* items[NUMBER_OF_ITEMS];
-  items[0] = IMG_Load (TEXTURESDIR"/arbre.png");
-  items[1] = IMG_Load (TEXTURESDIR"/pierre1.png");
-  for (int i = 0; i < NUMBER_OF_ITEMS; i++)
-    {
-      if (items[i] == NULL)
-	{
-	  fprintf (stderr, _("Error while loading items’ textures"));
-	  fprintf (stderr, "\n");
-	}
-    }
+  if (m_chunk_texture)
+    m_chunk_texture.reset ();
 
-  SDL_Surface* chunk_surface;
-  chunk_surface = copy_surface (m_ground);
-
-  SDL_Rect floor_pos = {.x = 0, .y = 0, .w = 24, .h = 24};
-  SquareProto* current_square = NULL;
-
-  for (int i = 0; i < m_me->n_squares; i++)
-    {
-      current_square = m_me->squares[i];
-
-      if (current_square->x > 16 || current_square->y > 16)
-	continue;
-
-      switch (current_square->item)
-	{
-	case 1:
-	  floor_pos.x = current_square->x * 24;
-	  floor_pos.y = current_square->y * 24;
-
-	  SDL_BlitSurface (items[0], NULL, chunk_surface, &floor_pos);
-	  break;
-
-	case 2:
-	  floor_pos.x = current_square->x * 24;
-	  floor_pos.y = current_square->y * 24;
-
-	  SDL_BlitSurface (items[1], NULL, chunk_surface, &floor_pos);
-	  break;
-
-	default:
-	  break;
-	}
-    }
-
-      
-  // std::string nom_de_l_image = std::to_string (m_chunk_coordinates.x) + ";";
-  // nom_de_l_image += std::to_string (m_chunk_coordinates.y) + ".bmp";
-  // SDL_SaveBMP (chunk_surface, nom_de_l_image.c_str ());
-
-  m_chunk_texture = std::shared_ptr<SDL_Texture> (SDL_CreateTextureFromSurface
-						  (m_window_renderer,
-						   chunk_surface),
-						  SDL_DestroyTexture);
-
-  if (!m_chunk_texture)
-    {
-      fprintf (stderr,
-	       _("Error while generating the texture of the chunk %d;%d"),
-	       m_chunk_coordinates.x, m_chunk_coordinates.y);
-
-      fprintf (stderr, "\n");
-    }
-
-  for (int i = 0; i < 2; i++)
-    SDL_FreeSurface (items[i]);
-  SDL_FreeSurface (chunk_surface);
-}
-
-void
-Chunk::generate_ground_surface ()
-{
-  if (m_ground == NULL)
-    SDL_FreeSurface (m_ground);
-  
   Uint32 rmask, gmask, bmask, amask;
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -726,9 +654,59 @@ Chunk::generate_ground_surface ()
   amask = 0xff000000;
 #endif
 
-  m_ground = SDL_CreateRGBSurface (0, 24*16, 24*16, 32,
-				   rmask, gmask, bmask, amask);
-  if (m_ground == NULL)
+  SDL_Surface* chunk_surface = SDL_CreateRGBSurface (0, 24*16, 24*16, 32,
+						     rmask, gmask, bmask,
+						     amask);
+  if (chunk_surface == NULL)
+    {
+      fprintf (stderr, _("CreateRGBSurface failed: "));
+      fprintf (stderr, "%s\n", SDL_GetError ());
+    }
+
+  SDL_BlitSurface (m_ground.get (), NULL, chunk_surface, NULL);
+  SDL_BlitSurface (m_items.get (), NULL, chunk_surface, NULL);
+  
+  m_chunk_texture = std::shared_ptr<SDL_Texture>
+    (SDL_CreateTextureFromSurface (m_window_renderer, chunk_surface),
+     SDL_DestroyTexture);
+
+  if (!m_chunk_texture)
+    {
+      fprintf (stderr,
+	       _("Error while generating the texture of the chunk %d;%d"),
+	       m_chunk_coordinates.x, m_chunk_coordinates.y);
+
+      fprintf (stderr, "\n");
+    }
+
+  SDL_FreeSurface (chunk_surface);
+}
+
+void
+Chunk::generate_ground_surface ()
+{
+  if (m_ground)
+    m_ground.reset ();
+
+  Uint32 rmask, gmask, bmask, amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+  rmask = 0xff000000;
+  gmask = 0x00ff0000;
+  bmask = 0x0000ff00;
+  amask = 0x000000ff;
+#else
+  rmask = 0x000000ff;
+  gmask = 0x0000ff00;
+  bmask = 0x00ff0000;
+  amask = 0xff000000;
+#endif
+
+  m_ground = std::shared_ptr<SDL_Surface>
+    (SDL_CreateRGBSurface (0, 24*16, 24*16, 32, rmask, gmask, bmask, amask),
+     SDL_FreeSurface);
+
+  if (!m_ground)
     {
       fprintf (stderr, _("CreateRGBSurface failed: "));
       fprintf (stderr, "%s\n", SDL_GetError ());
@@ -764,21 +742,21 @@ Chunk::generate_ground_surface ()
 	  floor_pos.x = current_square->x * 24;
 	  floor_pos.y = current_square->y * 24;
 
-	  SDL_BlitSurface (biomes[0], NULL, m_ground, &floor_pos);
+	  SDL_BlitSurface (biomes[0], NULL, m_ground.get (), &floor_pos);
 	  break;
 
 	case 2:
 	  floor_pos.x = current_square->x * 24;
 	  floor_pos.y = current_square->y * 24;
 
-	  SDL_BlitSurface (biomes[1], NULL, m_ground, &floor_pos);
+	  SDL_BlitSurface (biomes[1], NULL, m_ground.get (), &floor_pos);
 	  break;
 
 	case 3:
 	  floor_pos.x = current_square->x * 24;
 	  floor_pos.y = current_square->y * 24;
 
-	  SDL_BlitSurface (biomes[2], NULL, m_ground, &floor_pos);
+	  SDL_BlitSurface (biomes[2], NULL, m_ground.get (), &floor_pos);
 	  break;
 
 	default:
@@ -789,4 +767,87 @@ Chunk::generate_ground_surface ()
   // Il faut libérer les surfaces des biomes
   for (int i = 0; i < 3; i++)
     SDL_FreeSurface (biomes[i]);
+}
+
+void
+Chunk::generate_item_surface ()
+{
+  if (m_items)
+    m_items.reset ();
+  
+  Uint32 rmask, gmask, bmask, amask;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+  rmask = 0xff000000;
+  gmask = 0x00ff0000;
+  bmask = 0x0000ff00;
+  amask = 0x000000ff;
+#else
+  rmask = 0x000000ff;
+  gmask = 0x0000ff00;
+  bmask = 0x00ff0000;
+  amask = 0xff000000;
+#endif
+
+  m_items = std::shared_ptr<SDL_Surface>
+    (SDL_CreateRGBSurface (0, 24*16, 24*16, 32,
+			   rmask, gmask, bmask, amask), SDL_FreeSurface);
+  if (!m_items)
+    {
+      fprintf (stderr, _("CreateRGBSurface failed: "));
+      fprintf (stderr, "%s\n", SDL_GetError ());
+    }
+
+  const int NUMBER_OF_ITEMS = 2;
+  SDL_Surface* items[NUMBER_OF_ITEMS];
+  items[0] = IMG_Load (TEXTURESDIR"/biome1.png");
+  items[1] = IMG_Load (TEXTURESDIR"/pierre1.png");
+  for (int i = 0; i < NUMBER_OF_ITEMS; i++)
+    {
+      if (items[i] == NULL)
+	{
+	  fprintf (stderr, _("Error while loading items’ textures"));
+	  fprintf (stderr, "\n");
+	}
+    }
+
+  SDL_Rect floor_pos = {.x = 0, .y = 0, .w = 24, .h = 24};
+  SquareProto* current_square = NULL;
+
+  for (int i = 0; i < m_me->n_squares; i++)
+    {
+      current_square = m_me->squares[i];
+
+      if (current_square->x > 16 || current_square->y > 16)
+	continue;
+
+      switch (current_square->item)
+	{
+	case 1:
+	  floor_pos = {.x = current_square->x * 24,
+		       .y = current_square->y * 24, .w = 24, .h = 24};
+
+	  SDL_BlitScaled (items[0], NULL, m_items.get (), &floor_pos);
+	  break;
+
+	case 2:
+	  floor_pos = {.x = current_square->x * 24,
+		       .y = current_square->y * 24, .w = 24, .h = 24};
+
+
+	  SDL_BlitScaled (items[1], NULL, m_items.get (), &floor_pos);
+	  break;
+
+	default:
+	  break;
+	}
+    }
+  
+  // Il faut libérer les surfaces des objets.
+  for (int i = 0; i < NUMBER_OF_ITEMS; i++)
+    SDL_FreeSurface (items[i]);
+
+  // std::string nom_de_l_image = "items_" + std::to_string (m_chunk_coordinates.x) + ";";
+  // nom_de_l_image += std::to_string (m_chunk_coordinates.y) + ".bmp";
+  // SDL_SaveBMP (m_items.get (), nom_de_l_image.c_str ());
 }
