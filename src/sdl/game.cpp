@@ -38,21 +38,18 @@ run_gui ()
 {
   const int config_value_len = 256;
   char config_value[config_value_len];
+  struct size screen_dimensions;
 
   get_config_value ("height", config_value, config_value_len);
-  int screen_height = atoi (config_value);
+  screen_dimensions.y = atoi (config_value);
 
   get_config_value ("width", config_value, config_value_len);
-  int screen_width = atoi (config_value);
-
-  struct size screen_dimensions = {.x = screen_width,
-				   .y = screen_height};
+  screen_dimensions.x = atoi (config_value);
 
   SDL_Window *Window = NULL;
   SDL_Renderer *Renderer = NULL;
 
-  init (&Window, &Renderer, screen_height,
-	screen_width);
+  init (&Window, &Renderer, &screen_dimensions);
   
   const int save_path_len = 256;
   char save_path[save_path_len], map_path[save_path_len];
@@ -191,7 +188,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   // We need to display the map at the beginning
   display_background (&main_renderer, &map,
 		      textures, screen_origin,
-		      screen_dimensions->y, screen_dimensions->x);
+		      *screen_dimensions);
 
   // Display character
   // blit (main_renderer, screen_center, 25, 41, player_texture);
@@ -224,8 +221,9 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 	{
 	  if (keys_state[i])
 	    {
-              move_coordinates_on_keydown (&screen_origin, keys_state,
-					   screen_dimensions->y, screen_dimensions->x,
+              move_coordinates_on_keydown (&screen_origin,
+					   keys_state,
+					   *screen_dimensions,
 					   players[0]);
 
 	      // send_move_command (network_write_pipe, screen_origin,
@@ -311,7 +309,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 
       display_background (&main_renderer, &map,
 			  textures, screen_origin,
-			  screen_dimensions->y, screen_dimensions->x);
+			  *screen_dimensions);
 
 
 
@@ -368,19 +366,20 @@ destroy_game_textures (SDL_Texture* player_texture, SDL_Texture* textures[][10])
 
 void
 move_coordinates_on_keydown (struct coordinates* screen_origin,
-			     bool* keys_state, int screen_height,
-			     int screen_width, Player& me)
+			     bool* keys_state,
+			     const struct size screen_dimensions,
+			     Player& me)
 {
   struct coordinates hero_screen_coords = me.getCoordinates ();
   hero_screen_coords.x -= screen_origin->x;
   hero_screen_coords.y -= screen_origin->y;
 
-  if (hero_screen_coords.x >= screen_width / 2)
+  if (hero_screen_coords.x >= screen_dimensions.x / 2)
     {
       screen_origin->x -= (keys_state[key_left])? 5 : 0;
       screen_origin->x += (keys_state[key_right])? 5 : 0;
     }
-  if (hero_screen_coords.y >= screen_height / 2)
+  if (hero_screen_coords.y >= screen_dimensions.y / 2)
     {
       screen_origin->y -= (keys_state[key_up])? 5 : 0;
       screen_origin->y += (keys_state[key_down])? 5 : 0;
@@ -401,11 +400,11 @@ move_coordinates_on_keydown (struct coordinates* screen_origin,
   hero_screen_coords.x = (hero_screen_coords.x < 0)? 0 : hero_screen_coords.x;
   hero_screen_coords.y = (hero_screen_coords.y < 0)? 0 : hero_screen_coords.y;
 
-  if (hero_screen_coords.x > screen_width / 2)
-    hero_screen_coords.x = screen_width / 2;
+  if (hero_screen_coords.x > screen_dimensions.x / 2)
+    hero_screen_coords.x = screen_dimensions.x / 2;
 
-  if (hero_screen_coords.y > screen_height / 2)
-    hero_screen_coords.y = screen_height / 2;
+  if (hero_screen_coords.y > screen_dimensions.y / 2)
+    hero_screen_coords.y = screen_dimensions.y / 2;
 
 
   struct coordinates hero_coords;

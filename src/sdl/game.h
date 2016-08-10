@@ -74,8 +74,7 @@ void destroy_game_textures (SDL_Texture* player_texture, SDL_Texture* textures[]
  */
 void move_coordinates_on_keydown (struct coordinates* screen_origin,
 				 bool* keys_state,
-				 int screen_height,
-				 int screen_width,
+				 const struct size screen_dimensions,
 				 Player& me);
 
 /**
@@ -85,7 +84,7 @@ void move_coordinates_on_keydown (struct coordinates* screen_origin,
  * @param screen_origin is the offset in pixels from the origin of the map.
  * @param renderer is the renderer where we blit the players.
  * @param player_texture is the texture to blit.
- * @param screen_dimensons is the screen’s dimensions.
+ * @param screen_dimensions is the screen’s dimensions.
 2 */
 void display_players (std::vector<Player>& players,
 		      struct coordinates screen_origin,

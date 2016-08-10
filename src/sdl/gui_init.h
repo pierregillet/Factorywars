@@ -48,6 +48,5 @@ void load_game_textures (SDL_Renderer* main_renderer,
  */
 void init (SDL_Window** main_window,
 	   SDL_Renderer** main_renderer,
-	   const int screen_height,
-	   const int screen_width);
+	   struct size* screen_dimensions);
 
