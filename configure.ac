@@ -5,12 +5,17 @@ AM_GNU_GETTEXT([external])
 
 AC_PROG_CC
 AC_PROG_CXX
+AC_LANG(C)
 
 PKG_CHECK_MODULES([libxml2], [libxml-2.0 >= 2])
 PKG_CHECK_MODULES([libSDL2], [sdl2 >= 2])
 PKG_CHECK_MODULES([libSDL2Image], [SDL2_image])
 PKG_CHECK_MODULES([PROTOBUFC], [libprotobuf-c >= 1.0.0])
 PKG_CHECK_MODULES([SDL2ttf], [SDL2_ttf >= 2])
+
+AC_LANG_PUSH(C++)
+AC_CHECK_HEADERS("noise/noise.h")
+AC_LANG_POP
 
 LIBS="$LIBS $libSDL2Image_LIBS $libxml2_LIBS $PROTOBUFC_LIBS $SDL2ttf_LIBS -lnoise"
 
