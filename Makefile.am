@@ -5,7 +5,7 @@ EXTRA_DIST = config.rpath  \
 	factorywars.conf\
 	README.md\
 	TODO.md\
-	src/map.proto src/player-data.proto\
+	src/tile.proto src/player-data.proto\
 	saves
 
 bin_PROGRAMS = factorywars
@@ -15,7 +15,7 @@ factorywars_SOURCES = \
 	src/gettext.h\
 	src/items.cpp src/items.h\
 	src/map.cpp src/map.h\
-	src/map.pb-c.c src/map.pb-c.h\
+	src/tile.pb-c.c src/tile.pb-c.h\
 	src/multiplayer.cpp src/multiplayer.h\
 	src/network.c src/network.h\
 	src/player.cpp src/player.h\
@@ -41,7 +41,8 @@ dist_textures_DATA = \
 	media/textures/arbre.png media/textures/biome1.png\
 	media/textures/biome2.png media/textures/LEFT.png\
 	media/textures/RIGHT.png media/textures/pierre1.png\
-	media/textures/pierre2.png media/textures/pierre3.png
+	media/textures/pierre2.png media/textures/pierre3.png\
+	media/textures/biome3.png
 
 fontsdir = $(pkgdatadir)/fonts
 dist_fonts_DATA = media/fonts/FreeSans.ttf

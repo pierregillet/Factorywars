@@ -398,7 +398,7 @@ number_of_files (struct directory_list* dir_list)
 }
 
 int
-is_existing (const char path)
+is_existing (const char* path)
 {
   FILE* file = fopen (path, "r");
 

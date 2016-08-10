@@ -70,8 +70,7 @@ void
 display_ground (SDL_Renderer* main_renderer,
 		SDL_Texture* textures[][10],
 		const struct size screen_dimensions,
-		struct coordinates player_coordinates,
-		Map map)
+		struct coordinates player_coordinates)
 {
   const unsigned int NUMBER_OF_SQUARES_PER_ROW = 16; // Per chunk
   unsigned int default_square_width = 24; // In pixels
@@ -140,21 +139,6 @@ display_fps (SDL_Renderer* main_renderer, TTF_Font* ttf_freesans,
 
   SDL_RenderCopy (main_renderer, message, NULL, &message_rect);
   SDL_DestroyTexture (message);
-}
-
-SDL_Surface*
-copy_surface (SDL_Surface* src)
-{
-  SDL_Surface *dest;
-  dest = SDL_CreateRGBSurfaceFrom (src->pixels, src->w, src->h,
-				   src->format->BitsPerPixel,
-				   src->pitch,
-				   src->format->Rmask,
-				   src->format->Gmask,
-				   src->format->Bmask,
-				   src->format->Amask);
-
-  return dest;
 }
 
 void
