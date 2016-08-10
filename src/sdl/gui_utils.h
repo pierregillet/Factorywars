@@ -38,16 +38,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include <vector>
 
 #include "../structures.h"
-#include "display_item.h"
-#include "display_map.h"
-#include "../multiplayer.h"
-#include "game_events.h"
-#include "menu.h"
-#include "game.h"
-#include "../map.h"
 #include "gui_exit.h"
 
 #include "../gettext.h"
@@ -112,14 +104,6 @@ display_fps (SDL_Renderer* main_renderer,
 	     unsigned int* fps_lasttime,
 	     unsigned int* fps_current,
 	     unsigned int* fps_frames);
-
-/**
- * Copy a surface in another and return the new surface
- *
- * @param src is the surface to copy
- * @return a pointer to the new surface.
- */
-SDL_Surface* copy_surface (SDL_Surface* src);
 
 /**
  * Display a rectangle of a specific color.

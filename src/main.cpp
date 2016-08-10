@@ -36,6 +36,7 @@
 #include <locale.h>
 
 #include "sdl/gui_utils.h"
+#include "sdl/game.h"
 
 #include "gettext.h"
 #define _(string) gettext (string)

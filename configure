@@ -7883,7 +7883,8 @@ else
 $as_echo "yes" >&6; }
 
 fi
-LIBS="$LIBS $libSDL2Image_LIBS $libxml2_LIBS $PROTOBUFC_LIBS $SDL2ttf_LIBS"
+
+LIBS="$LIBS $libSDL2Image_LIBS $libxml2_LIBS $PROTOBUFC_LIBS $SDL2ttf_LIBS -lnoise"
 
 # Check whether --enable-run-in-place was given.
 if test "${enable_run_in_place+set}" = set; then :

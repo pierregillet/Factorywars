@@ -429,8 +429,9 @@ get_save_path (SDL_Renderer* main_renderer, char* dst, size_t dst_len,
   for (int i = 0; i < choice; i++)
     dir_list = dir_list->next;
 
-  // On l’ajoute à la chaine
-  strncat (dst, dir_list->dir_name, dst_len);
+  // On met le nom de la sauvegarde dans la chaine.
+  // strncat (dst, dir_list->dir_name, dst_len);
+  snprintf (dst, dst_len, "%s", dir_list->dir_name);
 
   free_dir_list (dir_list);  
 

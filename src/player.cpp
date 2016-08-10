@@ -273,7 +273,7 @@ Player::read_save (std::string path)
 
   while (fread (&c, sizeof (char), 1, save_file))
     {
-      buffer[n]=c;
+      buffer[n] = c;
       n++;
 
       buffer = (uint8_t*) realloc (buffer, sizeof (uint8_t) * (n + 1));

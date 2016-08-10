@@ -33,9 +33,8 @@
 #include "display_map.h"
 
 void
-display_background (SDL_Renderer** Renderer,
-		    Map* map,
-		    SDL_Texture* textures[][10],
+display_background (SDL_Renderer* Renderer,
+		    Map& map,
 		    struct coordinates screen_origin,
 		    const struct size screen_dimensions)
 {
@@ -50,7 +49,7 @@ display_background (SDL_Renderer** Renderer,
   struct coordinates hero_coords;
   struct coordinates coords;
   int id;
-  SDL_Texture* display_id;
+  SDL_Texture* current_displayed_texture;
   struct coordinates temp;
   struct chunk_info current_chunk_info;
 
@@ -62,30 +61,14 @@ display_background (SDL_Renderer** Renderer,
 			 .y = (int) screen_origin.y + i};
 	  coords = get_chunk_coordinates_from_player_movement (hero_coords);
      
-	  id = get_biome_id (coords, map);
-	  if (id == -1 || id > 4)
-	    {
-	      id = 2;
-	    }
-
-	  display_id = textures[1][id];
+	  current_displayed_texture = map.get_chunk_texture (coords);
 	  
 	  temp = {.x = (int) (j - screen_origin.x % chunk_width),
 		  .y = (int) (i - screen_origin.y % chunk_width)};
 	  
 
-	  blit (*Renderer, temp, chunk_width,
-		chunk_width, display_id);
-	  
-	  current_chunk_info = get_chunk_info (coords, map);
-
-	  if (current_chunk_info.biome_id == -1)
-	    continue;
-
-	  display_items (Renderer,
-			 textures,
-			 screen_origin,
-			 current_chunk_info, i, j);
+	  blit (Renderer, temp, chunk_width, chunk_width,
+		current_displayed_texture);
 	}
     }
 }  

@@ -51,8 +51,8 @@ run_gui ()
 
   init (&Window, &Renderer, &screen_dimensions);
   
-  const int save_path_len = 256;
-  char save_path[save_path_len], map_path[save_path_len];
+  const int save_name_len = 256;
+  char save_name[save_name_len];
   int ret;
 
   int stay = 1;
@@ -60,7 +60,7 @@ run_gui ()
   while (stay)
     {
       ret = display_main_menu (Renderer, screen_dimensions,
-			       save_path, save_path_len);
+			       save_name, save_name_len);
       if (ret == 0)
 	{
 	  quit_sdl (&Window, &Renderer);
@@ -72,7 +72,7 @@ run_gui ()
       // else
       //   strncpy (map_path, "protosave", save_path_len);
 
-      ret = run_game (Renderer, save_path, &screen_dimensions);
+      ret = run_game (Renderer, save_name, &screen_dimensions);
 
       if (ret == 0)
 	stay = 0;
@@ -84,7 +84,7 @@ run_gui ()
 }
 
 int
-run_game (SDL_Renderer* main_renderer, const char* save_path,
+run_game (SDL_Renderer* main_renderer, const char* save_name,
 	  struct size* screen_dimensions)
 {
   SDL_Texture* textures[4][10];
@@ -111,8 +111,11 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 
   // S’il y a un fichier de sauvegarde pour le joueur, on le charge
   get_config_value ("name", config_value, config_value_len);
-  players[0].setSaveFilePath (std::string (save_path) + "/"
-			      + std::string (config_value));
+
+  std::string player_save_directory = get_save_directory_path () + std::string (save_name);
+  player_save_directory += "/" + std::string (config_value);
+
+  players[0].setSaveFilePath (player_save_directory);
   players[0].read_save ();
 
   // On utilise les coordonnées du joueur
@@ -139,13 +142,7 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
     }
 
   // On charge la sauvegarde de la carte
-  const int map_path_len = 256;
-  char map_path[map_path_len];
-
-  snprintf (map_path, map_path_len, "%s/%s", save_path, "map");
-
-  Map map = MAP__INIT;
-  read_save_file (&map, map_path);      
+  Map map (save_name, main_renderer);
   
   /* 
    * keys_state contains only 4 elements
@@ -186,9 +183,8 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
   unsigned int fps_frames = 0; //frames passed since the last recorded fps.
 
   // We need to display the map at the beginning
-  display_background (&main_renderer, &map,
-		      textures, screen_origin,
-		      *screen_dimensions);
+  display_background (main_renderer, map,
+		      screen_origin, *screen_dimensions);
 
   // Display character
   // blit (main_renderer, screen_center, 25, 41, player_texture);
@@ -242,14 +238,14 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
 
 	  else if (ret == 1)
 	    {
-	      save_to_file (&map, map_path);
-	      save_players (players, save_path);
+	      map.save ();
+	      save_players (players, save_name);
 	    }
 
 	  else if (ret == 2)
 	    {
-	      save_to_file (&map, map_path);
-	      save_players (players, save_path);
+	      map.save ();
+	      save_players (players, save_name);
 	      break;
 	    }
 
@@ -261,13 +257,12 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
       // Left click handling
       if (clicks_state[0])
 	{
-	  if (get_surface_item (click_map_coords.chunk,
-				click_map_coords.square,
-				&map) == -1)
+	  if (map.get_surface_item (click_map_coords.chunk,
+				    click_map_coords.square) == -1)
 	    {
-	      set_surface_item(click_map_coords.chunk,
-			       click_map_coords.square,
-			       1, &map);
+	      map.set_surface_item(click_map_coords.chunk,
+				   click_map_coords.square,
+				   1, 1);
 	    }
 	    
 	  clicks_state[0] = 0;
@@ -277,13 +272,12 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
       // Right click handling
       if (clicks_state[2])
 	{
-	  if (get_surface_item (click_map_coords.chunk,
-				click_map_coords.square,
-				&map) != -1)
+	  if (map.get_surface_item (click_map_coords.chunk,
+				    click_map_coords.square) != -1)
 	    {
-	      set_surface_item(click_map_coords.chunk,
-			       click_map_coords.square,
-			       -1, &map);
+	      map.set_surface_item(click_map_coords.chunk,
+				   click_map_coords.square,
+				   -1, 0);
 	    }
 	  clicks_state[2] = 0;
 	}
@@ -307,11 +301,8 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
       // 			   screen_dimensionsx);
       // 	}
 
-      display_background (&main_renderer, &map,
-			  textures, screen_origin,
-			  *screen_dimensions);
-
-
+      display_background (main_renderer, map,
+			  screen_origin, *screen_dimensions);
 
       blit (main_renderer,
 	    toolbar_origin,
@@ -330,7 +321,6 @@ run_game (SDL_Renderer* main_renderer, const char* save_path,
     }
 
   destroy_game_textures (player_texture, textures);
-  free_map_struct (&map);
 
   if (ret == 4)
     return 1;

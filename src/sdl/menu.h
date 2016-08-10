@@ -37,8 +37,13 @@
 #include <wchar.h>
 
 #include "gui_utils.h"
-#include "../gettext.h"
 
+extern "C"
+{
+#include "../utils.h"
+}
+
+#include "../gettext.h"
 #define _(string) gettext (string)
 
 /**
@@ -75,7 +80,7 @@ int handle_main_menu_events (SDL_Renderer* main_renderer,
  *
  * @param main_renderer is the renderer of the window.
  * @param screen_dimensions is the dimensions of the screen.
- * @param dst is a string which will contain the save_path.
+ * @param dst is a string which will contain the save name.
  * @param dst_len is the lenght of the dst string.
  * @return + 0 if we need to quit.
  * + 1 if we need to launch a new game.
@@ -89,7 +94,7 @@ int display_main_menu (SDL_Renderer* main_renderer,
  * Get the path to the save the user want to load.
  *
  * @param main_renderer is the window’s renderer.
- * @param dst is the string where we’ll store the path to the save file.
+ * @param dst is the string where we’ll store the save’s name.
  * @param dst_len is the size of the dst array.
  * @param screen_dimensions is the dimensions of the screen.
  * @return + 0 if we need to quit
