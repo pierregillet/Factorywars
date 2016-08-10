@@ -33,14 +33,13 @@ Network
 
 GUI
 ---
-+ Replace screen_height and screen_width with a structure.
 + Blit by layers, first the ground textures then the objects.
 + Blit squares individually (not chunks).
 + Allow to zoom on the map/items in-game.
 + FPS limit.
 + Display using a system of ticks.
 + Handle the case in which if there is no change in the current view, we don't draw everything again (if it is lighter than redrawing everything).
-+ Handle windows resizing.
++ Handle windows resizing correctly.
 
 Events
 ------
