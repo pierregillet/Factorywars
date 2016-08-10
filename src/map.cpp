@@ -149,6 +149,7 @@ SDL_Texture*
 Map::get_chunk_texture (struct coordinates chunk_coordinates)
 {
   unload_unused_chunks ();
+  load_chunk (chunk_coordinates);
   for (int i = 0; i < m_chunks.size (); i++)
     {
       if (m_chunks[i].getChunkCoordinates ().x == chunk_coordinates.x
@@ -156,16 +157,16 @@ Map::get_chunk_texture (struct coordinates chunk_coordinates)
 	return m_chunks[i].get_chunk_texture ();
     }
 
-  // Le tronçon n’est pas encore en mémoire.
-  load_tile (get_tile_by_chunk (chunk_coordinates));
+  // // Le tronçon n’est pas encore en mémoire.
+  // load_tile (get_tile_by_chunk (chunk_coordinates));
 
-  // On cherche de nouveau.
-  for (int i = 0; i < m_chunks.size (); i++)
-    {
-      if (m_chunks[i].getChunkCoordinates ().x == chunk_coordinates.x
-	  && m_chunks[i].getChunkCoordinates ().y == chunk_coordinates.y)
-	return m_chunks[i].get_chunk_texture ();
-    }
+  // // On cherche de nouveau.
+  // for (int i = 0; i < m_chunks.size (); i++)
+  //   {
+  //     if (m_chunks[i].getChunkCoordinates ().x == chunk_coordinates.x
+  // 	  && m_chunks[i].getChunkCoordinates ().y == chunk_coordinates.y)
+  // 	return m_chunks[i].get_chunk_texture ();
+  //   }
 
   // Erreur
   return NULL;
@@ -198,6 +199,47 @@ Map::get_surface_item (struct coordinates chunk_coordinates,
 	  && m_chunks[i].getChunkCoordinates ().y == chunk_coordinates.y)
 	{
 	  return m_chunks[i].get_square_item_id (square_coordinates);
+	}
+    }
+}
+
+void
+Map::load_chunk (struct coordinates chunk_coordinates)
+{
+  // Vérifier si le tronçon n’existe pas déjà.
+  for (int i = 0; i < m_chunks.size (); i++)
+    {
+      if (m_chunks[i].getChunkCoordinates ().x == chunk_coordinates.x
+	  && m_chunks[i].getChunkCoordinates ().y == chunk_coordinates.y)
+	return;
+    }
+
+  // S’il n’existe pas, vérifier si la dalle est déjà en mémoire et si
+  // elle ne l’est pas, la charger.
+  struct coordinates tile_coordinates = get_tile_by_chunk (chunk_coordinates);
+  load_tile (tile_coordinates);
+
+  // Mettre le tronçon en mémoire.
+  TileProto* tile = NULL;
+
+  for (int i = 0; i < m_tiles.size (); i++)
+    {
+      if (m_tiles[i]->x == tile_coordinates.x
+	  && m_tiles[i]->y == tile_coordinates.y)
+	{
+	  tile = m_tiles[i];
+	}
+    }
+
+  if (tile == NULL)
+    return;
+
+  for (int i = 0; i < tile->n_chunks; i++)
+    {
+      if (tile->chunks[i]->x == chunk_coordinates.x
+	  && tile->chunks[i]->y == chunk_coordinates.y)
+	{
+	  m_chunks.push_back (Chunk ({tile->chunks[i]->x, tile->chunks[i]->y}, tile, m_window_renderer));
 	}
     }
 }
@@ -257,7 +299,7 @@ Map::load_tile (struct coordinates tile_coordinates)
   tile = tile_proto__unpack (NULL, n, buffer);
   if (tile == NULL)
     {
-      fprintf (stderr, _("Error while reading the tile’s file."));
+      fprintf (stderr, _("Error while reading the tile's file."));
       fprintf (stderr, "\n");
       free (buffer);
       return;
@@ -267,13 +309,13 @@ Map::load_tile (struct coordinates tile_coordinates)
 
   m_tiles.push_back (tile);
 
-  // Il faut créer un à un les tronçons en parcourant les coordonnées des
-  // tronçons dans la dalle et ajouter les tronçons au fur et à mesure dans
-  // le vecteur m_chunks.
-  for (int i = 0; i < tile->n_chunks; i++)
-    {
-      m_chunks.push_back (Chunk ({tile->chunks[i]->x, tile->chunks[i]->y}, tile, m_window_renderer));
-    }
+  // // Il faut créer un à un les tronçons en parcourant les coordonnées des
+  // // tronçons dans la dalle et ajouter les tronçons au fur et à mesure dans
+  // // le vecteur m_chunks.
+  // for (int i = 0; i < tile->n_chunks; i++)
+  //   {
+  //     m_chunks.push_back (Chunk ({tile->chunks[i]->x, tile->chunks[i]->y}, tile, m_window_renderer));
+  //   }
 }
 
 void
@@ -437,7 +479,6 @@ Map::get_floor_id (double random_value)
 void
 Map::unload_unused_chunks ()
 {
-  return;
   time_t last_use;
   time_t now = time (NULL);
 
@@ -449,7 +490,7 @@ Map::unload_unused_chunks ()
       last_use = m_chunks[i].getLastUse ();
 
       // Si ça fait plus d’une minute que le tronçon n’est pas utilisé.
-      if (difftime (now, last_use) > 60.0)
+      if (difftime (now, last_use) > 20.0)
 	{
 	  // On récupère les coordonnées du tronçon et de la dalle le contenant.
 	  chunk_coordinates = m_chunks[i].getChunkCoordinates ();
@@ -721,7 +762,7 @@ Chunk::generate_ground_surface ()
     {
       if (biomes[i] == NULL)
 	{
-	  fprintf (stderr, _("Error while loading biomes’ textures"));
+	  fprintf (stderr, _("Error while loading biomes' textures"));
 	  fprintf (stderr, "\n");
 	}
     }
@@ -806,7 +847,7 @@ Chunk::generate_item_surface ()
     {
       if (items[i] == NULL)
 	{
-	  fprintf (stderr, _("Error while loading items’ textures"));
+	  fprintf (stderr, _("Error while loading items' textures"));
 	  fprintf (stderr, "\n");
 	}
     }

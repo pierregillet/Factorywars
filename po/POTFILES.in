@@ -1,9 +1,9 @@
 # List of source files which contain translatable strings.
-src/gui.cpp
+src/sdl/gui_utils.cpp
 src/config.c
 src/network.c
 src/multiplayer.cpp
-src/menu.cpp
+src/sdl/menu.cpp
 src/main.cpp
 src/player.cpp
 src/map.cpp

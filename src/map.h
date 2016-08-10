@@ -143,6 +143,7 @@ class Map
 
   SDL_Renderer* m_window_renderer;
 
+  void load_chunk (struct coordinates chunk_coordinates);
   void load_tile (struct coordinates tile_coordinates);
 
   /**
