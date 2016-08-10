@@ -132,6 +132,8 @@ class Map
 			 struct coordinates square_coordinates, int item_id,
 			 int quantity = 1);
 
+  void save();
+
  private:
   int m_seed;
   std::string m_game_path;
@@ -145,6 +147,9 @@ class Map
 
   void load_chunk (struct coordinates chunk_coordinates);
   void load_tile (struct coordinates tile_coordinates);
+
+  void save_tile (TileProto* tile);
+  void save_tiles ();
 
   /**
    * Il faudra vérifier à chaque tronçon déchargé si c’était le dernier 

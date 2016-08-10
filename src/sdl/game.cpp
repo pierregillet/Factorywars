@@ -241,13 +241,13 @@ run_game (SDL_Renderer* main_renderer, const char* save_name,
 
 	  else if (ret == 1)
 	    {
-	      // save_to_file (&map, map_path);
+	      map.save ();
 	      save_players (players, save_name);
 	    }
 
 	  else if (ret == 2)
 	    {
-	      // save_to_file (&map, map_path);
+	      map.save ();
 	      save_players (players, save_name);
 	      break;
 	    }

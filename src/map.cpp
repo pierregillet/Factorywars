@@ -189,6 +189,12 @@ Map::set_surface_item (struct coordinates chunk_coordinates,
     }
 }
 
+void
+Map::save ()
+{
+  save_tiles ();
+}
+
 int
 Map::get_surface_item (struct coordinates chunk_coordinates,
 		       struct coordinates square_coordinates)
@@ -316,6 +322,45 @@ Map::load_tile (struct coordinates tile_coordinates)
   //   {
   //     m_chunks.push_back (Chunk ({tile->chunks[i]->x, tile->chunks[i]->y}, tile, m_window_renderer));
   //   }
+}
+
+void
+Map::save_tile (TileProto* tile)
+{
+  struct coordinates tile_coordinates = {tile->x, tile->y};
+
+  unsigned long len = tile_proto__get_packed_size (tile);
+
+  std::string tile_file_path = m_tiles_directory_path;
+  tile_file_path += std::to_string (tile_coordinates.x);
+  tile_file_path += ";" + std::to_string (tile_coordinates.y);
+
+  uint8_t *buffer = (uint8_t*) malloc (len);
+  if (buffer == NULL)
+    return;
+
+  tile_proto__pack (tile, buffer);
+
+  FILE *tile_file = fopen (tile_file_path.c_str (), "w");
+  if (tile_file == NULL)
+    {
+      fprintf (stderr, _("Error, the tile file cannot be opened."));
+      fprintf (stderr, "\n");
+      return;
+    }
+
+  fwrite (buffer, len, 1, tile_file);
+  fclose (tile_file);
+  free (buffer);
+}
+
+void
+Map::save_tiles ()
+{
+  for (int i = 0; i < m_tiles.size (); i++)
+    {
+      this->save_tile (m_tiles[i]);
+    }
 }
 
 void
@@ -522,6 +567,10 @@ Map::unload_unused_chunks ()
 		  if (m_tiles[i]->x == tile_coordinates.x
 		      && m_tiles[i]->y == tile_coordinates.y)
 		    {
+		      // Il faut sauvegarder la dalle.
+		      save_tile (m_tiles[i]);
+
+		      // On libère et on détruit la dalle.
 		      tile_proto__free_unpacked (m_tiles[i], NULL);
 		      m_tiles.erase (m_tiles.begin () + i);
 		    }
