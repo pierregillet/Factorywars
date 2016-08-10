@@ -166,7 +166,7 @@ int handle_in_game_menu_events (SDL_Rect* buttons, int number_of_buttons);
  * Print the about menu.
  *
  * @param main_renderer is the renderer of the window.
- * @param screen_dimensons is the dimensions of the screen.
+ * @param screen_dimensions is the dimensions of the screen.
  * @return 0 if we have to quit or 1 to display the main menu again.
  */
 int about (SDL_Renderer* main_renderer, struct size screen_dimensions);

@@ -36,8 +36,7 @@ void
 display_background (SDL_Renderer* Renderer,
 		    Map& map,
 		    struct coordinates screen_origin,
-		    const int screen_height,
-		    const int screen_width)
+		    const struct size screen_dimensions)
 {
   const int NUMBER_OF_SQUARE_PER_ROW = 16;
   const int SQUARE_WIDTH = 24;
@@ -54,9 +53,9 @@ display_background (SDL_Renderer* Renderer,
   struct coordinates temp;
   struct chunk_info current_chunk_info;
 
-  for(int i(0); i < screen_height + screen_origin.y % chunk_width; i += chunk_width)
+  for(int i(0); i < screen_dimensions.y + screen_origin.y % chunk_width; i += chunk_width)
     {
-      for(int j(0); j < screen_width + screen_origin.x % chunk_width ; j += chunk_width)
+      for(int j(0); j < screen_dimensions.x + screen_origin.x % chunk_width ; j += chunk_width)
 	{
 	  hero_coords = {.x = (int) screen_origin.x + j,
 			 .y = (int) screen_origin.y + i};

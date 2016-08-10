@@ -52,5 +52,4 @@ extern "C" {
 void display_background (SDL_Renderer* Renderer,
 			 Map& map,
 			 struct coordinates screen_origin,
-			 const int screen_height,
-			 const int screen_width);
+			 const struct size screen_dimensions);

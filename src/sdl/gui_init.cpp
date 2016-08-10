@@ -87,8 +87,7 @@ load_game_textures (SDL_Renderer* main_renderer,
 void
 init (SDL_Window** main_window,
       SDL_Renderer** main_renderer,
-      const int screen_height,
-      const int screen_width)
+      struct size* screen_dimensions)
 {
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
@@ -105,8 +104,8 @@ init (SDL_Window** main_window,
   *main_window = SDL_CreateWindow ("Factorywars",
 				   SDL_WINDOWPOS_UNDEFINED,
 				   SDL_WINDOWPOS_UNDEFINED,
-				   screen_width,
-				   screen_height,
+				   screen_dimensions->x,
+				   screen_dimensions->y,
 				   SDL_WINDOW_SHOWN
 				   | SDL_WINDOW_RESIZABLE);
 	  
