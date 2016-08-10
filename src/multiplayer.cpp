@@ -56,14 +56,14 @@ handle_data_from_network_pipe (int read_pipe, std::vector<Player>& players)
   return 1;
 }
 
-void send_move_command (int write_pipe, struct coordinates screen_origin, int screen_height, int screen_width)
+void send_move_command (int write_pipe, struct coordinates screen_origin, struct size screen_dimensions)
 {
   const int COORDINATES_STR_SIZE = 128;
   const int MSG_LEN = 256;
 
   struct coordinates hero_coords;
-  hero_coords.x = screen_origin.x + screen_width / 2;
-  hero_coords.y = screen_origin.y + screen_height / 2;
+  hero_coords.x = screen_origin.x + screen_dimensions.x / 2;
+  hero_coords.y = screen_origin.y + screen_dimensions.y / 2;
     
   char coordinates_str[COORDINATES_STR_SIZE], msg[MSG_LEN];
 
