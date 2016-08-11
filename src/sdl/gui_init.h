@@ -42,9 +42,7 @@ void load_game_textures (SDL_Renderer* main_renderer,
  *
  * @param main_window is the main window.
  * @param main_renderer is the main renderer.
- * @param screen_height is an int pointer where we will store the screen height.
- * @param screen_width is an int pointer where we will store the screnn width.
- * @param textures is an array of arrays containing the textures.
+ * @param screen_dimensions is a structure that contains the dimensions of the screen.
  */
 void init (SDL_Window** main_window,
 	   SDL_Renderer** main_renderer,

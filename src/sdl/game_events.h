@@ -94,11 +94,7 @@ int handle_events (SDL_Texture* textures[][10],
  *
  * @param click_coords is the coordinates relative to the origin of the screen
  * where the player clicked.
- * @param screen_height is screen’s height.
- * @param screen_width is screen’s width.
  * @param screen_origin is the offset in pixels from the origin of the map.
- * @return a structure map_coordinates containing the chunk and square
- * coordinates where the player clicked.
  */
 struct map_coordinates get_map_coords (coordinates click_coords,
 				       struct coordinates screen_origin);
