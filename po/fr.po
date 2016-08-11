@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: factorywars 0.1\n"
 "Report-Msgid-Bugs-To: factorywars-bugs@gnufr.xyz\n"
-"POT-Creation-Date: 2016-08-09 22:58+0200\n"
-"PO-Revision-Date: 2016-08-09 23:02+0200\n"
+"POT-Creation-Date: 2016-08-11 23:02+0200\n"
+"PO-Revision-Date: 2016-08-11 22:56+0200\n"
 "Last-Translator:  <0x539@nybble.fr>\n"
 "Language-Team: French <0x539@nybble.fr>\n"
 "Language: fr\n"
@@ -30,11 +30,11 @@ msgstr "Charger une partie"
 
 #: src/sdl/menu.cpp:98 src/sdl/menu.cpp:559
 msgid "Settings"
-msgstr "ParamÃ¨tres"
+msgstr "Paramètres"
 
 #: src/sdl/menu.cpp:99
 msgid "About"
-msgstr "Ã€ propos"
+msgstr "À propos"
 
 #: src/sdl/menu.cpp:100 src/sdl/menu.cpp:561
 msgid "Quit"
@@ -55,12 +55,12 @@ msgstr "Sauvegarder et quitter"
 #: src/main.cpp:120
 #, c-format
 msgid "Usage: %s [OPTION]..."
-msgstr "UtilisationÂ : %s [OPTION]..."
+msgstr "Utilisation : %s [OPTION]..."
 
 #: src/main.cpp:122
 #, c-format
 msgid "The best game in the world!"
-msgstr "Le meilleur jeu du mondeÂ !"
+msgstr "Le meilleur jeu du monde !"
 
 #: src/main.cpp:125
 #, c-format
@@ -71,7 +71,7 @@ msgstr "-h, --help affiche cette aide et quitte."
 #, c-format
 msgid "-s, --server <IP> specify the ip of the server you want to join."
 msgstr ""
-"-s, --server <IP> spÃ©cifie l'adresse IP du serveur que l'on souhaite "
+"-s, --server <IP> spécifie l'adresse IP du serveur que l'on souhaite "
 "rejoindre."
 
 #: src/main.cpp:130
@@ -80,7 +80,7 @@ msgid ""
 "-p, --server-port <port> specify the port of the server you want to join "
 "(default: 4284)."
 msgstr ""
-"-p, --server-port <port> spÃ©cifie le port du serveur que l'on souhaite "
+"-p, --server-port <port> spécifie le port du serveur que l'on souhaite "
 "rejoindre."
 
 #: src/main.cpp:145
@@ -88,14 +88,14 @@ msgstr ""
 msgid ""
 "License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>"
 msgstr ""
-"Licence GPLv3+Â : GNU GPL version 3 ou toute version ultÃ©rieure <https://www."
+"Licence GPLv3+ : GNU GPL version 3 ou toute version ultérieure <https://www."
 "gnu.org/licenses/gpl-3.0.fr.html>"
 
 #: src/main.cpp:147
 #, c-format
 msgid "This is free software: you are free to change and destribute it."
 msgstr ""
-"Ceci est un logiciel libreÂ : vous Ãªtes libre de le modifier et de le "
+"Ceci est un logiciel libre : vous êtes libre de le modifier et de le "
 "distribuer."
 
 #: src/main.cpp:149
@@ -107,7 +107,7 @@ msgstr "Il n'y a AUCUNE GARANTIE, dans les limites permises par la loi."
 #: src/player.cpp:212
 #, c-format
 msgid "Error, cannot allocate memory.\n"
-msgstr "Erreur, impossible d'allouer de la mÃ©moire.\n"
+msgstr "Erreur, impossible d'allouer de la mémoire.\n"
 
 #: src/player.cpp:222
 #, c-format
@@ -117,60 +117,60 @@ msgstr "Erreur, le fichier ne peut Ãªtre ouvert.\n"
 #: src/player.cpp:261
 #, c-format
 msgid "Failed to allocate memory.\n"
-msgstr "Impossible d'allouer de la mÃ©moire.\n"
+msgstr "Impossible d'allouer de la mémoire.\n"
 
 #: src/player.cpp:282
 #, c-format
 msgid "Failed to reallocate memory.\n"
-msgstr "Impossible de rÃ©allouer de la mÃ©moire.\n"
+msgstr "Impossible de réallouer de la mémoire.\n"
 
 #: src/player.cpp:291
 #, c-format
 msgid "Error while reading the file.\n"
 msgstr "Erreur lors de la lecture du fichier.\n"
 
-#: src/map.cpp:237
+#: src/map.cpp:285
 #, c-format
 msgid "Error while opening the tile file."
-msgstr "Erreur lors de lâ€™ouverture du fichier de la dalle."
+msgstr "Erreur lors de l'ouverture du fichier de la dalle."
 
-#: src/map.cpp:247 src/map.cpp:294 src/map.cpp:304 src/map.cpp:319
-#: src/map.cpp:336
+#: src/map.cpp:295 src/map.cpp:381 src/map.cpp:391 src/map.cpp:406
+#: src/map.cpp:423
 #, c-format
 msgid "Failed to allocate memory."
-msgstr "Impossible d'allouer de la mÃ©moire."
+msgstr "Impossible d'allouer de la mémoire."
 
-#: src/map.cpp:260
+#: src/map.cpp:308
 #, c-format
 msgid "Error while reading the tile's file."
 msgstr "Erreur lors de la lecture du fichier de la dalle."
 
-#: src/map.cpp:373
+#: src/map.cpp:347 src/map.cpp:460
 #, c-format
 msgid "Error, the tile file cannot be opened."
-msgstr "Erreur, le fichier de la dalle ne peut Ãªtre ouvert."
+msgstr "Erreur, le fichier de la dalle ne peut être ouvert."
 
-#: src/map.cpp:565
+#: src/map.cpp:655
 #, c-format
 msgid "The texture of the chunk %d;%d is not correct."
-msgstr "La texture du tronÃ§on %d;%d est incorrecte."
+msgstr "La texture du tronçon %d;%d est incorrecte."
 
-#: src/map.cpp:662 src/map.cpp:711 src/map.cpp:797
+#: src/map.cpp:752 src/map.cpp:801 src/map.cpp:887
 #, c-format
 msgid "CreateRGBSurface failed: "
-msgstr "CreateRGBSurface a Ã©chouÃ©Â : "
+msgstr "CreateRGBSurface a échoué : "
 
-#: src/map.cpp:676
+#: src/map.cpp:766
 #, c-format
 msgid "Error while generating the texture of the chunk %d;%d"
-msgstr "Erreur pendant la gÃ©nÃ©ration de la texture du tronÃ§on %d;%d"
+msgstr "Erreur pendant la génération de la texture du tronçon %d;%d"
 
-#: src/map.cpp:724
+#: src/map.cpp:814
 #, c-format
 msgid "Error while loading biomes' textures"
 msgstr "Erreur pendant le chargement des textures de biomes."
 
-#: src/map.cpp:809
+#: src/map.cpp:899
 #, c-format
 msgid "Error while loading items' textures"
 msgstr "Erreur pendant le chargement des textures des objets."

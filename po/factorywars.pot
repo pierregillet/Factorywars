@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: factorywars 0.1\n"
 "Report-Msgid-Bugs-To: factorywars-bugs@gnufr.xyz\n"
-"POT-Creation-Date: 2016-08-09 22:58+0200\n"
+"POT-Creation-Date: 2016-08-11 23:02+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -121,48 +121,48 @@ msgstr ""
 msgid "Error while reading the file.\n"
 msgstr ""
 
-#: src/map.cpp:237
+#: src/map.cpp:285
 #, c-format
 msgid "Error while opening the tile file."
 msgstr ""
 
-#: src/map.cpp:247 src/map.cpp:294 src/map.cpp:304 src/map.cpp:319
-#: src/map.cpp:336
+#: src/map.cpp:295 src/map.cpp:381 src/map.cpp:391 src/map.cpp:406
+#: src/map.cpp:423
 #, c-format
 msgid "Failed to allocate memory."
 msgstr ""
 
-#: src/map.cpp:260
+#: src/map.cpp:308
 #, c-format
 msgid "Error while reading the tile's file."
 msgstr ""
 
-#: src/map.cpp:373
+#: src/map.cpp:347 src/map.cpp:460
 #, c-format
 msgid "Error, the tile file cannot be opened."
 msgstr ""
 
-#: src/map.cpp:565
+#: src/map.cpp:655
 #, c-format
 msgid "The texture of the chunk %d;%d is not correct."
 msgstr ""
 
-#: src/map.cpp:662 src/map.cpp:711 src/map.cpp:797
+#: src/map.cpp:752 src/map.cpp:801 src/map.cpp:887
 #, c-format
 msgid "CreateRGBSurface failed: "
 msgstr ""
 
-#: src/map.cpp:676
+#: src/map.cpp:766
 #, c-format
 msgid "Error while generating the texture of the chunk %d;%d"
 msgstr ""
 
-#: src/map.cpp:724
+#: src/map.cpp:814
 #, c-format
 msgid "Error while loading biomes' textures"
 msgstr ""
 
-#: src/map.cpp:809
+#: src/map.cpp:899
 #, c-format
 msgid "Error while loading items' textures"
 msgstr ""
