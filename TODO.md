@@ -9,12 +9,11 @@ content of the README.md file.
 + Finish the documentation of every function.
 + Translate the documentation in french.
 + Translate the documentation in esperanto.
-+ Translate the user’s side of the game in french and esperanto.
-+ Follow [XDG Base Directory Specification](https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html).
++ Translate the user’s side of the game in esperanto.
++ Continue to follow [XDG Base Directory Specification](https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html).
 + Create a website.
 + Use Texlive for documentation.
 + Update the list of dependencies in COMPILE.md.
-+ Randomly generate maps (maybe perlin noise algorithm).
 
 Main
 ----
@@ -33,8 +32,6 @@ Network
 
 GUI
 ---
-+ Blit by layers, first the ground textures then the objects.
-+ Blit squares individually (not chunks).
 + Allow to zoom on the map/items in-game.
 + FPS limit.
 + Display using a system of ticks.
@@ -55,10 +52,9 @@ Textures
 
 Configuration
 -------------
-+ Switch from XML to JSON.
++ Switch from XML to JSON for the configuration file.
 + Create functions to modify the configuration file.
 
 Save
 ----
 + Auto saving.
-+ Create super chunks for saving, we need to discuss the size of those chunks but maybe 128*128 squares (64 times smaller than for now, 8*8 of current chunks).
