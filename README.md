@@ -1,3 +1,7 @@
+Le dépot a migré à cette adresse : [http://git.gnufr.xyz/on_sait_pas_trop/Factorywars](http://git.gnufr.xyz/on_sait_pas_trop/Factorywars).
+
+The repository was migrated at this address: [http://git.gnufr.xyz/on_sait_pas_trop/Factorywars](http://git.gnufr.xyz/on_sait_pas_trop/Factorywars).
+
 # Factorywars (English) #
 
 Factorywars is a game which is inspired of the indie game Factorio, but 
