@@ -1,6 +1,6 @@
-Le dépot a migré à cette adresse : [http://git.gnufr.xyz/on_sait_pas_trop/Factorywars](http://git.gnufr.xyz/on_sait_pas_trop/Factorywars).
+Le dépot est également présent à cette adresse : [https://framagit.org/on_sait_pas_trop/factorywars](https://framagit.org/on_sait_pas_trop/factorywars).
 
-The repository was migrated at this address: [http://git.gnufr.xyz/on_sait_pas_trop/Factorywars](http://git.gnufr.xyz/on_sait_pas_trop/Factorywars).
+The repository is also available at this address : [https://framagit.org/on_sait_pas_trop/factorywars](https://framagit.org/on_sait_pas_trop/factorywars).
 
 # Factorywars (English) #
 
@@ -24,12 +24,7 @@ try to figure out every one of the issues, by learning how things works.
 
 # Contact #
 
-For discussions about the game development: 
-[factorywars-devel@gnufr.xyz](http://lists.gnufr.xyz/listinfo/factorywars-devel)
-.
-
-To report and discuss bugs in Factorywars: 
-[factorywars-bugs@gnufr.xyz](http://lists.gnufr.xyz/listinfo/factorywars-bugs).
+For discussions about the game development, contact one of the group's members.
 
 # Factorywars (Français) #
 
@@ -56,9 +51,5 @@ comment les choses fonctionnent.
 
 # Nous contacter #
 
-Pour les questions en rapport avec le développement du jeu : 
-[factorywars-devel@gnufr.xyz](http://lists.gnufr.xyz/listinfo/factorywars-devel)
-.
-
-Pour discutter d’un bogue ou en soumettre un nouveau : 
-[factorywars-bugs@gnufr.xyz](http://lists.gnufr.xyz/listinfo/factorywars-bugs).
+Pour les questions en rapport avec le développement du jeu, contactez un des
+membres du groupe.
