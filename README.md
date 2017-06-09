@@ -18,9 +18,8 @@ Currenly, the game is under heavy development. It isn't playable yet.
 
 We are a group of 3 friends from France, and created this project as a 
 college work, but we are motivated to pursue its development after the 
-college project is over. We do not have much experience nor knowledge in
- advanced programming or math algorithms but we are very motivated, and 
-try to figure out every one of the issues, by learning how things works.
+college project is over. We didn't have much experience nor knowledge in
+ advanced programming or math algorithms when we started, hence some eventual inconsistencies.
 
 # Contact #
 
@@ -44,10 +43,8 @@ Nous sommes un groupe de 3 amis venant de France. Ce projet était un travail
 pour le lycée, nous l’avons présenté le 2016-05-30.
 La présentation pour le Baccalauréat étant passée, nous acceptons et
 encourageons toute contribution.
-Nous n’avons pas beaucoup d’expériences ni de connaissances en programmation
-avancée ou en algorithmique mais nous sommes motivés et nous essayons de
-trouver des solutions à tous les problèmes que nous rencontrons en apprenant
-comment les choses fonctionnent.
+Nous n’avions pas beaucoup d’expérience ni de connaissances en programmation
+avancée ou en algorithmique au début du développement du projet, ce qui peut expliquer certaines incohérences éventuelles.
 
 # Nous contacter #
 
